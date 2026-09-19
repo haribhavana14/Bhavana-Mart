@@ -1,0 +1,9 @@
+build/
+vcpkg/
+vcpkg_installed/
+*.db
+uploads/*
+.vscode/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
