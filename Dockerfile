@@ -9,7 +9,13 @@ RUN apt-get update && \
     libsqlite3-dev \
     libjsoncpp-dev \
     uuid-dev \
-    zlib1g-dev && \
+    zlib1g-dev \
+    libpq-dev \
+    libbrotli-dev \
+    libc-ares-dev \
+    libhiredis-dev \
+    libmariadb-dev \
+    libyaml-cpp-dev && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
