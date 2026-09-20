@@ -8,7 +8,8 @@ RUN apt-get update && \
     libdrogon-dev \
     libsqlite3-dev \
     libjsoncpp-dev \
-    uuid-dev && \
+    uuid-dev \
+    zlib1g-dev && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
