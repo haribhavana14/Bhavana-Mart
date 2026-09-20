@@ -12,9 +12,7 @@ int main() {
     repo.addProduct({2, "Mouse", 800, 25});
     repo.addProduct({3, "Keyboard", 1200, 15});
 
-    // GET /products
-    drogon::app().registerHandler(
-        "/products",
+    auto getProductsHandler =
         [&repo](const drogon::HttpRequestPtr&,
                 std::function<void(const drogon::HttpResponsePtr&)>&& callback) {
 
@@ -33,13 +31,9 @@ int main() {
             callback(
                 drogon::HttpResponse::newHttpJsonResponse(result)
             );
-        },
-        {drogon::Get}
-    );
+        };
 
-    // POST /products
-    drogon::app().registerHandler(
-        "/products",
+    auto postProductHandler =
         [&repo](const drogon::HttpRequestPtr& req,
                 std::function<void(const drogon::HttpResponsePtr&)>&& callback) {
 
@@ -67,17 +61,74 @@ int main() {
 
             auto resp =
                 drogon::HttpResponse::newHttpJsonResponse(result);
+
             resp->setStatusCode(drogon::k201Created);
 
             callback(resp);
-        },
+        };
+
+    // Existing API
+    drogon::app().registerHandler(
+        "/products",
+        getProductsHandler,
+        {drogon::Get}
+    );
+
+    drogon::app().registerHandler(
+        "/products",
+        postProductHandler,
         {drogon::Post}
     );
 
-    // Render provides PORT; use 8080 locally if PORT is not set
+    // Versioned API
+    drogon::app().registerHandler(
+        "/api/v1/products",
+        getProductsHandler,
+        {drogon::Get}
+    );
+
+    drogon::app().registerHandler(
+        "/api/v1/products",
+        postProductHandler,
+        {drogon::Post}
+    );
+
+    // Health check
+    drogon::app().registerHandler(
+        "/api/v1/health",
+        [&repo](const drogon::HttpRequestPtr&,
+                std::function<void(const drogon::HttpResponsePtr&)>&& callback) {
+
+            Json::Value result;
+
+            if (repo.isDatabaseHealthy()) {
+                result["status"] = "UP";
+                result["db"] = "UP";
+
+                auto resp =
+                    drogon::HttpResponse::newHttpJsonResponse(result);
+
+                resp->setStatusCode(drogon::k200OK);
+                callback(resp);
+            } else {
+                result["status"] = "DOWN";
+                result["db"] = "DOWN";
+
+                auto resp =
+                    drogon::HttpResponse::newHttpJsonResponse(result);
+
+                resp->setStatusCode(drogon::k500InternalServerError);
+                callback(resp);
+            }
+        },
+        {drogon::Get}
+    );
+
+    // Render provides PORT; use 8080 locally
     int port = 8080;
 
     const char* portEnv = std::getenv("PORT");
+
     if (portEnv != nullptr) {
         port = std::stoi(portEnv);
     }

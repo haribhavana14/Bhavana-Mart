@@ -24,7 +24,7 @@ void ProductRepository::addProduct(const Product& product) {
         "INSERT OR REPLACE INTO products "
         "(id, name, price, stock) VALUES (?, ?, ?, ?);";
 
-    sqlite3_stmt* stmt;
+    sqlite3_stmt* stmt = nullptr;
 
     sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
     sqlite3_bind_int(stmt, 1, product.id);
@@ -39,20 +39,45 @@ void ProductRepository::addProduct(const Product& product) {
 std::vector<Product> ProductRepository::getProducts() {
     std::vector<Product> products;
 
-    const char* sql = "SELECT id, name, price, stock FROM products;";
-    sqlite3_stmt* stmt;
+    const char* sql =
+        "SELECT id, name, price, stock FROM products;";
+
+    sqlite3_stmt* stmt = nullptr;
 
     sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
 
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         Product p;
+
         p.id = sqlite3_column_int(stmt, 0);
-        p.name = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
+        p.name =
+            reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
         p.price = sqlite3_column_double(stmt, 2);
         p.stock = sqlite3_column_int(stmt, 3);
+
         products.push_back(p);
     }
 
     sqlite3_finalize(stmt);
+
     return products;
+}
+
+bool ProductRepository::isDatabaseHealthy() {
+    if (db == nullptr) {
+        return false;
+    }
+
+    const char* sql = "SELECT 1;";
+    sqlite3_stmt* stmt = nullptr;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK) {
+        return false;
+    }
+
+    bool healthy = (sqlite3_step(stmt) == SQLITE_ROW);
+
+    sqlite3_finalize(stmt);
+
+    return healthy;
 }
