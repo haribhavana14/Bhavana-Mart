@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../models/Product.h"
+#include "../models/product.h"
 #include <vector>
 
 class ProductRepository {

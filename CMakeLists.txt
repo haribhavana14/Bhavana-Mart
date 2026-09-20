@@ -28,7 +28,7 @@ endif()
 
 add_executable(BhavanaMart
     src/main.cpp
-    repositories/ProductRepository.cpp
+    repositories/productrepository.cpp
 )
 
 target_link_libraries(BhavanaMart PRIVATE
