@@ -1,306 +1,970 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Bhavana-Mart</title>
+<title>Bhavana-Mart</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f3e8ff;
-            color: #2e1065;
-        }
+body{
+    background:#f7f4ff;
+    color:#24133d;
+}
 
-        header {
-            background: linear-gradient(135deg, #6d28d9, #9333ea);
-            color: white;
-            padding: 28px 8%;
-            box-shadow: 0 4px 14px rgba(76, 29, 149, 0.25);
-        }
+/* NAVBAR */
+.navbar{
+    background:linear-gradient(135deg,#6a1b9a,#8e24aa,#5e35b1);
+    color:white;
+    padding:16px 5%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    position:sticky;
+    top:0;
+    z-index:1000;
+    box-shadow:0 4px 15px rgba(70,20,100,.2);
+}
 
-        header h1 {
-            margin: 0;
-            font-size: 34px;
-        }
+.logo{
+    font-size:26px;
+    font-weight:800;
+    white-space:nowrap;
+}
 
-        header p {
-            margin: 7px 0 0;
-            font-size: 15px;
-            opacity: 0.9;
-        }
+.search-box{
+    flex:1;
+    max-width:550px;
+}
 
-        main {
-            width: 84%;
-            max-width: 1100px;
-            margin: 32px auto;
-        }
+.search-box input{
+    width:100%;
+    padding:13px 18px;
+    border:none;
+    outline:none;
+    border-radius:30px;
+    font-size:15px;
+}
 
-        .status {
-            background: white;
-            padding: 18px 20px;
-            border-radius: 14px;
-            margin-bottom: 28px;
-            border-left: 6px solid #7c3aed;
-            box-shadow: 0 4px 14px rgba(76, 29, 149, 0.10);
-        }
+.nav-right{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
 
-        #health {
-            color: #7c3aed;
-            font-weight: bold;
-        }
+.cart{
+    background:white;
+    color:#6a1b9a;
+    padding:10px 16px;
+    border-radius:25px;
+    font-weight:bold;
+}
 
-        h2 {
-            color: #581c87;
-        }
+/* HERO */
+.hero{
+    margin:25px 5%;
+    padding:45px 35px;
+    border-radius:25px;
+    background:linear-gradient(135deg,#ead7ff,#d7c2ff,#f3e6ff);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:30px;
+}
 
-        .products {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-        }
+.hero-text h1{
+    font-size:42px;
+    color:#5e2a8a;
+    margin-bottom:12px;
+}
 
-        .card {
-            background: white;
-            padding: 22px;
-            border-radius: 16px;
-            border-top: 5px solid #8b5cf6;
-            box-shadow: 0 5px 16px rgba(76, 29, 149, 0.12);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
+.hero-text p{
+    font-size:18px;
+    color:#5f536b;
+}
 
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(76, 29, 149, 0.18);
-        }
+.hero-badge{
+    background:white;
+    padding:25px;
+    border-radius:20px;
+    text-align:center;
+    box-shadow:0 10px 25px rgba(80,40,120,.12);
+}
 
-        .card h3 {
-            margin-top: 0;
-            color: #581c87;
-            font-size: 21px;
-        }
+.hero-badge .big{
+    font-size:55px;
+}
 
-        .price {
-            margin-top: 12px;
-            font-size: 23px;
-            font-weight: bold;
-            color: #7c3aed;
-        }
+.hero-badge b{
+    display:block;
+    color:#6a1b9a;
+}
 
-        .stock {
-            margin-top: 9px;
-            color: #6b21a8;
-            font-weight: 600;
-        }
+/* CATEGORIES */
+.section{
+    padding:10px 5% 0;
+}
 
-        .add-box {
-            background: white;
-            padding: 25px;
-            border-radius: 16px;
-            margin-top: 32px;
-            box-shadow: 0 5px 16px rgba(76, 29, 149, 0.12);
-        }
+.section-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:18px;
+}
 
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 14px;
-        }
+.section-title h2{
+    color:#47205f;
+}
 
-        input {
-            padding: 13px;
-            border: 2px solid #ddd6fe;
-            border-radius: 9px;
-            width: 100%;
-            outline: none;
-            font-size: 14px;
-        }
+.categories{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:30px;
+}
 
-        input:focus {
-            border-color: #8b5cf6;
-            box-shadow: 0 0 0 3px #ede9fe;
-        }
+.category-btn{
+    border:none;
+    background:white;
+    color:#6a1b9a;
+    padding:11px 17px;
+    border-radius:25px;
+    cursor:pointer;
+    font-weight:700;
+    box-shadow:0 3px 10px rgba(60,20,90,.08);
+}
 
-        button {
-            margin-top: 16px;
-            padding: 13px 24px;
-            border: none;
-            border-radius: 9px;
-            background: linear-gradient(135deg, #7c3aed, #9333ea);
-            color: white;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: bold;
-            box-shadow: 0 4px 10px rgba(124, 58, 237, 0.25);
-        }
+.category-btn:hover,
+.category-btn.active{
+    background:#6a1b9a;
+    color:white;
+}
 
-        button:hover {
-            opacity: 0.9;
-        }
+/* PRODUCTS */
+.products{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:22px;
+    padding-bottom:40px;
+}
 
-        #message {
-            margin-top: 14px;
-            color: #6b21a8;
-            font-weight: bold;
-        }
+.card{
+    background:white;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 6px 18px rgba(50,20,80,.10);
+    transition:.25s;
+}
 
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            padding: 18px;
-            color: #7e22ce;
-            font-size: 14px;
-        }
-    </style>
+.card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 12px 25px rgba(80,30,120,.16);
+}
+
+.image-wrap{
+    height:220px;
+    background:#f0e7f8;
+    position:relative;
+    overflow:hidden;
+}
+
+.image-wrap img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.fallback{
+    width:100%;
+    height:100%;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    font-size:68px;
+    background:linear-gradient(135deg,#eee3ff,#f9efff);
+}
+
+.badge{
+    position:absolute;
+    top:12px;
+    left:12px;
+    background:#7b1fa2;
+    color:white;
+    padding:6px 10px;
+    border-radius:15px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.card-body{
+    padding:16px;
+}
+
+.card-body h3{
+    font-size:18px;
+    margin-bottom:7px;
+}
+
+.category{
+    font-size:13px;
+    color:#8b78a0;
+    margin-bottom:8px;
+}
+
+.rating{
+    color:#f4a300;
+    margin-bottom:10px;
+}
+
+.price-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.price{
+    font-size:19px;
+    color:#6a1b9a;
+    font-weight:800;
+}
+
+.add-btn{
+    border:none;
+    background:#6a1b9a;
+    color:white;
+    padding:9px 13px;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.add-btn:hover{
+    background:#4a136d;
+}
+
+/* STATUS */
+.status-box{
+    margin:0 5% 30px;
+    background:white;
+    border-radius:18px;
+    padding:18px 20px;
+    box-shadow:0 5px 15px rgba(50,20,80,.08);
+}
+
+.status-title{
+    font-weight:800;
+    margin-bottom:8px;
+}
+
+#status{
+    color:#6a1b9a;
+    font-weight:600;
+}
+
+/* FOOTER */
+footer{
+    margin-top:20px;
+    background:#35184b;
+    color:#eee;
+    text-align:center;
+    padding:28px 15px;
+}
+
+footer b{
+    color:#d8b7ff;
+}
+
+/* EMPTY */
+.empty{
+    grid-column:1/-1;
+    text-align:center;
+    background:white;
+    border-radius:18px;
+    padding:45px;
+    color:#7a688c;
+}
+
+/* RESPONSIVE */
+@media(max-width:800px){
+    .navbar{
+        flex-wrap:wrap;
+    }
+
+    .search-box{
+        order:3;
+        width:100%;
+        max-width:none;
+    }
+
+    .hero{
+        flex-direction:column;
+        text-align:center;
+    }
+
+    .hero-text h1{
+        font-size:32px;
+    }
+}
+</style>
 </head>
 
 <body>
 
-<header>
-    <h1>💜 Bhavana-Mart</h1>
-    <p>Simple C++ / Drogon E-Commerce Backend</p>
-</header>
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="logo">💜 Bhavana-Mart</div>
 
-<main>
-
-    <div class="status">
-        <strong>Backend Status:</strong>
-        <span id="health">Checking...</span>
+    <div class="search-box">
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search products..."
+            oninput="filterProducts()"
+        >
     </div>
 
-    <h2>Products</h2>
+    <div class="nav-right">
+        <div>🛍️ Shop</div>
+        <div class="cart">🛒 Cart <span id="cartCount">0</span></div>
+    </div>
+</nav>
 
-    <div id="products" class="products"></div>
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-text">
+        <h1>Shop Everything You Love 💜</h1>
+        <p>Clothing • Jewellery • Shoes • Electronics • Beauty • Home • Accessories</p>
+    </div>
 
-    <div class="add-box">
-        <h2>Add Product</h2>
+    <div class="hero-badge">
+        <div class="big">🛍️</div>
+        <b>Bhavana-Mart</b>
+        <span>Smart Shopping Marketplace</span>
+    </div>
+</section>
 
-        <div class="form-grid">
-            <input id="id" type="number" placeholder="Product ID">
-            <input id="name" type="text" placeholder="Product Name">
-            <input id="price" type="number" placeholder="Price">
-            <input id="stock" type="number" placeholder="Stock">
+<!-- CATEGORIES -->
+<section class="section">
+
+    <div class="section-title">
+        <h2>Shop by Category</h2>
+    </div>
+
+    <div class="categories">
+        <button class="category-btn active" onclick="setCategory('All',this)">All</button>
+        <button class="category-btn" onclick="setCategory('Clothing',this)">👗 Clothing</button>
+        <button class="category-btn" onclick="setCategory('Jewellery',this)">💎 Jewellery</button>
+        <button class="category-btn" onclick="setCategory('Shoes',this)">👟 Shoes</button>
+        <button class="category-btn" onclick="setCategory('Electronics',this)">💻 Electronics</button>
+        <button class="category-btn" onclick="setCategory('Beauty',this)">💄 Beauty</button>
+        <button class="category-btn" onclick="setCategory('Home',this)">🏠 Home</button>
+        <button class="category-btn" onclick="setCategory('Accessories',this)">👜 Accessories</button>
+    </div>
+</section>
+
+<!-- STATUS -->
+<div class="status-box">
+    <div class="status-title">⚡ Backend Status</div>
+    <div id="status">Checking backend...</div>
+</div>
+
+<!-- PRODUCTS -->
+<section class="section">
+
+    <div class="section-title">
+        <h2 id="productsTitle">Featured Products</h2>
+    </div>
+
+    <div class="products" id="productGrid">
+
+        <!-- CLOTHING -->
+        <div class="card product-card" data-category="Clothing" data-name="Women Kurti">
+            <div class="image-wrap">
+                <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="fallback">👗<small>Women Kurti</small></div>
+                <span class="badge">Popular</span>
+            </div>
+            <div class="card-body">
+                <h3>Women Kurti</h3>
+                <div class="category">Clothing</div>
+                <div class="rating">★★★★★</div>
+                <div class="price-row">
+                    <div class="price">₹899</div>
+                    <button class="add-btn" onclick="addToCart()">Add</button>
+                </div>
+            </div>
         </div>
 
-        <button onclick="addProduct()">Add Product</button>
+        <div class="card product-card" data-category="Clothing" data-name="Classic T-Shirt">
+            <div class="image-wrap">
+                <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="fallback">👕<small>Classic T-Shirt</small></div>
+            </div>
+            <div class="card-body">
+                <h3>Classic T-Shirt</h3>
+                <div class="category">Clothing</div>
+                <div class="rating">★★★★☆</div>
+                <div class="price-row">
+                    <div class="price">₹599</div>
+                    <button class="add-btn" onclick="addToCart()">Add</button>
+                </div>
+            </div>
+        </div>
 
-        <div id="message"></div>
+        <div class="card product-card" data-category="Clothing" data-name="Denim Jeans">
+            <div class="image-wrap">
+                <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=800&q=80" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="fallback">👖<small>Denim Jeans</small></div>
+            </div>
+            <div class="card-body">
+                <h3>Denim Jeans</h3>
+                <div class="category">Clothing</div>
+                <div class="rating">★★★★★</div>
+                <div class="price-row">
+                    <div class="price">₹1,299</div>
+                    <button class="add-btn" onclick="addToCart()">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card product-card" data-category="Clothing" data-name="Casual Jacket">
+            <div class="image-wrap">
+                <img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=80" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="fallback">🧥<small>Casual Jacket</small></div>
+            </div>
+            <div class="card-body">
+                <h3>Casual Jacket</h3>
+                <div class="category">Clothing</div>
+                <div class="rating">★★★★☆</div>
+                <div class="price-row">
+                    <div class="price">₹1,799</div>
+                    <button class="add-btn" onclick="addToCart()">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- JEWELLERY -->
+        <div class="card product-card" data-category="Jewellery" data-name="Gold Necklace">
+            <div class="image-wrap">
+                <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="fallback">📿<small>Gold Necklace</small></div>
+                <span class="badge">New</span>
+            </div>
+            <div class="card-body">
+                <h3>Gold Necklace</h3>
+                <div class="category">Jewellery</div>
+                <div class="rating">★★★★★</div>
+                <div class="price-row">
+                    <div class="price">₹2,499</div>
+                    <button class="add-btn" onclick="addToCart()">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card product-card" data-category="Jewellery" data-name="Elegant Earrings">
+            <div class="image-wrap">
+                <img src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=800&q=80" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="fallback">✨<small>Elegant Earrings</small></div>
+            </div>
+            <div class="card-body">
+                <h3>Elegant Earrings</h3>
+                <div class="category">Jewellery</div>
+                <div class="rating">★★★★★</div>
+                <div class="price-row">
+                    <div class="price">₹999</div>
+                    <button class="add-btn" onclick="addToCart()">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card product-card" data-category="Jewellery" data-name="Silver Ring">
+            <div class="image-wrap">
+                <img src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="fallback">💍<small>Silver Ring</small></div>
+            </div>
+            <div class="card-body">
+                <h3>Silver Ring</h3>
+                <div class="category">Jewellery</div>
+                <div class="rating">★★★★☆</div>
+                <div class="price-row">
+                    <div class="price">₹749</div>
+                    <button class="add-btn" onclick="addToCart()">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card product-card" data-category="Jewellery" data-name="Bracelet">
+            <div class="image-wrap">
+                <img src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=800&q=80" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="fallback">📿<small>Bracelet</small></div>
+            </div>
+            <div class="card-body">
+                <h3>Designer Bracelet</h3>
+                <div class="category">Jewellery</div>
+                <div class="rating">★★★★★</div>
+                <div class="price-row">
+                    <div class="price">₹1,199</div>
+                    <button class="add-btn" onclick="addToCart()">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SHOES -->
+        <div class="card product-card" data-category="Shoes" data-name="Running Shoes">
+            <div class="image-wrap">
+                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="fallback">👟<small>Running Shoes</small></div>
+            </div>
+            <div class="card-body">
+                <h3>Running Shoes</h3>
+                <div class="category">Shoes</div>
+                <div class="rating">★★★★★</div>
+                <div class="price-row">
+                    <div class="price">₹1,999</div>
+                    <button class="add-btn" onclick="addToCart()">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card product-card" data-category="Shoes" data-name="Sports Sneakers">
+            <div class="image-wrap">
+                <img src="https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&w=800&q=80" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="fallback">👟<small>Sports Sneakers</small></div>
+            </div>
+            <div class="card-body">
+                <h3>Sports Sneakers</h3>
+                <div class="category">Shoes</div>
+                <div class="rating">★★★★☆</div>
+                <div class="price-row">
+                    <div class="price">₹2,199</div>
+                    <button class="add-btn" onclick="addToCart()">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card product-card" data-category="Shoes" data-name="Heels">
+            <div class="image-wrap">
+                <img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=800&q=80" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="fallback">👠<small>Heels</small></div>
+            </div>
+            <div class="card-body">
+                <h3>Elegant Heels</h3>
+                <div class="category">Shoes</div>
+                <div class="rating">★★★★★</div>
+                <div class="price-row">
+                    <div class="price">₹1,499</div>
+                    <button class="add-btn" onclick="addToCart()">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card product-card" data-category="Shoes" data-name="Casual Shoes">
+            <div class="image-wrap">
+                <img src="https://images.unsplash.com/photo-1495555961986-6d4c1ecb7be3?auto=format&fit=crop&w=800&q=80" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="fallback">👞<small>Casual Shoes</small></div>
+            </div>
+            <div class="card-body">
+                <h3>Casual Shoes</h3>
+                <div class="category">Shoes</div>
+                <div class="rating">★★★★☆</div>
+                <div class="price-row">
+                    <div class="price">₹1,699</div>
+                    <button class="add-btn" onclick="addToCart()">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ELECTRONICS -->
+        <div class="card product-card" data-category="Electronics" data-name="Laptop">
+            <div class="image-wrap">
+                <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=800&q=80" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="fallback">💻<small>Laptop</small></div>
+                <span class="badge">Top Seller</span>
+            </div>
+            <div class="card-body">
+                <h3>Laptop</h3>
+                <div class="category">Electronics</div>
+                <div class="rating">★★★★★</div>
+                <div class="price-row">
+                    <div class="price">₹57,000</div>
+                    <button class="add-btn" onclick="addToCart()">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card product-card" data-category="Electronics" data-name="Wireless Headphones">
+            <div class="image-wrap">
+                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="fallback">🎧<small>Headphones</small></div>
+            </div>
+            <div class="card-body">
+                <h3>Wireless Headphones</h3>
+                <div class="category">Electronics</div>
+                <div class="rating">★★★★★</div>
+                <div class="price-row">
+                    <div class="price">₹1,500</div>
+                    <button class="add-btn" onclick="addToCart()">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card product-card" data-category="Electronics" data-name="Mechanical Keyboard">
+            <div class="image-wrap">
+                <img src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=800&q=80" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="fallback">⌨️<small>Keyboard</small></div>
+            </div>
+            <div class="card-body">
+                <h3>Mechanical Keyboard</h3>
+                <div class="category">Electronics</div>
+                <div class="rating">★★★★☆</div>
+                <div class="price-row">
+                    <div class="price">₹1,200</div>
+                    <button class="add-btn" onclick="addToCart()">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card product-card" data-category="Electronics" data-name="Monitor">
+            <div class="image-wrap">
+                <img src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=800&q=80" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="fallback">🖥️<small>Monitor</small></div>
+            </div>
+            <div class="card-body">
+                <h3>HD Monitor</h3>
+                <div class="category">Electronics</div>
+                <div class="rating">★★★★★</div>
+                <div class="price-row">
+                    <div class="price">₹8,000</div>
+                    <button class="add-btn" onclick="addToCart()">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- BEAUTY -->
+        <div class="card product-card" data-category="Beauty" data-name="Makeup Kit">
+            <div class="image-wrap">
+                <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=800&q=80" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="fallback">💄<small>Makeup Kit</small></div>
+            </div>
+            <div class="card-body">
+                <h3>Makeup Kit</h3>
+                <div class="category">Beauty</div>
+                <div class="rating">★★★★★</div>
+                <div class="price-row">
+                    <div class="price">₹1,299</div>
+                    <button class="add-btn" onclick="addToCart()">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card product-card" data-category="Beauty" data-name="Perfume">
+            <div class="image-wrap">
+                <img src="https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="fallback">🌸<small>Perfume</small></div>
+            </div>
+            <div class="card-body">
+                <h3>Floral Perfume</h3>
+                <div class="category">Beauty</div>
+                <div class="rating">★★★★★</div>
+                <div class="price-row">
+                    <div class="price">₹899</div>
+                    <button class="add-btn" onclick="addToCart()">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card product-card" data-category="Beauty" data-name="Skincare Set">
+            <div class="image-wrap">
+                <img src="https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=800&q=80" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="fallback">🧴<small>Skincare Set</small></div>
+            </div>
+            <div class="card-body">
+                <h3>Skincare Set</h3>
+                <div class="category">Beauty</div>
+                <div class="rating">★★★★☆</div>
+                <div class="price-row">
+                    <div class="price">₹1,099</div>
+                    <button class="add-btn" onclick="addToCart()">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card product-card" data-category="Beauty" data-name="Hair Care">
+            <div class="image-wrap">
+                <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="fallback">💇<small>Hair Care</small></div>
+            </div>
+            <div class="card-body">
+                <h3>Hair Care Kit</h3>
+                <div class="category">Beauty</div>
+                <div class="rating">★★★★☆</div>
+                <div class="price-row">
+                    <div class="price">₹749</div>
+                    <button class="add-btn" onclick="addToCart()">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- HOME -->
+        <div class="card product-card" data-category="Home" data-name="Modern Chair">
+            <div class="image-wrap">
+                <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="fallback">🪑<small>Chair</small></div>
+            </div>
+            <div class="card-body">
+                <h3>Modern Chair</h3>
+                <div class="category">Home</div>
+                <div class="rating">★★★★★</div>
+                <div class="price-row">
+                    <div class="price">₹3,499</div>
+                    <button class="add-btn" onclick="addToCart()">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card product-card" data-category="Home" data-name="Table Lamp">
+            <div class="image-wrap">
+                <img src="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="fallback">💡<small>Lamp</small></div>
+            </div>
+            <div class="card-body">
+                <h3>Table Lamp</h3>
+                <div class="category">Home</div>
+                <div class="rating">★★★★☆</div>
+                <div class="price-row">
+                    <div class="price">₹999</div>
+                    <button class="add-btn" onclick="addToCart()">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card product-card" data-category="Home" data-name="Cushion Set">
+            <div class="image-wrap">
+                <img src="https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?auto=format&fit=crop&w=800&q=80" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="fallback">🛋️<small>Cushion</small></div>
+            </div>
+            <div class="card-body">
+                <h3>Comfort Cushion Set</h3>
+                <div class="category">Home</div>
+                <div class="rating">★★★★★</div>
+                <div class="price-row">
+                    <div class="price">₹899</div>
+                    <button class="add-btn" onclick="addToCart()">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card product-card" data-category="Home" data-name="Wall Decor">
+            <div class="image-wrap">
+                <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="fallback">🖼️<small>Wall Decor</small></div>
+            </div>
+            <div class="card-body">
+                <h3>Wall Decor</h3>
+                <div class="category">Home</div>
+                <div class="rating">★★★★☆</div>
+                <div class="price-row">
+                    <div class="price">₹1,499</div>
+                    <button class="add-btn" onclick="addToCart()">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACCESSORIES -->
+        <div class="card product-card" data-category="Accessories" data-name="Sunglasses">
+            <div class="image-wrap">
+                <img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=800&q=80" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="fallback">🕶️<small>Sunglasses</small></div>
+            </div>
+            <div class="card-body">
+                <h3>Classic Sunglasses</h3>
+                <div class="category">Accessories</div>
+                <div class="rating">★★★★★</div>
+                <div class="price-row">
+                    <div class="price">₹799</div>
+                    <button class="add-btn" onclick="addToCart()">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card product-card" data-category="Accessories" data-name="Watch">
+            <div class="image-wrap">
+                <img src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=800&q=80" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="fallback">⌚<small>Watch</small></div>
+            </div>
+            <div class="card-body">
+                <h3>Classic Watch</h3>
+                <div class="category">Accessories</div>
+                <div class="rating">★★★★★</div>
+                <div class="price-row">
+                    <div class="price">₹1,599</div>
+                    <button class="add-btn" onclick="addToCart()">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card product-card" data-category="Accessories" data-name="Handbag">
+            <div class="image-wrap">
+                <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=800&q=80" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="fallback">👜<small>Handbag</small></div>
+            </div>
+            <div class="card-body">
+                <h3>Designer Handbag</h3>
+                <div class="category">Accessories</div>
+                <div class="rating">★★★★☆</div>
+                <div class="price-row">
+                    <div class="price">₹1,899</div>
+                    <button class="add-btn" onclick="addToCart()">Add</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card product-card" data-category="Accessories" data-name="Wallet">
+            <div class="image-wrap">
+                <img src="https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=800&q=80" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="fallback">👛<small>Wallet</small></div>
+            </div>
+            <div class="card-body">
+                <h3>Leather Wallet</h3>
+                <div class="category">Accessories</div>
+                <div class="rating">★★★★★</div>
+                <div class="price-row">
+                    <div class="price">₹699</div>
+                    <button class="add-btn" onclick="addToCart()">Add</button>
+                </div>
+            </div>
+        </div>
+
     </div>
+</section>
 
-    <div class="footer">
-        © 2026 Bhavana-Mart
-    </div>
-
-</main>
+<footer>
+    <b>💜 Bhavana-Mart</b><br>
+    Native C++ E-Commerce Marketplace • Drogon Backend • SQLite Database
+</footer>
 
 <script>
-    async function checkHealth() {
-        try {
-            const response = await fetch("/api/v1/health");
-            const data = await response.json();
 
-            document.getElementById("health").textContent =
-                data.status === "UP" ? " UP" : " DOWN";
+let currentCategory = "All";
+let cartCount = 0;
 
-        } catch (error) {
-            document.getElementById("health").textContent = " DOWN";
+/* CART */
+function addToCart(){
+    cartCount++;
+    document.getElementById("cartCount").textContent = cartCount;
+}
+
+/* CATEGORY */
+function setCategory(category,button){
+
+    currentCategory = category;
+
+    document.querySelectorAll(".category-btn").forEach(btn=>{
+        btn.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    filterProducts();
+}
+
+/* SEARCH + CATEGORY */
+function filterProducts(){
+
+    const search =
+        document.getElementById("searchInput")
+        .value
+        .toLowerCase()
+        .trim();
+
+    const cards =
+        document.querySelectorAll(".product-card");
+
+    let visible = 0;
+
+    cards.forEach(card=>{
+
+        const category =
+            card.dataset.category;
+
+        const name =
+            card.dataset.name.toLowerCase();
+
+        const categoryMatch =
+            currentCategory === "All" ||
+            category === currentCategory;
+
+        const searchMatch =
+            name.includes(search);
+
+        if(categoryMatch && searchMatch){
+            card.style.display = "";
+            visible++;
         }
+        else{
+            card.style.display = "none";
+        }
+    });
+
+    if(visible === 0){
+        document.getElementById("productGrid").innerHTML =
+        '<div class="empty">😔 No products found</div>';
     }
+}
 
-    async function loadProducts() {
-        const container = document.getElementById("products");
+/* BACKEND HEALTH */
+async function checkBackend(){
 
-        container.textContent = "Loading products...";
+    try{
 
-        try {
-            const response = await fetch("/api/v1/products");
-            const products = await response.json();
+        const response =
+            await fetch("/api/v1/health");
 
-            container.textContent = "";
+        if(response.ok){
 
-            products.forEach(product => {
-                const card = document.createElement("div");
-                card.className = "card";
+            const data =
+                await response.json();
 
-                const title = document.createElement("h3");
-                title.textContent = product.name;
+            if(data.status === "UP" &&
+               data.db === "UP"){
 
-                const id = document.createElement("div");
-                id.textContent = "ID: " + product.id;
+                document.getElementById("status").textContent =
+                    "✅ Backend UP • Database UP • API Connected";
+            }
+            else{
+                document.getElementById("status").textContent =
+                    "⚠️ Backend reachable, database status unavailable";
+            }
 
-                const price = document.createElement("div");
-                price.className = "price";
-                price.textContent = "₹" + product.price;
-
-                const stock = document.createElement("div");
-                stock.className = "stock";
-                stock.textContent = "Stock: " + product.stock;
-
-                card.appendChild(title);
-                card.appendChild(id);
-                card.appendChild(price);
-                card.appendChild(stock);
-
-                container.appendChild(card);
-            });
-
-        } catch (error) {
-            container.textContent = "Unable to load products.";
         }
+        else{
+
+            document.getElementById("status").textContent =
+                "⚠️ Backend not responding";
+        }
+
     }
+    catch(error){
 
-    async function addProduct() {
-        const id = Number(document.getElementById("id").value);
-        const name = document.getElementById("name").value;
-        const price = Number(document.getElementById("price").value);
-        const stock = Number(document.getElementById("stock").value);
-
-        const message = document.getElementById("message");
-
-        if (!id || !name || price < 0 || stock < 0) {
-            message.textContent = "Please enter valid product details.";
-            return;
-        }
-
-        try {
-            const response = await fetch("/api/v1/products", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    id: id,
-                    name: name,
-                    price: price,
-                    stock: stock
-                })
-            });
-
-            const data = await response.json();
-
-            message.textContent =
-                data.message || "Product added successfully.";
-
-            document.getElementById("id").value = "";
-            document.getElementById("name").value = "";
-            document.getElementById("price").value = "";
-            document.getElementById("stock").value = "";
-
-            loadProducts();
-
-        } catch (error) {
-            message.textContent = "Failed to add product.";
-        }
+        document.getElementById("status").textContent =
+            "⚠️ Backend unavailable";
     }
+}
 
-    checkHealth();
-    loadProducts();
+/* LOAD */
+checkBackend();
+
 </script>
 
 </body>
