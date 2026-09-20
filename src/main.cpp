@@ -12,6 +12,7 @@ int main() {
     repo.addProduct({2, "Mouse", 800, 25});
     repo.addProduct({3, "Keyboard", 1200, 15});
 
+    // GET /products
     auto getProductsHandler =
         [&repo](const drogon::HttpRequestPtr&,
                 std::function<void(const drogon::HttpResponsePtr&)>&& callback) {
@@ -33,6 +34,7 @@ int main() {
             );
         };
 
+    // POST /products
     auto postProductHandler =
         [&repo](const drogon::HttpRequestPtr& req,
                 std::function<void(const drogon::HttpResponsePtr&)>&& callback) {
@@ -63,7 +65,6 @@ int main() {
                 drogon::HttpResponse::newHttpJsonResponse(result);
 
             resp->setStatusCode(drogon::k201Created);
-
             callback(resp);
         };
 
@@ -124,11 +125,14 @@ int main() {
         {drogon::Get}
     );
 
+    // Serve src/index.html at /
+    drogon::app().setDocumentRoot("./src");
+    drogon::app().setHomePage("index.html");
+
     // Render provides PORT; use 8080 locally
     int port = 8080;
 
     const char* portEnv = std::getenv("PORT");
-
     if (portEnv != nullptr) {
         port = std::stoi(portEnv);
     }
