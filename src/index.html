@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bhavana-Mart</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f3ff;
+            color: #222;
+        }
+
+        header {
+            background: #6c3fc8;
+            color: white;
+            padding: 22px 8%;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        header p {
+            margin: 6px 0 0;
+            opacity: 0.9;
+        }
+
+        main {
+            width: 84%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        .status {
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 22px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 14px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .card h3 {
+            margin-top: 0;
+        }
+
+        .price {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .stock {
+            margin-top: 8px;
+        }
+
+        .add-box {
+            background: white;
+            padding: 22px;
+            border-radius: 14px;
+            margin-top: 28px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+
+        input {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            width: 100%;
+        }
+
+        button {
+            margin-top: 14px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            background: #6c3fc8;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        #message {
+            margin-top: 12px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Bhavana-Mart</h1>
+    <p>Simple C++ / Drogon E-Commerce Backend</p>
+</header>
+
+<main>
+
+    <div class="status">
+        <strong>Backend Status:</strong>
+        <span id="health">Checking...</span>
+    </div>
+
+    <h2>Products</h2>
+
+    <div id="products" class="products"></div>
+
+    <div class="add-box">
+        <h2>Add Product</h2>
+
+        <div class="form-grid">
+            <input id="id" type="number" placeholder="Product ID">
+            <input id="name" type="text" placeholder="Product Name">
+            <input id="price" type="number" placeholder="Price">
+            <input id="stock" type="number" placeholder="Stock">
+        </div>
+
+        <button onclick="addProduct()">Add Product</button>
+
+        <div id="message"></div>
+    </div>
+
+</main>
+
+<script>
+    async function checkHealth() {
+        try {
+            const response = await fetch("/api/v1/health");
+            const data = await response.json();
+
+            document.getElementById("health").textContent =
+                data.status === "UP"
+                    ? " UP"
+                    : " DOWN";
+        } catch (error) {
+            document.getElementById("health").textContent = " DOWN";
+        }
+    }
+
+    async function loadProducts() {
+        const container = document.getElementById("products");
+        container.textContent = "Loading products...";
+
+        try {
+            const response = await fetch("/api/v1/products");
+            const products = await response.json();
+
+            container.textContent = "";
+
+            products.forEach(product => {
+                const card = document.createElement("div");
+                card.className = "card";
+
+                const title = document.createElement("h3");
+                title.textContent = product.name;
+
+                const id = document.createElement("div");
+                id.textContent = "ID: " + product.id;
+
+                const price = document.createElement("div");
+                price.className = "price";
+                price.textContent = "₹" + product.price;
+
+                const stock = document.createElement("div");
+                stock.className = "stock";
+                stock.textContent = "Stock: " + product.stock;
+
+                card.appendChild(title);
+                card.appendChild(id);
+                card.appendChild(price);
+                card.appendChild(stock);
+
+                container.appendChild(card);
+            });
+
+        } catch (error) {
+            container.textContent = "Unable to load products.";
+        }
+    }
+
+    async function addProduct() {
+        const id = Number(document.getElementById("id").value);
+        const name = document.getElementById("name").value;
+        const price = Number(document.getElementById("price").value);
+        const stock = Number(document.getElementById("stock").value);
+        const message = document.getElementById("message");
+
+        if (!id || !name || price < 0 || stock < 0) {
+            message.textContent = "Please enter valid product details.";
+            return;
+        }
+
+        try {
+            const response = await fetch("/api/v1/products", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    id: id,
+                    name: name,
+                    price: price,
+                    stock: stock
+                })
+            });
+
+            const data = await response.json();
+
+            message.textContent = data.message || "Product added.";
+
+            document.getElementById("id").value = "";
+            document.getElementById("name").value = "";
+            document.getElementById("price").value = "";
+            document.getElementById("stock").value = "";
+
+            loadProducts();
+
+        } catch (error) {
+            message.textContent = "Failed to add product.";
+        }
+    }
+
+    checkHealth();
+    loadProducts();
+</script>
+
+</body>
+</html>
