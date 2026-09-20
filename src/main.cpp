@@ -11,6 +11,8 @@ int main() {
     repo.addProduct({1, "Laptop", 57000, 10});
     repo.addProduct({2, "Mouse", 800, 25});
     repo.addProduct({3, "Keyboard", 1200, 15});
+    repo.addProduct({4, "Headphones", 1500, 20});
+    repo.addProduct({5, "Monitor", 8000, 10});
 
     // GET /products
     auto getProductsHandler =
