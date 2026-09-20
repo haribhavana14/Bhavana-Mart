@@ -7,7 +7,8 @@ RUN apt-get update && \
     ninja-build \
     libdrogon-dev \
     libsqlite3-dev \
-    libjsoncpp-dev && \
+    libjsoncpp-dev \
+    uuid-dev && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
