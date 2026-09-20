@@ -6,7 +6,8 @@ RUN apt-get update && \
     cmake \
     ninja-build \
     libdrogon-dev \
-    libsqlite3-dev && \
+    libsqlite3-dev \
+    libjsoncpp-dev && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
