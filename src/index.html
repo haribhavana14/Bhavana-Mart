@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Bhavana-Mart</title>
 
     <style>
@@ -13,95 +14,130 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background: #f5f3ff;
-            color: #222;
+            background: #f3e8ff;
+            color: #2e1065;
         }
 
         header {
-            background: #6c3fc8;
+            background: linear-gradient(135deg, #6d28d9, #9333ea);
             color: white;
-            padding: 22px 8%;
+            padding: 28px 8%;
+            box-shadow: 0 4px 14px rgba(76, 29, 149, 0.25);
         }
 
         header h1 {
             margin: 0;
-            font-size: 30px;
+            font-size: 34px;
         }
 
         header p {
-            margin: 6px 0 0;
+            margin: 7px 0 0;
+            font-size: 15px;
             opacity: 0.9;
         }
 
         main {
             width: 84%;
             max-width: 1100px;
-            margin: 30px auto;
+            margin: 32px auto;
         }
 
         .status {
             background: white;
-            padding: 16px;
-            border-radius: 12px;
-            margin-bottom: 22px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            padding: 18px 20px;
+            border-radius: 14px;
+            margin-bottom: 28px;
+            border-left: 6px solid #7c3aed;
+            box-shadow: 0 4px 14px rgba(76, 29, 149, 0.10);
+        }
+
+        #health {
+            color: #7c3aed;
+            font-weight: bold;
+        }
+
+        h2 {
+            color: #581c87;
         }
 
         .products {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 18px;
+            gap: 20px;
         }
 
         .card {
             background: white;
-            padding: 20px;
-            border-radius: 14px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            padding: 22px;
+            border-radius: 16px;
+            border-top: 5px solid #8b5cf6;
+            box-shadow: 0 5px 16px rgba(76, 29, 149, 0.12);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(76, 29, 149, 0.18);
         }
 
         .card h3 {
             margin-top: 0;
+            color: #581c87;
+            font-size: 21px;
         }
 
         .price {
-            font-size: 20px;
+            margin-top: 12px;
+            font-size: 23px;
             font-weight: bold;
+            color: #7c3aed;
         }
 
         .stock {
-            margin-top: 8px;
+            margin-top: 9px;
+            color: #6b21a8;
+            font-weight: 600;
         }
 
         .add-box {
             background: white;
-            padding: 22px;
-            border-radius: 14px;
-            margin-top: 28px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            border-radius: 16px;
+            margin-top: 32px;
+            box-shadow: 0 5px 16px rgba(76, 29, 149, 0.12);
         }
 
         .form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 12px;
+            gap: 14px;
         }
 
         input {
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
+            padding: 13px;
+            border: 2px solid #ddd6fe;
+            border-radius: 9px;
             width: 100%;
+            outline: none;
+            font-size: 14px;
+        }
+
+        input:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px #ede9fe;
         }
 
         button {
-            margin-top: 14px;
-            padding: 12px 20px;
+            margin-top: 16px;
+            padding: 13px 24px;
             border: none;
-            border-radius: 8px;
-            background: #6c3fc8;
+            border-radius: 9px;
+            background: linear-gradient(135deg, #7c3aed, #9333ea);
             color: white;
             cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(124, 58, 237, 0.25);
         }
 
         button:hover {
@@ -109,8 +145,17 @@
         }
 
         #message {
-            margin-top: 12px;
+            margin-top: 14px;
+            color: #6b21a8;
             font-weight: bold;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 18px;
+            color: #7e22ce;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -118,7 +163,7 @@
 <body>
 
 <header>
-    <h1>Bhavana-Mart</h1>
+    <h1>💜 Bhavana-Mart</h1>
     <p>Simple C++ / Drogon E-Commerce Backend</p>
 </header>
 
@@ -148,6 +193,10 @@
         <div id="message"></div>
     </div>
 
+    <div class="footer">
+        © 2026 Bhavana-Mart
+    </div>
+
 </main>
 
 <script>
@@ -157,9 +206,8 @@
             const data = await response.json();
 
             document.getElementById("health").textContent =
-                data.status === "UP"
-                    ? " UP"
-                    : " DOWN";
+                data.status === "UP" ? " UP" : " DOWN";
+
         } catch (error) {
             document.getElementById("health").textContent = " DOWN";
         }
@@ -167,6 +215,7 @@
 
     async function loadProducts() {
         const container = document.getElementById("products");
+
         container.textContent = "Loading products...";
 
         try {
@@ -211,6 +260,7 @@
         const name = document.getElementById("name").value;
         const price = Number(document.getElementById("price").value);
         const stock = Number(document.getElementById("stock").value);
+
         const message = document.getElementById("message");
 
         if (!id || !name || price < 0 || stock < 0) {
@@ -234,7 +284,8 @@
 
             const data = await response.json();
 
-            message.textContent = data.message || "Product added.";
+            message.textContent =
+                data.message || "Product added successfully.";
 
             document.getElementById("id").value = "";
             document.getElementById("name").value = "";
