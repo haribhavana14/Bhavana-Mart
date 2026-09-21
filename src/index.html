@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,22 +19,27 @@ body{
     color:#24133d;
 }
 
-/* LOGIN / REGISTER */
+button,input,select{
+    font-family:inherit;
+}
+
+/* ================= AUTH ================= */
+
 .auth-page{
     min-height:100vh;
-    background:linear-gradient(135deg,#4a126b,#7b1fa2,#5e35b1);
+    background:linear-gradient(135deg,#461267,#7b1fa2,#5e35b1);
     display:flex;
     justify-content:center;
     align-items:center;
-    padding:25px;
+    padding:20px;
 }
 
 .auth-box{
     width:100%;
     max-width:430px;
-    background:white;
-    border-radius:28px;
+    background:#fff;
     padding:35px;
+    border-radius:28px;
     box-shadow:0 20px 50px rgba(0,0,0,.25);
     text-align:center;
 }
@@ -46,31 +52,31 @@ body{
 }
 
 .welcome{
-    font-size:25px;
+    font-size:24px;
     font-weight:800;
-    margin-bottom:8px;
     color:#35184b;
 }
 
 .subtitle{
     color:#806a91;
-    margin-bottom:25px;
+    margin:8px 0 24px;
 }
 
 .auth-tabs{
     display:flex;
+    gap:5px;
     background:#f1e8f8;
-    border-radius:12px;
     padding:4px;
+    border-radius:12px;
     margin-bottom:22px;
 }
 
 .auth-tab{
     width:50%;
-    border:none;
+    border:0;
+    background:transparent;
     padding:11px;
     border-radius:9px;
-    background:transparent;
     color:#6a1b9a;
     font-weight:bold;
     cursor:pointer;
@@ -78,7 +84,7 @@ body{
 
 .auth-tab.active{
     background:#6a1b9a;
-    color:white;
+    color:#fff;
 }
 
 .auth-form{
@@ -88,8 +94,8 @@ body{
 .auth-form label{
     display:block;
     margin:13px 0 6px;
-    font-weight:bold;
     font-size:14px;
+    font-weight:bold;
 }
 
 .auth-form input,
@@ -99,7 +105,6 @@ body{
     border:1px solid #ddd0e9;
     border-radius:11px;
     outline:none;
-    font-size:15px;
 }
 
 .auth-form input:focus,
@@ -109,12 +114,12 @@ body{
 
 .auth-btn{
     width:100%;
+    border:0;
     margin-top:20px;
     padding:14px;
-    border:none;
     border-radius:12px;
     background:#6a1b9a;
-    color:white;
+    color:#fff;
     font-size:16px;
     font-weight:bold;
     cursor:pointer;
@@ -125,8 +130,8 @@ body{
 }
 
 .auth-message{
+    min-height:22px;
     margin-top:12px;
-    min-height:20px;
     font-size:14px;
     font-weight:bold;
 }
@@ -134,25 +139,26 @@ body{
 .demo-note{
     margin-top:20px;
     padding:12px;
-    background:#f8f1ff;
     border-radius:10px;
+    background:#f8f1ff;
     color:#765c87;
     font-size:12px;
 }
 
-/* NAVBAR */
+/* ================= SHOP ================= */
+
 #shopPage{
     display:none;
 }
 
 .navbar{
     background:linear-gradient(135deg,#6a1b9a,#8e24aa,#5e35b1);
-    color:white;
-    padding:16px 5%;
+    color:#fff;
+    padding:15px 5%;
     display:flex;
     align-items:center;
     justify-content:space-between;
-    gap:20px;
+    gap:18px;
     position:sticky;
     top:0;
     z-index:1000;
@@ -160,60 +166,64 @@ body{
 }
 
 .logo{
-    font-size:26px;
+    font-size:25px;
     font-weight:800;
     white-space:nowrap;
 }
 
 .search-box{
     flex:1;
-    max-width:540px;
+    max-width:550px;
 }
 
 .search-box input{
     width:100%;
     padding:13px 18px;
-    border:none;
-    outline:none;
+    border:0;
     border-radius:30px;
+    outline:none;
     font-size:15px;
 }
 
 .nav-right{
     display:flex;
     align-items:center;
-    gap:14px;
-}
-
-.cart{
-    background:white;
-    color:#6a1b9a;
-    padding:10px 16px;
-    border-radius:25px;
-    font-weight:bold;
+    gap:10px;
+    flex-wrap:wrap;
+    justify-content:center;
 }
 
 .user-box{
-    background:rgba(255,255,255,.16);
-    padding:9px 13px;
+    background:rgba(255,255,255,.15);
+    padding:9px 12px;
     border-radius:18px;
     font-size:13px;
 }
 
+.cart-btn,
 .logout-btn{
-    border:none;
-    background:#fff;
-    color:#6a1b9a;
-    padding:9px 13px;
-    border-radius:18px;
+    border:0;
     cursor:pointer;
     font-weight:bold;
+    border-radius:20px;
+    padding:10px 14px;
+}
+
+.cart-btn{
+    background:#fff;
+    color:#6a1b9a;
+}
+
+.logout-btn{
+    background:#f1dfff;
+    color:#5e2380;
 }
 
 /* HERO */
+
 .hero{
     margin:25px 5%;
-    padding:45px 35px;
+    padding:42px 35px;
     border-radius:25px;
     background:linear-gradient(135deg,#ead7ff,#d7c2ff,#f3e6ff);
     display:flex;
@@ -231,10 +241,11 @@ body{
 .hero-text p{
     font-size:18px;
     color:#5f536b;
+    line-height:1.5;
 }
 
 .hero-badge{
-    background:white;
+    background:#fff;
     padding:25px;
     border-radius:20px;
     text-align:center;
@@ -248,17 +259,16 @@ body{
 .hero-badge b{
     display:block;
     color:#6a1b9a;
+    margin:5px 0;
 }
 
-/* SECTION */
+/* COMMON */
+
 .section{
-    padding:10px 5% 0;
+    padding:5px 5% 0;
 }
 
 .section-title{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
     margin-bottom:18px;
 }
 
@@ -266,17 +276,16 @@ body{
     color:#47205f;
 }
 
-/* CATEGORIES */
 .categories{
     display:flex;
-    gap:10px;
     flex-wrap:wrap;
-    margin-bottom:30px;
+    gap:10px;
+    margin-bottom:25px;
 }
 
 .category-btn{
-    border:none;
-    background:white;
+    border:0;
+    background:#fff;
     color:#6a1b9a;
     padding:11px 17px;
     border-radius:25px;
@@ -285,24 +294,25 @@ body{
     box-shadow:0 3px 10px rgba(60,20,90,.08);
 }
 
-.category-btn:hover,
-.category-btn.active{
+.category-btn.active,
+.category-btn:hover{
     background:#6a1b9a;
-    color:white;
+    color:#fff;
 }
 
 /* STATUS */
+
 .status-box{
-    margin:0 5% 30px;
-    background:white;
-    border-radius:18px;
+    margin:0 5% 25px;
     padding:18px 20px;
+    background:#fff;
+    border-radius:18px;
     box-shadow:0 5px 15px rgba(50,20,80,.08);
 }
 
 .status-title{
     font-weight:800;
-    margin-bottom:8px;
+    margin-bottom:7px;
 }
 
 #status{
@@ -311,15 +321,16 @@ body{
 }
 
 /* PRODUCTS */
+
 .products{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    grid-template-columns:repeat(auto-fit,minmax(225px,1fr));
     gap:22px;
-    padding-bottom:40px;
+    padding-bottom:35px;
 }
 
 .card{
-    background:white;
+    background:#fff;
     border-radius:20px;
     overflow:hidden;
     box-shadow:0 6px 18px rgba(50,20,80,.10);
@@ -345,14 +356,20 @@ body{
 }
 
 .fallback{
+    display:none;
     width:100%;
     height:100%;
-    display:none;
     align-items:center;
     justify-content:center;
     flex-direction:column;
-    font-size:68px;
+    font-size:65px;
     background:linear-gradient(135deg,#eee3ff,#f9efff);
+}
+
+.fallback small{
+    font-size:14px;
+    color:#715681;
+    margin-top:5px;
 }
 
 .badge{
@@ -360,7 +377,7 @@ body{
     top:12px;
     left:12px;
     background:#7b1fa2;
-    color:white;
+    color:#fff;
     padding:6px 10px;
     border-radius:15px;
     font-size:12px;
@@ -377,13 +394,13 @@ body{
 }
 
 .category{
-    font-size:13px;
     color:#8b78a0;
-    margin-bottom:8px;
+    font-size:13px;
+    margin-bottom:7px;
 }
 
 .rating{
-    color:#f4a300;
+    color:#efa700;
     margin-bottom:10px;
 }
 
@@ -395,34 +412,167 @@ body{
 }
 
 .price{
-    font-size:19px;
     color:#6a1b9a;
+    font-size:19px;
     font-weight:800;
 }
 
 .add-btn{
-    border:none;
+    border:0;
     background:#6a1b9a;
-    color:white;
-    padding:9px 13px;
-    border-radius:12px;
+    color:#fff;
+    padding:9px 14px;
+    border-radius:11px;
     cursor:pointer;
     font-weight:bold;
 }
 
+.add-btn:hover{
+    background:#4a136d;
+}
+
+.no-products{
+    grid-column:1/-1;
+    text-align:center;
+    background:#fff;
+    padding:40px;
+    border-radius:18px;
+    color:#806a91;
+}
+
+/* ================= CART MODAL ================= */
+
+.cart-modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(20,10,30,.6);
+    z-index:3000;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.cart-box{
+    width:100%;
+    max-width:560px;
+    max-height:85vh;
+    overflow:auto;
+    background:#fff;
+    border-radius:24px;
+    padding:25px;
+}
+
+.cart-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:18px;
+}
+
+.cart-header h2{
+    color:#6a1b9a;
+}
+
+.close-btn{
+    border:0;
+    width:35px;
+    height:35px;
+    border-radius:50%;
+    background:#eee;
+    cursor:pointer;
+    font-size:18px;
+}
+
+.cart-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    padding:14px 0;
+    border-bottom:1px solid #eee;
+}
+
+.cart-item-name{
+    font-weight:bold;
+}
+
+.cart-item-price{
+    color:#6a1b9a;
+    font-weight:bold;
+}
+
+.qty-box{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.qty-btn{
+    border:0;
+    width:28px;
+    height:28px;
+    border-radius:7px;
+    background:#eee1f7;
+    color:#6a1b9a;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.remove-btn{
+    border:0;
+    background:#fbe8ef;
+    color:#b52b59;
+    padding:7px 10px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.cart-empty{
+    text-align:center;
+    padding:35px;
+    color:#806a91;
+}
+
+.cart-total{
+    display:flex;
+    justify-content:space-between;
+    margin-top:20px;
+    padding-top:15px;
+    border-top:2px solid #eee;
+    font-size:21px;
+    font-weight:800;
+}
+
+.checkout-btn{
+    width:100%;
+    margin-top:18px;
+    padding:14px;
+    border:0;
+    border-radius:12px;
+    background:#6a1b9a;
+    color:#fff;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
 /* FOOTER */
+
 footer{
     background:#35184b;
     color:#eee;
+    padding:28px;
     text-align:center;
-    padding:28px 15px;
 }
 
 footer b{
     color:#d8b7ff;
 }
 
-@media(max-width:800px){
+/* RESPONSIVE */
+
+@media(max-width:850px){
 
     .navbar{
         flex-wrap:wrap;
@@ -430,8 +580,8 @@ footer b{
 
     .search-box{
         order:3;
-        width:100%;
         max-width:none;
+        width:100%;
     }
 
     .hero{
@@ -442,10 +592,16 @@ footer b{
     .hero-text h1{
         font-size:32px;
     }
+}
+
+@media(max-width:550px){
+
+    .auth-box{
+        padding:25px;
+    }
 
     .nav-right{
-        flex-wrap:wrap;
-        justify-content:center;
+        width:100%;
     }
 }
 </style>
@@ -453,7 +609,8 @@ footer b{
 
 <body>
 
-<!-- ================= AUTH PAGE ================= -->
+<!-- ================= LOGIN / REGISTER ================= -->
+
 <div class="auth-page" id="authPage">
 
     <div class="auth-box">
@@ -469,40 +626,41 @@ footer b{
         <div class="auth-tabs">
 
             <button
-                class="auth-tab active"
                 id="loginTab"
+                class="auth-tab active"
                 onclick="showLogin()">
                 Login
             </button>
 
             <button
-                class="auth-tab"
                 id="registerTab"
+                class="auth-tab"
                 onclick="showRegister()">
                 Register
             </button>
 
         </div>
 
-        <!-- LOGIN -->
+        <!-- LOGIN FORM -->
+
         <form
-            class="auth-form"
             id="loginForm"
+            class="auth-form"
             onsubmit="loginUser(event)">
 
             <label>Email</label>
 
             <input
-                type="email"
                 id="loginEmail"
+                type="email"
                 placeholder="Enter your email"
                 required>
 
             <label>Password</label>
 
             <input
-                type="password"
                 id="loginPassword"
+                type="password"
                 placeholder="Enter your password"
                 required>
 
@@ -512,34 +670,35 @@ footer b{
 
         </form>
 
-        <!-- REGISTER -->
+        <!-- REGISTER FORM -->
+
         <form
-            class="auth-form"
             id="registerForm"
+            class="auth-form"
             style="display:none"
             onsubmit="registerUser(event)">
 
             <label>Full Name</label>
 
             <input
-                type="text"
                 id="registerName"
+                type="text"
                 placeholder="Enter your name"
                 required>
 
             <label>Email</label>
 
             <input
-                type="email"
                 id="registerEmail"
+                type="email"
                 placeholder="Enter your email"
                 required>
 
             <label>Password</label>
 
             <input
-                type="password"
                 id="registerPassword"
+                type="password"
                 placeholder="Create password"
                 minlength="4"
                 required>
@@ -557,1329 +716,1417 @@ footer b{
 
         </form>
 
-        <div class="auth-message" id="authMessage"></div>
+        <div id="authMessage" class="auth-message"></div>
 
         <div class="demo-note">
-            💡 Create an account using Register, then login to open the marketplace.
+            Register → Login → Enter Bhavana-Mart
         </div>
 
     </div>
-
 </div>
 
 
-<!-- ================= SHOP PAGE ================= -->
+<!-- ================= SHOP ================= -->
+
 <div id="shopPage">
 
-<nav class="navbar">
+    <nav class="navbar">
 
-    <div class="logo">💜 Bhavana-Mart</div>
+        <div class="logo">💜 Bhavana-Mart</div>
 
-    <div class="search-box">
-        <input
-            type="text"
-            id="searchInput"
-            placeholder="Search products..."
-            oninput="filterProducts()">
-    </div>
+        <div class="search-box">
 
-    <div class="nav-right">
+            <input
+                id="searchInput"
+                type="text"
+                placeholder="Search products..."
+                oninput="filterProducts()">
 
-        <div class="user-box" id="userDisplay">
-            👤 User
         </div>
 
-        <div class="cart">
-            🛒 Cart <span id="cartCount">0</span>
+        <div class="nav-right">
+
+            <div class="user-box" id="userDisplay">
+                👤 User
+            </div>
+
+            <button class="cart-btn" onclick="openCart()">
+                🛒 Cart (<span id="cartCount">0</span>)
+            </button>
+
+            <button class="logout-btn" onclick="logoutUser()">
+                Logout
+            </button>
+
         </div>
 
-        <button class="logout-btn" onclick="logoutUser()">
-            Logout
-        </button>
+    </nav>
+
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <div class="hero-text">
+
+            <h1>Shop Everything You Love 💜</h1>
+
+            <p>
+                Clothing • Jewellery • Shoes • Electronics • Beauty • Home • Accessories
+            </p>
+
+        </div>
+
+        <div class="hero-badge">
+
+            <div class="big">🛍️</div>
+
+            <b>Bhavana-Mart</b>
+
+            <span>Smart Shopping Marketplace</span>
+
+        </div>
+
+    </section>
+
+
+    <!-- CATEGORIES -->
+
+    <section class="section">
+
+        <div class="section-title">
+            <h2>Shop by Category</h2>
+        </div>
+
+        <div class="categories">
+
+            <button
+                class="category-btn active"
+                onclick="setCategory('All',this)">
+                All
+            </button>
+
+            <button
+                class="category-btn"
+                onclick="setCategory('Clothing',this)">
+                👗 Clothing
+            </button>
+
+            <button
+                class="category-btn"
+                onclick="setCategory('Jewellery',this)">
+                💎 Jewellery
+            </button>
+
+            <button
+                class="category-btn"
+                onclick="setCategory('Shoes',this)">
+                👟 Shoes
+            </button>
+
+            <button
+                class="category-btn"
+                onclick="setCategory('Electronics',this)">
+                💻 Electronics
+            </button>
+
+            <button
+                class="category-btn"
+                onclick="setCategory('Beauty',this)">
+                💄 Beauty
+            </button>
+
+            <button
+                class="category-btn"
+                onclick="setCategory('Home',this)">
+                🏠 Home
+            </button>
+
+            <button
+                class="category-btn"
+                onclick="setCategory('Accessories',this)">
+                👜 Accessories
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- BACKEND -->
+
+    <div class="status-box">
+
+        <div class="status-title">
+            ⚡ Backend Status
+        </div>
+
+        <div id="status">
+            Checking backend...
+        </div>
 
     </div>
 
-</nav>
+
+    <!-- PRODUCTS -->
+
+    <section class="section">
+
+        <div class="section-title">
+            <h2>Featured Products</h2>
+        </div>
+
+        <div class="products" id="productGrid">
 
 
-<!-- HERO -->
-<section class="hero">
+            <!-- CLOTHING -->
 
-    <div class="hero-text">
+            <div class="card product-card"
+                 data-category="Clothing"
+                 data-name="Women Kurti">
 
-        <h1>Shop Everything You Love 💜</h1>
+                <div class="image-wrap">
 
-        <p>
-            Clothing • Jewellery • Shoes • Electronics • Beauty • Home • Accessories
-        </p>
+                    <img
+                        src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
 
-    </div>
+                    <div class="fallback">
+                        👗
+                        <small>Women Kurti</small>
+                    </div>
 
-    <div class="hero-badge">
+                    <span class="badge">Popular</span>
 
-        <div class="big">🛍️</div>
+                </div>
 
-        <b>Bhavana-Mart</b>
+                <div class="card-body">
 
-        <span>Smart Shopping Marketplace</span>
+                    <h3>Women Kurti</h3>
 
-    </div>
+                    <div class="category">Clothing</div>
 
-</section>
+                    <div class="rating">★★★★★</div>
 
+                    <div class="price-row">
 
-<!-- CATEGORIES -->
-<section class="section">
+                        <div class="price">₹899</div>
 
-    <div class="section-title">
-        <h2>Shop by Category</h2>
-    </div>
+                        <button
+                            class="add-btn"
+                            data-name="Women Kurti"
+                            data-price="899">
+                            Add
+                        </button>
 
-    <div class="categories">
+                    </div>
 
-        <button class="category-btn active"
-            onclick="setCategory('All',this)">
-            All
-        </button>
-
-        <button class="category-btn"
-            onclick="setCategory('Clothing',this)">
-            👗 Clothing
-        </button>
-
-        <button class="category-btn"
-            onclick="setCategory('Jewellery',this)">
-            💎 Jewellery
-        </button>
-
-        <button class="category-btn"
-            onclick="setCategory('Shoes',this)">
-            👟 Shoes
-        </button>
-
-        <button class="category-btn"
-            onclick="setCategory('Electronics',this)">
-            💻 Electronics
-        </button>
-
-        <button class="category-btn"
-            onclick="setCategory('Beauty',this)">
-            💄 Beauty
-        </button>
-
-        <button class="category-btn"
-            onclick="setCategory('Home',this)">
-            🏠 Home
-        </button>
-
-        <button class="category-btn"
-            onclick="setCategory('Accessories',this)">
-            👜 Accessories
-        </button>
-
-    </div>
-
-</section>
+                </div>
+            </div>
 
 
-<!-- BACKEND STATUS -->
-<div class="status-box">
+            <div class="card product-card"
+                 data-category="Clothing"
+                 data-name="Classic T-Shirt">
 
-    <div class="status-title">
-        ⚡ Backend Status
-    </div>
+                <div class="image-wrap">
 
-    <div id="status">
-        Checking backend...
-    </div>
+                    <img
+                        src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+                    <div class="fallback">
+                        👕
+                        <small>Classic T-Shirt</small>
+                    </div>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h3>Classic T-Shirt</h3>
+
+                    <div class="category">Clothing</div>
+
+                    <div class="rating">★★★★☆</div>
+
+                    <div class="price-row">
+
+                        <div class="price">₹599</div>
+
+                        <button
+                            class="add-btn"
+                            data-name="Classic T-Shirt"
+                            data-price="599">
+                            Add
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="card product-card"
+                 data-category="Clothing"
+                 data-name="Denim Jeans">
+
+                <div class="image-wrap">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=800&q=80"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+                    <div class="fallback">
+                        👖
+                        <small>Denim Jeans</small>
+                    </div>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h3>Denim Jeans</h3>
+
+                    <div class="category">Clothing</div>
+
+                    <div class="rating">★★★★★</div>
+
+                    <div class="price-row">
+
+                        <div class="price">₹1,299</div>
+
+                        <button
+                            class="add-btn"
+                            data-name="Denim Jeans"
+                            data-price="1299">
+                            Add
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="card product-card"
+                 data-category="Clothing"
+                 data-name="Casual Jacket">
+
+                <div class="image-wrap">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=80"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+                    <div class="fallback">
+                        🧥
+                        <small>Casual Jacket</small>
+                    </div>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h3>Casual Jacket</h3>
+
+                    <div class="category">Clothing</div>
+
+                    <div class="rating">★★★★☆</div>
+
+                    <div class="price-row">
+
+                        <div class="price">₹1,799</div>
+
+                        <button
+                            class="add-btn"
+                            data-name="Casual Jacket"
+                            data-price="1799">
+                            Add
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- JEWELLERY -->
+
+            <div class="card product-card"
+                 data-category="Jewellery"
+                 data-name="Gold Necklace">
+
+                <div class="image-wrap">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+                    <div class="fallback">
+                        📿
+                        <small>Gold Necklace</small>
+                    </div>
+
+                    <span class="badge">New</span>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h3>Gold Necklace</h3>
+
+                    <div class="category">Jewellery</div>
+
+                    <div class="rating">★★★★★</div>
+
+                    <div class="price-row">
+
+                        <div class="price">₹2,499</div>
+
+                        <button
+                            class="add-btn"
+                            data-name="Gold Necklace"
+                            data-price="2499">
+                            Add
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="card product-card"
+                 data-category="Jewellery"
+                 data-name="Elegant Earrings">
+
+                <div class="image-wrap">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=800&q=80"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+                    <div class="fallback">
+                        ✨
+                        <small>Elegant Earrings</small>
+                    </div>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h3>Elegant Earrings</h3>
+
+                    <div class="category">Jewellery</div>
+
+                    <div class="rating">★★★★★</div>
+
+                    <div class="price-row">
+
+                        <div class="price">₹999</div>
+
+                        <button
+                            class="add-btn"
+                            data-name="Elegant Earrings"
+                            data-price="999">
+                            Add
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="card product-card"
+                 data-category="Jewellery"
+                 data-name="Silver Ring">
+
+                <div class="image-wrap">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+                    <div class="fallback">
+                        💍
+                        <small>Silver Ring</small>
+                    </div>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h3>Silver Ring</h3>
+
+                    <div class="category">Jewellery</div>
+
+                    <div class="rating">★★★★☆</div>
+
+                    <div class="price-row">
+
+                        <div class="price">₹749</div>
+
+                        <button
+                            class="add-btn"
+                            data-name="Silver Ring"
+                            data-price="749">
+                            Add
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="card product-card"
+                 data-category="Jewellery"
+                 data-name="Designer Bracelet">
+
+                <div class="image-wrap">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=800&q=80"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+                    <div class="fallback">
+                        📿
+                        <small>Bracelet</small>
+                    </div>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h3>Designer Bracelet</h3>
+
+                    <div class="category">Jewellery</div>
+
+                    <div class="rating">★★★★★</div>
+
+                    <div class="price-row">
+
+                        <div class="price">₹1,199</div>
+
+                        <button
+                            class="add-btn"
+                            data-name="Designer Bracelet"
+                            data-price="1199">
+                            Add
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- SHOES -->
+
+            <div class="card product-card"
+                 data-category="Shoes"
+                 data-name="Running Shoes">
+
+                <div class="image-wrap">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+                    <div class="fallback">
+                        👟
+                        <small>Running Shoes</small>
+                    </div>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h3>Running Shoes</h3>
+
+                    <div class="category">Shoes</div>
+
+                    <div class="rating">★★★★★</div>
+
+                    <div class="price-row">
+
+                        <div class="price">₹1,999</div>
+
+                        <button
+                            class="add-btn"
+                            data-name="Running Shoes"
+                            data-price="1999">
+                            Add
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="card product-card"
+                 data-category="Shoes"
+                 data-name="Sports Sneakers">
+
+                <div class="image-wrap">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&w=800&q=80"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+                    <div class="fallback">
+                        👟
+                        <small>Sports Sneakers</small>
+                    </div>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h3>Sports Sneakers</h3>
+
+                    <div class="category">Shoes</div>
+
+                    <div class="rating">★★★★☆</div>
+
+                    <div class="price-row">
+
+                        <div class="price">₹2,199</div>
+
+                        <button
+                            class="add-btn"
+                            data-name="Sports Sneakers"
+                            data-price="2199">
+                            Add
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="card product-card"
+                 data-category="Shoes"
+                 data-name="Elegant Heels">
+
+                <div class="image-wrap">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=800&q=80"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+                    <div class="fallback">
+                        👠
+                        <small>Heels</small>
+                    </div>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h3>Elegant Heels</h3>
+
+                    <div class="category">Shoes</div>
+
+                    <div class="rating">★★★★★</div>
+
+                    <div class="price-row">
+
+                        <div class="price">₹1,499</div>
+
+                        <button
+                            class="add-btn"
+                            data-name="Elegant Heels"
+                            data-price="1499">
+                            Add
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="card product-card"
+                 data-category="Shoes"
+                 data-name="Casual Shoes">
+
+                <div class="image-wrap">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1495555961986-6d4c1ecb7be3?auto=format&fit=crop&w=800&q=80"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+                    <div class="fallback">
+                        👞
+                        <small>Casual Shoes</small>
+                    </div>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h3>Casual Shoes</h3>
+
+                    <div class="category">Shoes</div>
+
+                    <div class="rating">★★★★☆</div>
+
+                    <div class="price-row">
+
+                        <div class="price">₹1,699</div>
+
+                        <button
+                            class="add-btn"
+                            data-name="Casual Shoes"
+                            data-price="1699">
+                            Add
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- ELECTRONICS -->
+
+            <div class="card product-card"
+                 data-category="Electronics"
+                 data-name="Laptop">
+
+                <div class="image-wrap">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=800&q=80"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+                    <div class="fallback">
+                        💻
+                        <small>Laptop</small>
+                    </div>
+
+                    <span class="badge">Top Seller</span>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h3>Laptop</h3>
+
+                    <div class="category">Electronics</div>
+
+                    <div class="rating">★★★★★</div>
+
+                    <div class="price-row">
+
+                        <div class="price">₹57,000</div>
+
+                        <button
+                            class="add-btn"
+                            data-name="Laptop"
+                            data-price="57000">
+                            Add
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="card product-card"
+                 data-category="Electronics"
+                 data-name="Wireless Headphones">
+
+                <div class="image-wrap">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+                    <div class="fallback">
+                        🎧
+                        <small>Headphones</small>
+                    </div>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h3>Wireless Headphones</h3>
+
+                    <div class="category">Electronics</div>
+
+                    <div class="rating">★★★★★</div>
+
+                    <div class="price-row">
+
+                        <div class="price">₹1,500</div>
+
+                        <button
+                            class="add-btn"
+                            data-name="Wireless Headphones"
+                            data-price="1500">
+                            Add
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="card product-card"
+                 data-category="Electronics"
+                 data-name="Mechanical Keyboard">
+
+                <div class="image-wrap">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=800&q=80"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+                    <div class="fallback">
+                        ⌨️
+                        <small>Keyboard</small>
+                    </div>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h3>Mechanical Keyboard</h3>
+
+                    <div class="category">Electronics</div>
+
+                    <div class="rating">★★★★☆</div>
+
+                    <div class="price-row">
+
+                        <div class="price">₹1,200</div>
+
+                        <button
+                            class="add-btn"
+                            data-name="Mechanical Keyboard"
+                            data-price="1200">
+                            Add
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="card product-card"
+                 data-category="Electronics"
+                 data-name="HD Monitor">
+
+                <div class="image-wrap">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=800&q=80"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+                    <div class="fallback">
+                        🖥️
+                        <small>Monitor</small>
+                    </div>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h3>HD Monitor</h3>
+
+                    <div class="category">Electronics</div>
+
+                    <div class="rating">★★★★★</div>
+
+                    <div class="price-row">
+
+                        <div class="price">₹8,000</div>
+
+                        <button
+                            class="add-btn"
+                            data-name="HD Monitor"
+                            data-price="8000">
+                            Add
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- BEAUTY -->
+
+            <div class="card product-card"
+                 data-category="Beauty"
+                 data-name="Makeup Kit">
+
+                <div class="image-wrap">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=800&q=80"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+                    <div class="fallback">
+                        💄
+                        <small>Makeup Kit</small>
+                    </div>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h3>Makeup Kit</h3>
+
+                    <div class="category">Beauty</div>
+
+                    <div class="rating">★★★★★</div>
+
+                    <div class="price-row">
+
+                        <div class="price">₹1,299</div>
+
+                        <button
+                            class="add-btn"
+                            data-name="Makeup Kit"
+                            data-price="1299">
+                            Add
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="card product-card"
+                 data-category="Beauty"
+                 data-name="Floral Perfume">
+
+                <div class="image-wrap">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+                    <div class="fallback">
+                        🌸
+                        <small>Perfume</small>
+                    </div>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h3>Floral Perfume</h3>
+
+                    <div class="category">Beauty</div>
+
+                    <div class="rating">★★★★★</div>
+
+                    <div class="price-row">
+
+                        <div class="price">₹899</div>
+
+                        <button
+                            class="add-btn"
+                            data-name="Floral Perfume"
+                            data-price="899">
+                            Add
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="card product-card"
+                 data-category="Beauty"
+                 data-name="Skincare Set">
+
+                <div class="image-wrap">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=800&q=80"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+                    <div class="fallback">
+                        🧴
+                        <small>Skincare Set</small>
+                    </div>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h3>Skincare Set</h3>
+
+                    <div class="category">Beauty</div>
+
+                    <div class="rating">★★★★☆</div>
+
+                    <div class="price-row">
+
+                        <div class="price">₹1,099</div>
+
+                        <button
+                            class="add-btn"
+                            data-name="Skincare Set"
+                            data-price="1099">
+                            Add
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="card product-card"
+                 data-category="Beauty"
+                 data-name="Hair Care Kit">
+
+                <div class="image-wrap">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+                    <div class="fallback">
+                        💇
+                        <small>Hair Care</small>
+                    </div>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h3>Hair Care Kit</h3>
+
+                    <div class="category">Beauty</div>
+
+                    <div class="rating">★★★★☆</div>
+
+                    <div class="price-row">
+
+                        <div class="price">₹749</div>
+
+                        <button
+                            class="add-btn"
+                            data-name="Hair Care Kit"
+                            data-price="749">
+                            Add
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- HOME -->
+
+            <div class="card product-card"
+                 data-category="Home"
+                 data-name="Modern Chair">
+
+                <div class="image-wrap">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+                    <div class="fallback">
+                        🪑
+                        <small>Modern Chair</small>
+                    </div>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h3>Modern Chair</h3>
+
+                    <div class="category">Home</div>
+
+                    <div class="rating">★★★★★</div>
+
+                    <div class="price-row">
+
+                        <div class="price">₹3,499</div>
+
+                        <button
+                            class="add-btn"
+                            data-name="Modern Chair"
+                            data-price="3499">
+                            Add
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="card product-card"
+                 data-category="Home"
+                 data-name="Table Lamp">
+
+                <div class="image-wrap">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+                    <div class="fallback">
+                        💡
+                        <small>Table Lamp</small>
+                    </div>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h3>Table Lamp</h3>
+
+                    <div class="category">Home</div>
+
+                    <div class="rating">★★★★☆</div>
+
+                    <div class="price-row">
+
+                        <div class="price">₹999</div>
+
+                        <button
+                            class="add-btn"
+                            data-name="Table Lamp"
+                            data-price="999">
+                            Add
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="card product-card"
+                 data-category="Home"
+                 data-name="Comfort Cushion Set">
+
+                <div class="image-wrap">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?auto=format&fit=crop&w=800&q=80"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+                    <div class="fallback">
+                        🛋️
+                        <small>Cushion Set</small>
+                    </div>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h3>Comfort Cushion Set</h3>
+
+                    <div class="category">Home</div>
+
+                    <div class="rating">★★★★★</div>
+
+                    <div class="price-row">
+
+                        <div class="price">₹899</div>
+
+                        <button
+                            class="add-btn"
+                            data-name="Comfort Cushion Set"
+                            data-price="899">
+                            Add
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="card product-card"
+                 data-category="Home"
+                 data-name="Wall Decor">
+
+                <div class="image-wrap">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+                    <div class="fallback">
+                        🖼️
+                        <small>Wall Decor</small>
+                    </div>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h3>Wall Decor</h3>
+
+                    <div class="category">Home</div>
+
+                    <div class="rating">★★★★☆</div>
+
+                    <div class="price-row">
+
+                        <div class="price">₹1,499</div>
+
+                        <button
+                            class="add-btn"
+                            data-name="Wall Decor"
+                            data-price="1499">
+                            Add
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- ACCESSORIES -->
+
+            <div class="card product-card"
+                 data-category="Accessories"
+                 data-name="Classic Sunglasses">
+
+                <div class="image-wrap">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=800&q=80"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+                    <div class="fallback">
+                        🕶️
+                        <small>Sunglasses</small>
+                    </div>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h3>Classic Sunglasses</h3>
+
+                    <div class="category">Accessories</div>
+
+                    <div class="rating">★★★★★</div>
+
+                    <div class="price-row">
+
+                        <div class="price">₹799</div>
+
+                        <button
+                            class="add-btn"
+                            data-name="Classic Sunglasses"
+                            data-price="799">
+                            Add
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="card product-card"
+                 data-category="Accessories"
+                 data-name="Classic Watch">
+
+                <div class="image-wrap">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=800&q=80"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+                    <div class="fallback">
+                        ⌚
+                        <small>Classic Watch</small>
+                    </div>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h3>Classic Watch</h3>
+
+                    <div class="category">Accessories</div>
+
+                    <div class="rating">★★★★★</div>
+
+                    <div class="price-row">
+
+                        <div class="price">₹1,599</div>
+
+                        <button
+                            class="add-btn"
+                            data-name="Classic Watch"
+                            data-price="1599">
+                            Add
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="card product-card"
+                 data-category="Accessories"
+                 data-name="Designer Handbag">
+
+                <div class="image-wrap">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=800&q=80"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+                    <div class="fallback">
+                        👜
+                        <small>Handbag</small>
+                    </div>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h3>Designer Handbag</h3>
+
+                    <div class="category">Accessories</div>
+
+                    <div class="rating">★★★★☆</div>
+
+                    <div class="price-row">
+
+                        <div class="price">₹1,899</div>
+
+                        <button
+                            class="add-btn"
+                            data-name="Designer Handbag"
+                            data-price="1899">
+                            Add
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="card product-card"
+                 data-category="Accessories"
+                 data-name="Leather Wallet">
+
+                <div class="image-wrap">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=800&q=80"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+
+                    <div class="fallback">
+                        👛
+                        <small>Leather Wallet</small>
+                    </div>
+
+                </div>
+
+                <div class="card-body">
+
+                    <h3>Leather Wallet</h3>
+
+                    <div class="category">Accessories</div>
+
+                    <div class="rating">★★★★★</div>
+
+                    <div class="price-row">
+
+                        <div class="price">₹699</div>
+
+                        <button
+                            class="add-btn"
+                            data-name="Leather Wallet"
+                            data-price="699">
+                            Add
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <footer>
+
+        <b>💜 Bhavana-Mart</b>
+        <br><br>
+        Native C++ E-Commerce Marketplace • Drogon Backend • SQLite Database
+
+    </footer>
 
 </div>
 
 
-<!-- PRODUCTS -->
-<section class="section">
+<!-- ================= CART MODAL ================= -->
 
-    <div class="section-title">
-        <h2>Featured Products</h2>
-    </div>
+<div class="cart-modal" id="cartModal">
 
-    <div class="products" id="productGrid">
+    <div class="cart-box">
 
+        <div class="cart-header">
 
-        <!-- CLOTHING -->
-        <div class="card product-card"
-            data-category="Clothing"
-            data-name="Women Kurti">
+            <h2>🛒 Your Cart</h2>
 
-            <div class="image-wrap">
-
-                <img
-                    src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                <div class="fallback">
-                    👗
-                    <small>Women Kurti</small>
-                </div>
-
-                <span class="badge">Popular</span>
-
-            </div>
-
-            <div class="card-body">
-
-                <h3>Women Kurti</h3>
-
-                <div class="category">Clothing</div>
-
-                <div class="rating">★★★★★</div>
-
-                <div class="price-row">
-
-                    <div class="price">₹899</div>
-
-                    <button class="add-btn"
-                        onclick="addToCart()">
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
+            <button
+                class="close-btn"
+                onclick="closeCart()">
+                ✕
+            </button>
 
         </div>
 
+        <div id="cartItems"></div>
 
-        <div class="card product-card"
-            data-category="Clothing"
-            data-name="Classic T-Shirt">
+        <div class="cart-total">
 
-            <div class="image-wrap">
+            <span>Total</span>
 
-                <img
-                    src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                <div class="fallback">
-                    👕
-                    <small>Classic T-Shirt</small>
-                </div>
-
-            </div>
-
-            <div class="card-body">
-
-                <h3>Classic T-Shirt</h3>
-
-                <div class="category">Clothing</div>
-
-                <div class="rating">★★★★☆</div>
-
-                <div class="price-row">
-
-                    <div class="price">₹599</div>
-
-                    <button class="add-btn"
-                        onclick="addToCart()">
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
+            <span id="cartTotal">
+                ₹0
+            </span>
 
         </div>
 
-
-        <div class="card product-card"
-            data-category="Clothing"
-            data-name="Denim Jeans">
-
-            <div class="image-wrap">
-
-                <img
-                    src="https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=800&q=80"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                <div class="fallback">
-                    👖
-                    <small>Denim Jeans</small>
-                </div>
-
-            </div>
-
-            <div class="card-body">
-
-                <h3>Denim Jeans</h3>
-
-                <div class="category">Clothing</div>
-
-                <div class="rating">★★★★★</div>
-
-                <div class="price-row">
-
-                    <div class="price">₹1,299</div>
-
-                    <button class="add-btn"
-                        onclick="addToCart()">
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="card product-card"
-            data-category="Clothing"
-            data-name="Casual Jacket">
-
-            <div class="image-wrap">
-
-                <img
-                    src="https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=80"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                <div class="fallback">
-                    🧥
-                    <small>Casual Jacket</small>
-                </div>
-
-            </div>
-
-            <div class="card-body">
-
-                <h3>Casual Jacket</h3>
-
-                <div class="category">Clothing</div>
-
-                <div class="rating">★★★★☆</div>
-
-                <div class="price-row">
-
-                    <div class="price">₹1,799</div>
-
-                    <button class="add-btn"
-                        onclick="addToCart()">
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- JEWELLERY -->
-        <div class="card product-card"
-            data-category="Jewellery"
-            data-name="Gold Necklace">
-
-            <div class="image-wrap">
-
-                <img
-                    src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                <div class="fallback">
-                    📿
-                    <small>Gold Necklace</small>
-                </div>
-
-                <span class="badge">New</span>
-
-            </div>
-
-            <div class="card-body">
-
-                <h3>Gold Necklace</h3>
-
-                <div class="category">Jewellery</div>
-
-                <div class="rating">★★★★★</div>
-
-                <div class="price-row">
-
-                    <div class="price">₹2,499</div>
-
-                    <button class="add-btn"
-                        onclick="addToCart()">
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="card product-card"
-            data-category="Jewellery"
-            data-name="Elegant Earrings">
-
-            <div class="image-wrap">
-
-                <img
-                    src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=800&q=80"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                <div class="fallback">
-                    ✨
-                    <small>Elegant Earrings</small>
-                </div>
-
-            </div>
-
-            <div class="card-body">
-
-                <h3>Elegant Earrings</h3>
-
-                <div class="category">Jewellery</div>
-
-                <div class="rating">★★★★★</div>
-
-                <div class="price-row">
-
-                    <div class="price">₹999</div>
-
-                    <button class="add-btn"
-                        onclick="addToCart()">
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="card product-card"
-            data-category="Jewellery"
-            data-name="Silver Ring">
-
-            <div class="image-wrap">
-
-                <img
-                    src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                <div class="fallback">
-                    💍
-                    <small>Silver Ring</small>
-                </div>
-
-            </div>
-
-            <div class="card-body">
-
-                <h3>Silver Ring</h3>
-
-                <div class="category">Jewellery</div>
-
-                <div class="rating">★★★★☆</div>
-
-                <div class="price-row">
-
-                    <div class="price">₹749</div>
-
-                    <button class="add-btn"
-                        onclick="addToCart()">
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="card product-card"
-            data-category="Jewellery"
-            data-name="Designer Bracelet">
-
-            <div class="image-wrap">
-
-                <img
-                    src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=800&q=80"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                <div class="fallback">
-                    📿
-                    <small>Bracelet</small>
-                </div>
-
-            </div>
-
-            <div class="card-body">
-
-                <h3>Designer Bracelet</h3>
-
-                <div class="category">Jewellery</div>
-
-                <div class="rating">★★★★★</div>
-
-                <div class="price-row">
-
-                    <div class="price">₹1,199</div>
-
-                    <button class="add-btn"
-                        onclick="addToCart()">
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- SHOES -->
-        <div class="card product-card"
-            data-category="Shoes"
-            data-name="Running Shoes">
-
-            <div class="image-wrap">
-
-                <img
-                    src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                <div class="fallback">
-                    👟
-                    <small>Running Shoes</small>
-                </div>
-
-            </div>
-
-            <div class="card-body">
-
-                <h3>Running Shoes</h3>
-
-                <div class="category">Shoes</div>
-
-                <div class="rating">★★★★★</div>
-
-                <div class="price-row">
-
-                    <div class="price">₹1,999</div>
-
-                    <button class="add-btn"
-                        onclick="addToCart()">
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="card product-card"
-            data-category="Shoes"
-            data-name="Sports Sneakers">
-
-            <div class="image-wrap">
-
-                <img
-                    src="https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&w=800&q=80"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                <div class="fallback">
-                    👟
-                    <small>Sports Sneakers</small>
-                </div>
-
-            </div>
-
-            <div class="card-body">
-
-                <h3>Sports Sneakers</h3>
-
-                <div class="category">Shoes</div>
-
-                <div class="rating">★★★★☆</div>
-
-                <div class="price-row">
-
-                    <div class="price">₹2,199</div>
-
-                    <button class="add-btn"
-                        onclick="addToCart()">
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="card product-card"
-            data-category="Shoes"
-            data-name="Elegant Heels">
-
-            <div class="image-wrap">
-
-                <img
-                    src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=800&q=80"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                <div class="fallback">
-                    👠
-                    <small>Heels</small>
-                </div>
-
-            </div>
-
-            <div class="card-body">
-
-                <h3>Elegant Heels</h3>
-
-                <div class="category">Shoes</div>
-
-                <div class="rating">★★★★★</div>
-
-                <div class="price-row">
-
-                    <div class="price">₹1,499</div>
-
-                    <button class="add-btn"
-                        onclick="addToCart()">
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="card product-card"
-            data-category="Shoes"
-            data-name="Casual Shoes">
-
-            <div class="image-wrap">
-
-                <img
-                    src="https://images.unsplash.com/photo-1495555961986-6d4c1ecb7be3?auto=format&fit=crop&w=800&q=80"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                <div class="fallback">
-                    👞
-                    <small>Casual Shoes</small>
-                </div>
-
-            </div>
-
-            <div class="card-body">
-
-                <h3>Casual Shoes</h3>
-
-                <div class="category">Shoes</div>
-
-                <div class="rating">★★★★☆</div>
-
-                <div class="price-row">
-
-                    <div class="price">₹1,699</div>
-
-                    <button class="add-btn"
-                        onclick="addToCart()">
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- ELECTRONICS -->
-        <div class="card product-card"
-            data-category="Electronics"
-            data-name="Laptop">
-
-            <div class="image-wrap">
-
-                <img
-                    src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=800&q=80"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                <div class="fallback">
-                    💻
-                    <small>Laptop</small>
-                </div>
-
-                <span class="badge">Top Seller</span>
-
-            </div>
-
-            <div class="card-body">
-
-                <h3>Laptop</h3>
-
-                <div class="category">Electronics</div>
-
-                <div class="rating">★★★★★</div>
-
-                <div class="price-row">
-
-                    <div class="price">₹57,000</div>
-
-                    <button class="add-btn"
-                        onclick="addToCart()">
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="card product-card"
-            data-category="Electronics"
-            data-name="Wireless Headphones">
-
-            <div class="image-wrap">
-
-                <img
-                    src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                <div class="fallback">
-                    🎧
-                    <small>Headphones</small>
-                </div>
-
-            </div>
-
-            <div class="card-body">
-
-                <h3>Wireless Headphones</h3>
-
-                <div class="category">Electronics</div>
-
-                <div class="rating">★★★★★</div>
-
-                <div class="price-row">
-
-                    <div class="price">₹1,500</div>
-
-                    <button class="add-btn"
-                        onclick="addToCart()">
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="card product-card"
-            data-category="Electronics"
-            data-name="Mechanical Keyboard">
-
-            <div class="image-wrap">
-
-                <img
-                    src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=800&q=80"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                <div class="fallback">
-                    ⌨️
-                    <small>Keyboard</small>
-                </div>
-
-            </div>
-
-            <div class="card-body">
-
-                <h3>Mechanical Keyboard</h3>
-
-                <div class="category">Electronics</div>
-
-                <div class="rating">★★★★☆</div>
-
-                <div class="price-row">
-
-                    <div class="price">₹1,200</div>
-
-                    <button class="add-btn"
-                        onclick="addToCart()">
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="card product-card"
-            data-category="Electronics"
-            data-name="HD Monitor">
-
-            <div class="image-wrap">
-
-                <img
-                    src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=800&q=80"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                <div class="fallback">
-                    🖥️
-                    <small>Monitor</small>
-                </div>
-
-            </div>
-
-            <div class="card-body">
-
-                <h3>HD Monitor</h3>
-
-                <div class="category">Electronics</div>
-
-                <div class="rating">★★★★★</div>
-
-                <div class="price-row">
-
-                    <div class="price">₹8,000</div>
-
-                    <button class="add-btn"
-                        onclick="addToCart()">
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- BEAUTY -->
-        <div class="card product-card"
-            data-category="Beauty"
-            data-name="Makeup Kit">
-
-            <div class="image-wrap">
-
-                <img
-                    src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=800&q=80"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                <div class="fallback">
-                    💄
-                    <small>Makeup Kit</small>
-                </div>
-
-            </div>
-
-            <div class="card-body">
-
-                <h3>Makeup Kit</h3>
-
-                <div class="category">Beauty</div>
-
-                <div class="rating">★★★★★</div>
-
-                <div class="price-row">
-
-                    <div class="price">₹1,299</div>
-
-                    <button class="add-btn"
-                        onclick="addToCart()">
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="card product-card"
-            data-category="Beauty"
-            data-name="Floral Perfume">
-
-            <div class="image-wrap">
-
-                <img
-                    src="https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                <div class="fallback">
-                    🌸
-                    <small>Perfume</small>
-                </div>
-
-            </div>
-
-            <div class="card-body">
-
-                <h3>Floral Perfume</h3>
-
-                <div class="category">Beauty</div>
-
-                <div class="rating">★★★★★</div>
-
-                <div class="price-row">
-
-                    <div class="price">₹899</div>
-
-                    <button class="add-btn"
-                        onclick="addToCart()">
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="card product-card"
-            data-category="Beauty"
-            data-name="Skincare Set">
-
-            <div class="image-wrap">
-
-                <img
-                    src="https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=800&q=80"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                <div class="fallback">
-                    🧴
-                    <small>Skincare Set</small>
-                </div>
-
-            </div>
-
-            <div class="card-body">
-
-                <h3>Skincare Set</h3>
-
-                <div class="category">Beauty</div>
-
-                <div class="rating">★★★★☆</div>
-
-                <div class="price-row">
-
-                    <div class="price">₹1,099</div>
-
-                    <button class="add-btn"
-                        onclick="addToCart()">
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="card product-card"
-            data-category="Beauty"
-            data-name="Hair Care Kit">
-
-            <div class="image-wrap">
-
-                <img
-                    src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                <div class="fallback">
-                    💇
-                    <small>Hair Care</small>
-                </div>
-
-            </div>
-
-            <div class="card-body">
-
-                <h3>Hair Care Kit</h3>
-
-                <div class="category">Beauty</div>
-
-                <div class="rating">★★★★☆</div>
-
-                <div class="price-row">
-
-                    <div class="price">₹749</div>
-
-                    <button class="add-btn"
-                        onclick="addToCart()">
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- HOME -->
-        <div class="card product-card"
-            data-category="Home"
-            data-name="Modern Chair">
-
-            <div class="image-wrap">
-
-                <img
-                    src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                <div class="fallback">
-                    🪑
-                    <small>Chair</small>
-                </div>
-
-            </div>
-
-            <div class="card-body">
-
-                <h3>Modern Chair</h3>
-
-                <div class="category">Home</div>
-
-                <div class="rating">★★★★★</div>
-
-                <div class="price-row">
-
-                    <div class="price">₹3,499</div>
-
-                    <button class="add-btn"
-                        onclick="addToCart()">
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="card product-card"
-            data-category="Home"
-            data-name="Table Lamp">
-
-            <div class="image-wrap">
-
-                <img
-                    src="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                <div class="fallback">
-                    💡
-                    <small>Lamp</small>
-                </div>
-
-            </div>
-
-            <div class="card-body">
-
-                <h3>Table Lamp</h3>
-
-                <div class="category">Home</div>
-
-                <div class="rating">★★★★☆</div>
-
-                <div class="price-row">
-
-                    <div class="price">₹999</div>
-
-                    <button class="add-btn"
-                        onclick="addToCart()">
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="card product-card"
-            data-category="Home"
-            data-name="Comfort Cushion Set">
-
-            <div class="image-wrap">
-
-                <img
-                    src="https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?auto=format&fit=crop&w=800&q=80"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                <div class="fallback">
-                    🛋️
-                    <small>Cushion</small>
-                </div>
-
-            </div>
-
-            <div class="card-body">
-
-                <h3>Comfort Cushion Set</h3>
-
-                <div class="category">Home</div>
-
-                <div class="rating">★★★★★</div>
-
-                <div class="price-row">
-
-                    <div class="price">₹899</div>
-
-                    <button class="add-btn"
-                        onclick="addToCart()">
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="card product-card"
-            data-category="Home"
-            data-name="Wall Decor">
-
-            <div class="image-wrap">
-
-                <img
-                    src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                <div class="fallback">
-                    🖼️
-                    <small>Wall Decor</small>
-                </div>
-
-            </div>
-
-            <div class="card-body">
-
-                <h3>Wall Decor</h3>
-
-                <div class="category">Home</div>
-
-                <div class="rating">★★★★☆</div>
-
-                <div class="price-row">
-
-                    <div class="price">₹1,499</div>
-
-                    <button class="add-btn"
-                        onclick="addToCart()">
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- ACCESSORIES -->
-        <div class="card product-card"
-            data-category="Accessories"
-            data-name="Classic Sunglasses">
-
-            <div class="image-wrap">
-
-                <img
-                    src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=800&q=80"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                <div class="fallback">
-                    🕶️
-                    <small>Sunglasses</small>
-                </div>
-
-            </div>
-
-            <div class="card-body">
-
-                <h3>Classic Sunglasses</h3>
-
-                <div class="category">Accessories</div>
-
-                <div class="rating">★★★★★</div>
-
-                <div class="price-row">
-
-                    <div class="price">₹799</div>
-
-                    <button class="add-btn"
-                        onclick="addToCart()">
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="card product-card"
-            data-category="Accessories"
-            data-name="Classic Watch">
-
-            <div class="image-wrap">
-
-                <img
-                    src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=800&q=80"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                <div class="fallback">
-                    ⌚
-                    <small>Watch</small>
-                </div>
-
-            </div>
-
-            <div class="card-body">
-
-                <h3>Classic Watch</h3>
-
-                <div class="category">Accessories</div>
-
-                <div class="rating">★★★★★</div>
-
-                <div class="price-row">
-
-                    <div class="price">₹1,599</div>
-
-                    <button class="add-btn"
-                        onclick="addToCart()">
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="card product-card"
-            data-category="Accessories"
-            data-name="Designer Handbag">
-
-            <div class="image-wrap">
-
-                <img
-                    src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=800&q=80"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                <div class="fallback">
-                    👜
-                    <small>Handbag</small>
-                </div>
-
-            </div>
-
-            <div class="card-body">
-
-                <h3>Designer Handbag</h3>
-
-                <div class="category">Accessories</div>
-
-                <div class="rating">★★★★☆</div>
-
-                <div class="price-row">
-
-                    <div class="price">₹1,899</div>
-
-                    <button class="add-btn"
-                        onclick="addToCart()">
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="card product-card"
-            data-category="Accessories"
-            data-name="Leather Wallet">
-
-            <div class="image-wrap">
-
-                <img
-                    src="https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=800&q=80"
-                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                <div class="fallback">
-                    👛
-                    <small>Wallet</small>
-                </div>
-
-            </div>
-
-            <div class="card-body">
-
-                <h3>Leather Wallet</h3>
-
-                <div class="category">Accessories</div>
-
-                <div class="rating">★★★★★</div>
-
-                <div class="price-row">
-
-                    <div class="price">₹699</div>
-
-                    <button class="add-btn"
-                        onclick="addToCart()">
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
+        <button
+            class="checkout-btn"
+            onclick="checkout()">
+            Proceed to Checkout
+        </button>
 
     </div>
-
-</section>
-
-
-<footer>
-
-    <b>💜 Bhavana-Mart</b>
-    <br>
-
-    Native C++ E-Commerce Marketplace •
-    Drogon Backend • SQLite Database
-
-</footer>
 
 </div>
 
@@ -1912,28 +2159,15 @@ function showRegister(){
     document.getElementById("authMessage").textContent = "";
 }
 
-
 function registerUser(event){
 
     event.preventDefault();
 
-    const name =
-        document.getElementById("registerName").value.trim();
-
-    const email =
-        document.getElementById("registerEmail").value.trim();
-
-    const password =
-        document.getElementById("registerPassword").value;
-
-    const role =
-        document.getElementById("registerRole").value;
-
     const user = {
-        name,
-        email,
-        password,
-        role
+        name: document.getElementById("registerName").value.trim(),
+        email: document.getElementById("registerEmail").value.trim(),
+        password: document.getElementById("registerPassword").value,
+        role: document.getElementById("registerRole").value
     };
 
     localStorage.setItem(
@@ -1941,15 +2175,15 @@ function registerUser(event){
         JSON.stringify(user)
     );
 
-    document.getElementById("authMessage").textContent =
+    const message = document.getElementById("authMessage");
+
+    message.textContent =
         "✅ Registration successful! Please login.";
 
-    document.getElementById("authMessage").style.color =
-        "#388e3c";
+    message.style.color = "#388e3c";
 
     setTimeout(showLogin,700);
 }
-
 
 function loginUser(event){
 
@@ -1964,19 +2198,21 @@ function loginUser(event){
     const saved =
         localStorage.getItem("bhavanaMartUser");
 
+    const message =
+        document.getElementById("authMessage");
+
     if(!saved){
 
-        document.getElementById("authMessage").textContent =
+        message.textContent =
             "❌ Please register first.";
 
-        document.getElementById("authMessage").style.color =
+        message.style.color =
             "#d32f2f";
 
         return;
     }
 
-    const user =
-        JSON.parse(saved);
+    const user = JSON.parse(saved);
 
     if(
         email === user.email &&
@@ -1995,29 +2231,25 @@ function loginUser(event){
     }
     else{
 
-        document.getElementById("authMessage").textContent =
+        message.textContent =
             "❌ Invalid email or password.";
 
-        document.getElementById("authMessage").style.color =
+        message.style.color =
             "#d32f2f";
     }
 }
 
-
 function openShop(){
 
-    document.getElementById("authPage").style.display =
-        "none";
-
-    document.getElementById("shopPage").style.display =
-        "block";
+    document.getElementById("authPage").style.display = "none";
+    document.getElementById("shopPage").style.display = "block";
 
     document.getElementById("userDisplay").textContent =
         "👤 " + currentUser.name + " • " + currentUser.role;
 
+    updateCartCount();
     checkBackend();
 }
-
 
 function logoutUser(){
 
@@ -2025,11 +2257,8 @@ function logoutUser(){
 
     currentUser = null;
 
-    document.getElementById("shopPage").style.display =
-        "none";
-
-    document.getElementById("authPage").style.display =
-        "flex";
+    document.getElementById("shopPage").style.display = "none";
+    document.getElementById("authPage").style.display = "flex";
 
     document.getElementById("loginForm").reset();
 
@@ -2039,15 +2268,206 @@ function logoutUser(){
 
 /* ================= CART ================= */
 
-let cartCount = 0;
+let cart = JSON.parse(
+    localStorage.getItem("bhavanaMartCart") || "[]"
+);
 
-function addToCart(){
+function saveCart(){
 
-    cartCount++;
+    localStorage.setItem(
+        "bhavanaMartCart",
+        JSON.stringify(cart)
+    );
+}
+
+function addToCart(name,price){
+
+    const existing =
+        cart.find(item => item.name === name);
+
+    if(existing){
+
+        existing.quantity++;
+
+    }
+    else{
+
+        cart.push({
+            name:name,
+            price:Number(price),
+            quantity:1
+        });
+    }
+
+    saveCart();
+    updateCartCount();
+
+    alert(name + " added to cart 💜");
+}
+
+function updateCartCount(){
+
+    let count = 0;
+
+    cart.forEach(item=>{
+        count += item.quantity;
+    });
 
     document.getElementById("cartCount").textContent =
-        cartCount;
+        count;
 }
+
+function openCart(){
+
+    renderCart();
+
+    document.getElementById("cartModal").style.display =
+        "flex";
+}
+
+function closeCart(){
+
+    document.getElementById("cartModal").style.display =
+        "none";
+}
+
+function renderCart(){
+
+    const container =
+        document.getElementById("cartItems");
+
+    let total = 0;
+
+    if(cart.length === 0){
+
+        container.innerHTML = `
+            <div class="cart-empty">
+                🛒<br><br>
+                Your cart is empty
+            </div>
+        `;
+
+        document.getElementById("cartTotal").textContent =
+            "₹0";
+
+        return;
+    }
+
+    container.innerHTML = cart.map((item,index)=>{
+
+        const itemTotal =
+            item.price * item.quantity;
+
+        total += itemTotal;
+
+        return `
+            <div class="cart-item">
+
+                <div>
+                    <div class="cart-item-name">
+                        ${item.name}
+                    </div>
+
+                    <div class="cart-item-price">
+                        ₹${item.price}
+                    </div>
+                </div>
+
+                <div class="qty-box">
+
+                    <button
+                        class="qty-btn"
+                        onclick="changeQuantity(${index},-1)">
+                        −
+                    </button>
+
+                    <span>${item.quantity}</span>
+
+                    <button
+                        class="qty-btn"
+                        onclick="changeQuantity(${index},1)">
+                        +
+                    </button>
+
+                </div>
+
+                <div class="cart-item-price">
+                    ₹${itemTotal}
+                </div>
+
+                <button
+                    class="remove-btn"
+                    onclick="removeFromCart(${index})">
+                    Remove
+                </button>
+
+            </div>
+        `;
+
+    }).join("");
+
+    document.getElementById("cartTotal").textContent =
+        "₹" + total;
+}
+
+function changeQuantity(index,amount){
+
+    cart[index].quantity += amount;
+
+    if(cart[index].quantity <= 0){
+
+        cart.splice(index,1);
+    }
+
+    saveCart();
+    updateCartCount();
+    renderCart();
+}
+
+function removeFromCart(index){
+
+    cart.splice(index,1);
+
+    saveCart();
+    updateCartCount();
+    renderCart();
+}
+
+function checkout(){
+
+    if(cart.length === 0){
+
+        alert("Your cart is empty!");
+        return;
+    }
+
+    alert(
+        "✅ Checkout successful! This is a mock payment confirmation."
+    );
+
+    cart = [];
+
+    saveCart();
+    updateCartCount();
+    closeCart();
+}
+
+
+/* ================= PRODUCT BUTTONS ================= */
+
+document.querySelectorAll(".add-btn")
+    .forEach(button => {
+
+        button.addEventListener("click",function(){
+
+            addToCart(
+                this.dataset.name,
+                this.dataset.price
+            );
+
+        });
+
+    });
 
 
 /* ================= FILTER ================= */
@@ -2068,7 +2488,6 @@ function setCategory(category,button){
     filterProducts();
 }
 
-
 function filterProducts(){
 
     const search =
@@ -2080,13 +2499,15 @@ function filterProducts(){
     const cards =
         document.querySelectorAll(".product-card");
 
-    cards.forEach(card=>{
+    let visible = 0;
 
-        const category =
-            card.dataset.category;
+    cards.forEach(card=>{
 
         const name =
             card.dataset.name.toLowerCase();
+
+        const category =
+            card.dataset.category;
 
         const categoryMatch =
             currentCategory === "All" ||
@@ -2095,11 +2516,38 @@ function filterProducts(){
         const searchMatch =
             name.includes(search);
 
-        card.style.display =
-            categoryMatch && searchMatch
-            ? ""
-            : "none";
+        if(categoryMatch && searchMatch){
+
+            card.style.display = "";
+            visible++;
+
+        }
+        else{
+
+            card.style.display = "none";
+        }
+
     });
+
+    const oldMessage =
+        document.querySelector(".no-products");
+
+    if(oldMessage){
+        oldMessage.remove();
+    }
+
+    if(visible === 0){
+
+        document.getElementById("productGrid")
+            .insertAdjacentHTML(
+                "beforeend",
+                `
+                <div class="no-products">
+                    😔 No products found
+                </div>
+                `
+            );
+    }
 }
 
 
@@ -2124,11 +2572,13 @@ async function checkBackend(){
 
                 document.getElementById("status").textContent =
                     "✅ Backend UP • Database UP • API Connected";
+
             }
             else{
 
                 document.getElementById("status").textContent =
                     "⚠️ Backend reachable";
+
             }
 
         }
@@ -2151,13 +2601,13 @@ async function checkBackend(){
 
 window.onload = function(){
 
-    const loggedIn =
-        localStorage.getItem("bhavanaMartLoggedIn");
-
     const saved =
         localStorage.getItem("bhavanaMartUser");
 
-    if(loggedIn === "true" && saved){
+    const loggedIn =
+        localStorage.getItem("bhavanaMartLoggedIn");
+
+    if(saved && loggedIn === "true"){
 
         currentUser =
             JSON.parse(saved);
@@ -2171,3 +2621,4 @@ window.onload = function(){
 
 </body>
 </html>
+```
