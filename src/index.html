@@ -3,2618 +3,952 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Bhavana-Mart</title>
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial,Helvetica,sans-serif;
-}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#f7f4ff;color:#2b173d}
 
-body{
-    background:#f7f4ff;
-    color:#24133d;
-}
+button{cursor:pointer}
 
-button,input,select{
-    font-family:inherit;
-}
-
-/* ================= AUTH ================= */
-
-.auth-page{
-    min-height:100vh;
-    background:linear-gradient(135deg,#461267,#7b1fa2,#5e35b1);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:20px;
+.auth{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(135deg,#4b126b,#7b1fa2,#5e35b1);
+  padding:20px
 }
 
 .auth-box{
-    width:100%;
-    max-width:430px;
-    background:#fff;
-    padding:35px;
-    border-radius:28px;
-    box-shadow:0 20px 50px rgba(0,0,0,.25);
-    text-align:center;
+  width:100%;
+  max-width:420px;
+  background:white;
+  padding:32px;
+  border-radius:25px;
+  box-shadow:0 20px 50px #0004;
+  text-align:center
 }
 
-.logo-big{
-    font-size:32px;
-    font-weight:800;
-    color:#6a1b9a;
-    margin-bottom:8px;
+.logo-big{font-size:30px;font-weight:bold;color:#6a1b9a}
+.welcome{font-size:24px;font-weight:bold;margin-top:8px}
+.sub{color:#806a91;margin:8px 0 22px}
+
+.tabs{
+  display:flex;
+  background:#f0e6f7;
+  padding:4px;
+  border-radius:10px;
+  margin-bottom:20px
 }
 
-.welcome{
-    font-size:24px;
-    font-weight:800;
-    color:#35184b;
+.tabs button{
+  width:50%;
+  border:0;
+  background:transparent;
+  padding:11px;
+  border-radius:8px;
+  font-weight:bold;
+  color:#6a1b9a
 }
 
-.subtitle{
-    color:#806a91;
-    margin:8px 0 24px;
+.tabs .active{background:#6a1b9a;color:white}
+
+.form{text-align:left}
+.form label{display:block;margin:12px 0 6px;font-weight:bold;font-size:14px}
+.form input,.form select{
+  width:100%;
+  padding:12px;
+  border:1px solid #d9cce2;
+  border-radius:10px;
+  outline:0
 }
 
-.auth-tabs{
-    display:flex;
-    gap:5px;
-    background:#f1e8f8;
-    padding:4px;
-    border-radius:12px;
-    margin-bottom:22px;
+.main-btn{
+  width:100%;
+  margin-top:18px;
+  padding:13px;
+  border:0;
+  border-radius:11px;
+  background:#6a1b9a;
+  color:white;
+  font-size:16px;
+  font-weight:bold
 }
 
-.auth-tab{
-    width:50%;
-    border:0;
-    background:transparent;
-    padding:11px;
-    border-radius:9px;
-    color:#6a1b9a;
-    font-weight:bold;
-    cursor:pointer;
+.message{min-height:20px;margin-top:12px;font-weight:bold;font-size:14px}
+
+#shop{display:none}
+
+.nav{
+  position:sticky;
+  top:0;
+  z-index:1000;
+  display:flex;
+  align-items:center;
+  gap:18px;
+  padding:15px 5%;
+  background:linear-gradient(135deg,#6a1b9a,#8e24aa,#5e35b1);
+  color:white
 }
 
-.auth-tab.active{
-    background:#6a1b9a;
-    color:#fff;
-}
+.logo{font-size:25px;font-weight:bold;white-space:nowrap}
 
-.auth-form{
-    text-align:left;
-}
-
-.auth-form label{
-    display:block;
-    margin:13px 0 6px;
-    font-size:14px;
-    font-weight:bold;
-}
-
-.auth-form input,
-.auth-form select{
-    width:100%;
-    padding:13px;
-    border:1px solid #ddd0e9;
-    border-radius:11px;
-    outline:none;
-}
-
-.auth-form input:focus,
-.auth-form select:focus{
-    border-color:#7b1fa2;
-}
-
-.auth-btn{
-    width:100%;
-    border:0;
-    margin-top:20px;
-    padding:14px;
-    border-radius:12px;
-    background:#6a1b9a;
-    color:#fff;
-    font-size:16px;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-.auth-btn:hover{
-    background:#4a136d;
-}
-
-.auth-message{
-    min-height:22px;
-    margin-top:12px;
-    font-size:14px;
-    font-weight:bold;
-}
-
-.demo-note{
-    margin-top:20px;
-    padding:12px;
-    border-radius:10px;
-    background:#f8f1ff;
-    color:#765c87;
-    font-size:12px;
-}
-
-/* ================= SHOP ================= */
-
-#shopPage{
-    display:none;
-}
-
-.navbar{
-    background:linear-gradient(135deg,#6a1b9a,#8e24aa,#5e35b1);
-    color:#fff;
-    padding:15px 5%;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:18px;
-    position:sticky;
-    top:0;
-    z-index:1000;
-    box-shadow:0 4px 15px rgba(70,20,100,.2);
-}
-
-.logo{
-    font-size:25px;
-    font-weight:800;
-    white-space:nowrap;
-}
-
-.search-box{
-    flex:1;
-    max-width:550px;
-}
-
-.search-box input{
-    width:100%;
-    padding:13px 18px;
-    border:0;
-    border-radius:30px;
-    outline:none;
-    font-size:15px;
+.search{flex:1;max-width:560px}
+.search input{
+  width:100%;
+  border:0;
+  outline:0;
+  padding:12px 18px;
+  border-radius:25px
 }
 
 .nav-right{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    flex-wrap:wrap;
-    justify-content:center;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:center
 }
 
-.user-box{
-    background:rgba(255,255,255,.15);
-    padding:9px 12px;
-    border-radius:18px;
-    font-size:13px;
+.user{
+  background:#ffffff22;
+  padding:9px 12px;
+  border-radius:18px;
+  font-size:13px
 }
 
-.cart-btn,
-.logout-btn{
-    border:0;
-    cursor:pointer;
-    font-weight:bold;
-    border-radius:20px;
-    padding:10px 14px;
+.cart-btn,.logout{
+  border:0;
+  padding:10px 14px;
+  border-radius:20px;
+  font-weight:bold
 }
 
-.cart-btn{
-    background:#fff;
-    color:#6a1b9a;
-}
-
-.logout-btn{
-    background:#f1dfff;
-    color:#5e2380;
-}
-
-/* HERO */
+.cart-btn{background:white;color:#6a1b9a}
+.logout{background:#ead8f5;color:#5e2380}
 
 .hero{
-    margin:25px 5%;
-    padding:42px 35px;
-    border-radius:25px;
-    background:linear-gradient(135deg,#ead7ff,#d7c2ff,#f3e6ff);
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:30px;
+  margin:25px 5%;
+  padding:42px 32px;
+  border-radius:25px;
+  background:linear-gradient(135deg,#ead7ff,#d7c2ff,#f3e6ff);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px
 }
 
-.hero-text h1{
-    font-size:42px;
-    color:#5e2a8a;
-    margin-bottom:12px;
+.hero h1{font-size:40px;color:#5e2a8a;margin-bottom:10px}
+.hero p{color:#5f536b;font-size:17px}
+
+.hero-card{
+  background:white;
+  padding:22px;
+  border-radius:20px;
+  text-align:center
 }
 
-.hero-text p{
-    font-size:18px;
-    color:#5f536b;
-    line-height:1.5;
-}
+.hero-card .emoji{font-size:50px}
+.hero-card b{display:block;color:#6a1b9a}
 
-.hero-badge{
-    background:#fff;
-    padding:25px;
-    border-radius:20px;
-    text-align:center;
-    box-shadow:0 10px 25px rgba(80,40,120,.12);
-}
-
-.hero-badge .big{
-    font-size:55px;
-}
-
-.hero-badge b{
-    display:block;
-    color:#6a1b9a;
-    margin:5px 0;
-}
-
-/* COMMON */
-
-.section{
-    padding:5px 5% 0;
-}
-
-.section-title{
-    margin-bottom:18px;
-}
-
-.section-title h2{
-    color:#47205f;
-}
+.section{padding:5px 5%}
 
 .categories{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    margin-bottom:25px;
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+  margin:15px 0 25px
 }
 
-.category-btn{
-    border:0;
-    background:#fff;
-    color:#6a1b9a;
-    padding:11px 17px;
-    border-radius:25px;
-    cursor:pointer;
-    font-weight:700;
-    box-shadow:0 3px 10px rgba(60,20,90,.08);
+.cat{
+  border:0;
+  background:white;
+  color:#6a1b9a;
+  padding:10px 15px;
+  border-radius:22px;
+  font-weight:bold;
+  box-shadow:0 3px 10px #00000010
 }
 
-.category-btn.active,
-.category-btn:hover{
-    background:#6a1b9a;
-    color:#fff;
+.cat.active,.cat:hover{background:#6a1b9a;color:white}
+
+.status{
+  background:white;
+  padding:16px 20px;
+  margin:0 5% 25px;
+  border-radius:17px;
+  box-shadow:0 4px 12px #00000010
 }
 
-/* STATUS */
-
-.status-box{
-    margin:0 5% 25px;
-    padding:18px 20px;
-    background:#fff;
-    border-radius:18px;
-    box-shadow:0 5px 15px rgba(50,20,80,.08);
-}
-
-.status-title{
-    font-weight:800;
-    margin-bottom:7px;
-}
-
-#status{
-    color:#6a1b9a;
-    font-weight:600;
-}
-
-/* PRODUCTS */
+#status{color:#6a1b9a;font-weight:bold}
 
 .products{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(225px,1fr));
-    gap:22px;
-    padding-bottom:35px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+  padding-bottom:35px
 }
 
 .card{
-    background:#fff;
-    border-radius:20px;
-    overflow:hidden;
-    box-shadow:0 6px 18px rgba(50,20,80,.10);
-    transition:.25s;
+  background:white;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 6px 18px #00000010
 }
 
-.card:hover{
-    transform:translateY(-5px);
+.card:hover{transform:translateY(-4px)}
+
+.pic{
+  height:210px;
+  background:linear-gradient(135deg,#eee3ff,#f9efff);
+  position:relative
 }
 
-.image-wrap{
-    height:220px;
-    background:#f0e7f8;
-    position:relative;
-    overflow:hidden;
-}
-
-.image-wrap img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    display:block;
+.pic img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block
 }
 
 .fallback{
-    display:none;
-    width:100%;
-    height:100%;
-    align-items:center;
-    justify-content:center;
-    flex-direction:column;
-    font-size:65px;
-    background:linear-gradient(135deg,#eee3ff,#f9efff);
-}
-
-.fallback small{
-    font-size:14px;
-    color:#715681;
-    margin-top:5px;
+  display:none;
+  height:100%;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  font-size:62px
 }
 
 .badge{
-    position:absolute;
-    top:12px;
-    left:12px;
-    background:#7b1fa2;
-    color:#fff;
-    padding:6px 10px;
-    border-radius:15px;
-    font-size:12px;
-    font-weight:bold;
+  position:absolute;
+  top:10px;
+  left:10px;
+  background:#7b1fa2;
+  color:white;
+  padding:5px 9px;
+  border-radius:14px;
+  font-size:11px
 }
 
-.card-body{
-    padding:16px;
+.card-body{padding:15px}
+.card-body h3{margin-bottom:5px}
+.category{font-size:13px;color:#8b78a0}
+.rating{color:#efa700;margin:8px 0}
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px
+}
+.price{font-size:18px;font-weight:bold;color:#6a1b9a}
+.add{
+  border:0;
+  background:#6a1b9a;
+  color:white;
+  padding:8px 12px;
+  border-radius:10px;
+  font-weight:bold
 }
 
-.card-body h3{
-    font-size:18px;
-    margin-bottom:7px;
+footer{
+  background:#35184b;
+  color:white;
+  text-align:center;
+  padding:25px
+}
+footer b{color:#d8b7ff}
+
+/* CART */
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:5000;
+  background:#0008;
+  align-items:center;
+  justify-content:center;
+  padding:20px
 }
 
-.category{
-    color:#8b78a0;
-    font-size:13px;
-    margin-bottom:7px;
+.modal-box{
+  width:100%;
+  max-width:560px;
+  max-height:85vh;
+  overflow:auto;
+  background:white;
+  border-radius:22px;
+  padding:25px
 }
 
-.rating{
-    color:#efa700;
-    margin-bottom:10px;
+.modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:15px
 }
 
-.price-row{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:10px;
-}
+.modal-head h2{color:#6a1b9a}
 
-.price{
-    color:#6a1b9a;
-    font-size:19px;
-    font-weight:800;
-}
-
-.add-btn{
-    border:0;
-    background:#6a1b9a;
-    color:#fff;
-    padding:9px 14px;
-    border-radius:11px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-.add-btn:hover{
-    background:#4a136d;
-}
-
-.no-products{
-    grid-column:1/-1;
-    text-align:center;
-    background:#fff;
-    padding:40px;
-    border-radius:18px;
-    color:#806a91;
-}
-
-/* ================= CART MODAL ================= */
-
-.cart-modal{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(20,10,30,.6);
-    z-index:3000;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-}
-
-.cart-box{
-    width:100%;
-    max-width:560px;
-    max-height:85vh;
-    overflow:auto;
-    background:#fff;
-    border-radius:24px;
-    padding:25px;
-}
-
-.cart-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:18px;
-}
-
-.cart-header h2{
-    color:#6a1b9a;
-}
-
-.close-btn{
-    border:0;
-    width:35px;
-    height:35px;
-    border-radius:50%;
-    background:#eee;
-    cursor:pointer;
-    font-size:18px;
+.close{
+  width:35px;
+  height:35px;
+  border:0;
+  border-radius:50%;
+  background:#eee
 }
 
 .cart-item{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:12px;
-    padding:14px 0;
-    border-bottom:1px solid #eee;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:13px 0;
+  border-bottom:1px solid #eee
 }
 
-.cart-item-name{
-    font-weight:bold;
+.qty{
+  display:flex;
+  align-items:center;
+  gap:7px
 }
 
-.cart-item-price{
-    color:#6a1b9a;
-    font-weight:bold;
+.qty button{
+  border:0;
+  width:28px;
+  height:28px;
+  border-radius:7px;
+  background:#eee1f7;
+  color:#6a1b9a;
+  font-weight:bold
 }
 
-.qty-box{
-    display:flex;
-    align-items:center;
-    gap:8px;
+.remove{
+  border:0;
+  background:#fbe7ef;
+  color:#b52b59;
+  padding:7px 9px;
+  border-radius:8px
 }
 
-.qty-btn{
-    border:0;
-    width:28px;
-    height:28px;
-    border-radius:7px;
-    background:#eee1f7;
-    color:#6a1b9a;
-    cursor:pointer;
-    font-weight:bold;
+.total{
+  display:flex;
+  justify-content:space-between;
+  border-top:2px solid #eee;
+  padding-top:15px;
+  margin-top:15px;
+  font-size:20px;
+  font-weight:bold
 }
 
-.remove-btn{
-    border:0;
-    background:#fbe8ef;
-    color:#b52b59;
-    padding:7px 10px;
-    border-radius:8px;
-    cursor:pointer;
+.checkout{
+  width:100%;
+  border:0;
+  margin-top:16px;
+  padding:13px;
+  border-radius:11px;
+  background:#6a1b9a;
+  color:white;
+  font-weight:bold;
+  font-size:16px
 }
 
-.cart-empty{
-    text-align:center;
-    padding:35px;
-    color:#806a91;
+.empty{
+  text-align:center;
+  padding:30px;
+  color:#806a91
 }
-
-.cart-total{
-    display:flex;
-    justify-content:space-between;
-    margin-top:20px;
-    padding-top:15px;
-    border-top:2px solid #eee;
-    font-size:21px;
-    font-weight:800;
-}
-
-.checkout-btn{
-    width:100%;
-    margin-top:18px;
-    padding:14px;
-    border:0;
-    border-radius:12px;
-    background:#6a1b9a;
-    color:#fff;
-    font-size:16px;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-/* FOOTER */
-
-footer{
-    background:#35184b;
-    color:#eee;
-    padding:28px;
-    text-align:center;
-}
-
-footer b{
-    color:#d8b7ff;
-}
-
-/* RESPONSIVE */
 
 @media(max-width:850px){
-
-    .navbar{
-        flex-wrap:wrap;
-    }
-
-    .search-box{
-        order:3;
-        max-width:none;
-        width:100%;
-    }
-
-    .hero{
-        flex-direction:column;
-        text-align:center;
-    }
-
-    .hero-text h1{
-        font-size:32px;
-    }
-}
-
-@media(max-width:550px){
-
-    .auth-box{
-        padding:25px;
-    }
-
-    .nav-right{
-        width:100%;
-    }
+  .nav{flex-wrap:wrap}
+  .search{order:3;max-width:none;width:100%}
+  .hero{flex-direction:column;text-align:center}
+  .hero h1{font-size:32px}
 }
 </style>
 </head>
 
 <body>
 
-<!-- ================= LOGIN / REGISTER ================= -->
+<!-- LOGIN / REGISTER -->
+<div class="auth" id="authPage">
 
-<div class="auth-page" id="authPage">
+<div class="auth-box">
 
-    <div class="auth-box">
+<div class="logo-big">💜 Bhavana-Mart</div>
+<div class="welcome">Welcome to Bhavana-Mart</div>
+<div class="sub">Your smart shopping marketplace</div>
 
-        <div class="logo-big">💜 Bhavana-Mart</div>
+<div class="tabs">
+<button id="loginTab" class="active" onclick="showLogin()">Login</button>
+<button id="registerTab" onclick="showRegister()">Register</button>
+</div>
 
-        <div class="welcome">Welcome to Bhavana-Mart</div>
+<form id="loginForm" class="form" onsubmit="login(event)">
 
-        <div class="subtitle">
-            Your smart shopping marketplace
-        </div>
+<label>Email</label>
+<input id="loginEmail" type="email" placeholder="Enter your email" required>
 
-        <div class="auth-tabs">
+<label>Password</label>
+<input id="loginPassword" type="password" placeholder="Enter your password" required>
 
-            <button
-                id="loginTab"
-                class="auth-tab active"
-                onclick="showLogin()">
-                Login
-            </button>
+<button class="main-btn" type="submit">🔐 Login</button>
 
-            <button
-                id="registerTab"
-                class="auth-tab"
-                onclick="showRegister()">
-                Register
-            </button>
+</form>
 
-        </div>
+<form id="registerForm" class="form" style="display:none" onsubmit="register(event)">
 
-        <!-- LOGIN FORM -->
+<label>Full Name</label>
+<input id="regName" type="text" placeholder="Enter your name" required>
 
-        <form
-            id="loginForm"
-            class="auth-form"
-            onsubmit="loginUser(event)">
+<label>Email</label>
+<input id="regEmail" type="email" placeholder="Enter your email" required>
 
-            <label>Email</label>
+<label>Password</label>
+<input id="regPassword" type="password" minlength="4" placeholder="Create password" required>
 
-            <input
-                id="loginEmail"
-                type="email"
-                placeholder="Enter your email"
-                required>
+<label>Role</label>
+<select id="regRole">
+<option value="Buyer">Buyer</option>
+<option value="Seller">Seller</option>
+</select>
 
-            <label>Password</label>
+<button class="main-btn" type="submit">📝 Create Account</button>
 
-            <input
-                id="loginPassword"
-                type="password"
-                placeholder="Enter your password"
-                required>
+</form>
 
-            <button class="auth-btn" type="submit">
-                🔐 Login
-            </button>
+<div class="message" id="message"></div>
 
-        </form>
-
-        <!-- REGISTER FORM -->
-
-        <form
-            id="registerForm"
-            class="auth-form"
-            style="display:none"
-            onsubmit="registerUser(event)">
-
-            <label>Full Name</label>
-
-            <input
-                id="registerName"
-                type="text"
-                placeholder="Enter your name"
-                required>
-
-            <label>Email</label>
-
-            <input
-                id="registerEmail"
-                type="email"
-                placeholder="Enter your email"
-                required>
-
-            <label>Password</label>
-
-            <input
-                id="registerPassword"
-                type="password"
-                placeholder="Create password"
-                minlength="4"
-                required>
-
-            <label>Role</label>
-
-            <select id="registerRole">
-                <option value="Buyer">Buyer</option>
-                <option value="Seller">Seller</option>
-            </select>
-
-            <button class="auth-btn" type="submit">
-                📝 Create Account
-            </button>
-
-        </form>
-
-        <div id="authMessage" class="auth-message"></div>
-
-        <div class="demo-note">
-            Register → Login → Enter Bhavana-Mart
-        </div>
-
-    </div>
+</div>
 </div>
 
 
-<!-- ================= SHOP ================= -->
+<!-- SHOP -->
+<div id="shop">
 
-<div id="shopPage">
+<nav class="nav">
 
-    <nav class="navbar">
+<div class="logo">💜 Bhavana-Mart</div>
 
-        <div class="logo">💜 Bhavana-Mart</div>
+<div class="search">
+<input id="search" placeholder="Search products..." oninput="filterProducts()">
+</div>
 
-        <div class="search-box">
+<div class="nav-right">
 
-            <input
-                id="searchInput"
-                type="text"
-                placeholder="Search products..."
-                oninput="filterProducts()">
+<div class="user" id="userInfo">👤 User</div>
 
-        </div>
+<button class="cart-btn" onclick="openCart()">
+🛒 Cart (<span id="cartCount">0</span>)
+</button>
 
-        <div class="nav-right">
+<button class="logout" onclick="logout()">Logout</button>
 
-            <div class="user-box" id="userDisplay">
-                👤 User
-            </div>
+</div>
 
-            <button class="cart-btn" onclick="openCart()">
-                🛒 Cart (<span id="cartCount">0</span>)
-            </button>
+</nav>
 
-            <button class="logout-btn" onclick="logoutUser()">
-                Logout
-            </button>
 
-        </div>
+<section class="hero">
 
-    </nav>
+<div>
+<h1>Shop Everything You Love 💜</h1>
+<p>Clothing • Jewellery • Shoes • Electronics • Beauty • Home • Accessories</p>
+</div>
 
+<div class="hero-card">
+<div class="emoji">🛍️</div>
+<b>Bhavana-Mart</b>
+<span>Smart Shopping Marketplace</span>
+</div>
 
-    <!-- HERO -->
+</section>
 
-    <section class="hero">
 
-        <div class="hero-text">
+<section class="section">
 
-            <h1>Shop Everything You Love 💜</h1>
+<h2>Shop by Category</h2>
 
-            <p>
-                Clothing • Jewellery • Shoes • Electronics • Beauty • Home • Accessories
-            </p>
+<div class="categories">
 
-        </div>
+<button class="cat active" onclick="setCategory('All',this)">All</button>
+<button class="cat" onclick="setCategory('Clothing',this)">👗 Clothing</button>
+<button class="cat" onclick="setCategory('Jewellery',this)">💎 Jewellery</button>
+<button class="cat" onclick="setCategory('Shoes',this)">👟 Shoes</button>
+<button class="cat" onclick="setCategory('Electronics',this)">💻 Electronics</button>
+<button class="cat" onclick="setCategory('Beauty',this)">💄 Beauty</button>
+<button class="cat" onclick="setCategory('Home',this)">🏠 Home</button>
+<button class="cat" onclick="setCategory('Accessories',this)">👜 Accessories</button>
 
-        <div class="hero-badge">
+</div>
 
-            <div class="big">🛍️</div>
+</section>
 
-            <b>Bhavana-Mart</b>
 
-            <span>Smart Shopping Marketplace</span>
+<div class="status">
+<b>⚡ Backend Status</b>
+<div id="status">Checking backend...</div>
+</div>
 
-        </div>
 
-    </section>
+<section class="section">
 
+<h2>Featured Products</h2>
 
-    <!-- CATEGORIES -->
+<div class="products" id="products"></div>
 
-    <section class="section">
+</section>
 
-        <div class="section-title">
-            <h2>Shop by Category</h2>
-        </div>
 
-        <div class="categories">
-
-            <button
-                class="category-btn active"
-                onclick="setCategory('All',this)">
-                All
-            </button>
-
-            <button
-                class="category-btn"
-                onclick="setCategory('Clothing',this)">
-                👗 Clothing
-            </button>
-
-            <button
-                class="category-btn"
-                onclick="setCategory('Jewellery',this)">
-                💎 Jewellery
-            </button>
-
-            <button
-                class="category-btn"
-                onclick="setCategory('Shoes',this)">
-                👟 Shoes
-            </button>
-
-            <button
-                class="category-btn"
-                onclick="setCategory('Electronics',this)">
-                💻 Electronics
-            </button>
-
-            <button
-                class="category-btn"
-                onclick="setCategory('Beauty',this)">
-                💄 Beauty
-            </button>
-
-            <button
-                class="category-btn"
-                onclick="setCategory('Home',this)">
-                🏠 Home
-            </button>
-
-            <button
-                class="category-btn"
-                onclick="setCategory('Accessories',this)">
-                👜 Accessories
-            </button>
-
-        </div>
-
-    </section>
-
-
-    <!-- BACKEND -->
-
-    <div class="status-box">
-
-        <div class="status-title">
-            ⚡ Backend Status
-        </div>
-
-        <div id="status">
-            Checking backend...
-        </div>
-
-    </div>
-
-
-    <!-- PRODUCTS -->
-
-    <section class="section">
-
-        <div class="section-title">
-            <h2>Featured Products</h2>
-        </div>
-
-        <div class="products" id="productGrid">
-
-
-            <!-- CLOTHING -->
-
-            <div class="card product-card"
-                 data-category="Clothing"
-                 data-name="Women Kurti">
-
-                <div class="image-wrap">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                    <div class="fallback">
-                        👗
-                        <small>Women Kurti</small>
-                    </div>
-
-                    <span class="badge">Popular</span>
-
-                </div>
-
-                <div class="card-body">
-
-                    <h3>Women Kurti</h3>
-
-                    <div class="category">Clothing</div>
-
-                    <div class="rating">★★★★★</div>
-
-                    <div class="price-row">
-
-                        <div class="price">₹899</div>
-
-                        <button
-                            class="add-btn"
-                            data-name="Women Kurti"
-                            data-price="899">
-                            Add
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <div class="card product-card"
-                 data-category="Clothing"
-                 data-name="Classic T-Shirt">
-
-                <div class="image-wrap">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                    <div class="fallback">
-                        👕
-                        <small>Classic T-Shirt</small>
-                    </div>
-
-                </div>
-
-                <div class="card-body">
-
-                    <h3>Classic T-Shirt</h3>
-
-                    <div class="category">Clothing</div>
-
-                    <div class="rating">★★★★☆</div>
-
-                    <div class="price-row">
-
-                        <div class="price">₹599</div>
-
-                        <button
-                            class="add-btn"
-                            data-name="Classic T-Shirt"
-                            data-price="599">
-                            Add
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <div class="card product-card"
-                 data-category="Clothing"
-                 data-name="Denim Jeans">
-
-                <div class="image-wrap">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=800&q=80"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                    <div class="fallback">
-                        👖
-                        <small>Denim Jeans</small>
-                    </div>
-
-                </div>
-
-                <div class="card-body">
-
-                    <h3>Denim Jeans</h3>
-
-                    <div class="category">Clothing</div>
-
-                    <div class="rating">★★★★★</div>
-
-                    <div class="price-row">
-
-                        <div class="price">₹1,299</div>
-
-                        <button
-                            class="add-btn"
-                            data-name="Denim Jeans"
-                            data-price="1299">
-                            Add
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <div class="card product-card"
-                 data-category="Clothing"
-                 data-name="Casual Jacket">
-
-                <div class="image-wrap">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=80"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                    <div class="fallback">
-                        🧥
-                        <small>Casual Jacket</small>
-                    </div>
-
-                </div>
-
-                <div class="card-body">
-
-                    <h3>Casual Jacket</h3>
-
-                    <div class="category">Clothing</div>
-
-                    <div class="rating">★★★★☆</div>
-
-                    <div class="price-row">
-
-                        <div class="price">₹1,799</div>
-
-                        <button
-                            class="add-btn"
-                            data-name="Casual Jacket"
-                            data-price="1799">
-                            Add
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <!-- JEWELLERY -->
-
-            <div class="card product-card"
-                 data-category="Jewellery"
-                 data-name="Gold Necklace">
-
-                <div class="image-wrap">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                    <div class="fallback">
-                        📿
-                        <small>Gold Necklace</small>
-                    </div>
-
-                    <span class="badge">New</span>
-
-                </div>
-
-                <div class="card-body">
-
-                    <h3>Gold Necklace</h3>
-
-                    <div class="category">Jewellery</div>
-
-                    <div class="rating">★★★★★</div>
-
-                    <div class="price-row">
-
-                        <div class="price">₹2,499</div>
-
-                        <button
-                            class="add-btn"
-                            data-name="Gold Necklace"
-                            data-price="2499">
-                            Add
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <div class="card product-card"
-                 data-category="Jewellery"
-                 data-name="Elegant Earrings">
-
-                <div class="image-wrap">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=800&q=80"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                    <div class="fallback">
-                        ✨
-                        <small>Elegant Earrings</small>
-                    </div>
-
-                </div>
-
-                <div class="card-body">
-
-                    <h3>Elegant Earrings</h3>
-
-                    <div class="category">Jewellery</div>
-
-                    <div class="rating">★★★★★</div>
-
-                    <div class="price-row">
-
-                        <div class="price">₹999</div>
-
-                        <button
-                            class="add-btn"
-                            data-name="Elegant Earrings"
-                            data-price="999">
-                            Add
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <div class="card product-card"
-                 data-category="Jewellery"
-                 data-name="Silver Ring">
-
-                <div class="image-wrap">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                    <div class="fallback">
-                        💍
-                        <small>Silver Ring</small>
-                    </div>
-
-                </div>
-
-                <div class="card-body">
-
-                    <h3>Silver Ring</h3>
-
-                    <div class="category">Jewellery</div>
-
-                    <div class="rating">★★★★☆</div>
-
-                    <div class="price-row">
-
-                        <div class="price">₹749</div>
-
-                        <button
-                            class="add-btn"
-                            data-name="Silver Ring"
-                            data-price="749">
-                            Add
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <div class="card product-card"
-                 data-category="Jewellery"
-                 data-name="Designer Bracelet">
-
-                <div class="image-wrap">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=800&q=80"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                    <div class="fallback">
-                        📿
-                        <small>Bracelet</small>
-                    </div>
-
-                </div>
-
-                <div class="card-body">
-
-                    <h3>Designer Bracelet</h3>
-
-                    <div class="category">Jewellery</div>
-
-                    <div class="rating">★★★★★</div>
-
-                    <div class="price-row">
-
-                        <div class="price">₹1,199</div>
-
-                        <button
-                            class="add-btn"
-                            data-name="Designer Bracelet"
-                            data-price="1199">
-                            Add
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <!-- SHOES -->
-
-            <div class="card product-card"
-                 data-category="Shoes"
-                 data-name="Running Shoes">
-
-                <div class="image-wrap">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                    <div class="fallback">
-                        👟
-                        <small>Running Shoes</small>
-                    </div>
-
-                </div>
-
-                <div class="card-body">
-
-                    <h3>Running Shoes</h3>
-
-                    <div class="category">Shoes</div>
-
-                    <div class="rating">★★★★★</div>
-
-                    <div class="price-row">
-
-                        <div class="price">₹1,999</div>
-
-                        <button
-                            class="add-btn"
-                            data-name="Running Shoes"
-                            data-price="1999">
-                            Add
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <div class="card product-card"
-                 data-category="Shoes"
-                 data-name="Sports Sneakers">
-
-                <div class="image-wrap">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&w=800&q=80"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                    <div class="fallback">
-                        👟
-                        <small>Sports Sneakers</small>
-                    </div>
-
-                </div>
-
-                <div class="card-body">
-
-                    <h3>Sports Sneakers</h3>
-
-                    <div class="category">Shoes</div>
-
-                    <div class="rating">★★★★☆</div>
-
-                    <div class="price-row">
-
-                        <div class="price">₹2,199</div>
-
-                        <button
-                            class="add-btn"
-                            data-name="Sports Sneakers"
-                            data-price="2199">
-                            Add
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <div class="card product-card"
-                 data-category="Shoes"
-                 data-name="Elegant Heels">
-
-                <div class="image-wrap">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=800&q=80"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                    <div class="fallback">
-                        👠
-                        <small>Heels</small>
-                    </div>
-
-                </div>
-
-                <div class="card-body">
-
-                    <h3>Elegant Heels</h3>
-
-                    <div class="category">Shoes</div>
-
-                    <div class="rating">★★★★★</div>
-
-                    <div class="price-row">
-
-                        <div class="price">₹1,499</div>
-
-                        <button
-                            class="add-btn"
-                            data-name="Elegant Heels"
-                            data-price="1499">
-                            Add
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <div class="card product-card"
-                 data-category="Shoes"
-                 data-name="Casual Shoes">
-
-                <div class="image-wrap">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1495555961986-6d4c1ecb7be3?auto=format&fit=crop&w=800&q=80"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                    <div class="fallback">
-                        👞
-                        <small>Casual Shoes</small>
-                    </div>
-
-                </div>
-
-                <div class="card-body">
-
-                    <h3>Casual Shoes</h3>
-
-                    <div class="category">Shoes</div>
-
-                    <div class="rating">★★★★☆</div>
-
-                    <div class="price-row">
-
-                        <div class="price">₹1,699</div>
-
-                        <button
-                            class="add-btn"
-                            data-name="Casual Shoes"
-                            data-price="1699">
-                            Add
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <!-- ELECTRONICS -->
-
-            <div class="card product-card"
-                 data-category="Electronics"
-                 data-name="Laptop">
-
-                <div class="image-wrap">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=800&q=80"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                    <div class="fallback">
-                        💻
-                        <small>Laptop</small>
-                    </div>
-
-                    <span class="badge">Top Seller</span>
-
-                </div>
-
-                <div class="card-body">
-
-                    <h3>Laptop</h3>
-
-                    <div class="category">Electronics</div>
-
-                    <div class="rating">★★★★★</div>
-
-                    <div class="price-row">
-
-                        <div class="price">₹57,000</div>
-
-                        <button
-                            class="add-btn"
-                            data-name="Laptop"
-                            data-price="57000">
-                            Add
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <div class="card product-card"
-                 data-category="Electronics"
-                 data-name="Wireless Headphones">
-
-                <div class="image-wrap">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                    <div class="fallback">
-                        🎧
-                        <small>Headphones</small>
-                    </div>
-
-                </div>
-
-                <div class="card-body">
-
-                    <h3>Wireless Headphones</h3>
-
-                    <div class="category">Electronics</div>
-
-                    <div class="rating">★★★★★</div>
-
-                    <div class="price-row">
-
-                        <div class="price">₹1,500</div>
-
-                        <button
-                            class="add-btn"
-                            data-name="Wireless Headphones"
-                            data-price="1500">
-                            Add
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <div class="card product-card"
-                 data-category="Electronics"
-                 data-name="Mechanical Keyboard">
-
-                <div class="image-wrap">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=800&q=80"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                    <div class="fallback">
-                        ⌨️
-                        <small>Keyboard</small>
-                    </div>
-
-                </div>
-
-                <div class="card-body">
-
-                    <h3>Mechanical Keyboard</h3>
-
-                    <div class="category">Electronics</div>
-
-                    <div class="rating">★★★★☆</div>
-
-                    <div class="price-row">
-
-                        <div class="price">₹1,200</div>
-
-                        <button
-                            class="add-btn"
-                            data-name="Mechanical Keyboard"
-                            data-price="1200">
-                            Add
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <div class="card product-card"
-                 data-category="Electronics"
-                 data-name="HD Monitor">
-
-                <div class="image-wrap">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=800&q=80"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                    <div class="fallback">
-                        🖥️
-                        <small>Monitor</small>
-                    </div>
-
-                </div>
-
-                <div class="card-body">
-
-                    <h3>HD Monitor</h3>
-
-                    <div class="category">Electronics</div>
-
-                    <div class="rating">★★★★★</div>
-
-                    <div class="price-row">
-
-                        <div class="price">₹8,000</div>
-
-                        <button
-                            class="add-btn"
-                            data-name="HD Monitor"
-                            data-price="8000">
-                            Add
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <!-- BEAUTY -->
-
-            <div class="card product-card"
-                 data-category="Beauty"
-                 data-name="Makeup Kit">
-
-                <div class="image-wrap">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=800&q=80"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                    <div class="fallback">
-                        💄
-                        <small>Makeup Kit</small>
-                    </div>
-
-                </div>
-
-                <div class="card-body">
-
-                    <h3>Makeup Kit</h3>
-
-                    <div class="category">Beauty</div>
-
-                    <div class="rating">★★★★★</div>
-
-                    <div class="price-row">
-
-                        <div class="price">₹1,299</div>
-
-                        <button
-                            class="add-btn"
-                            data-name="Makeup Kit"
-                            data-price="1299">
-                            Add
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <div class="card product-card"
-                 data-category="Beauty"
-                 data-name="Floral Perfume">
-
-                <div class="image-wrap">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                    <div class="fallback">
-                        🌸
-                        <small>Perfume</small>
-                    </div>
-
-                </div>
-
-                <div class="card-body">
-
-                    <h3>Floral Perfume</h3>
-
-                    <div class="category">Beauty</div>
-
-                    <div class="rating">★★★★★</div>
-
-                    <div class="price-row">
-
-                        <div class="price">₹899</div>
-
-                        <button
-                            class="add-btn"
-                            data-name="Floral Perfume"
-                            data-price="899">
-                            Add
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <div class="card product-card"
-                 data-category="Beauty"
-                 data-name="Skincare Set">
-
-                <div class="image-wrap">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=800&q=80"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                    <div class="fallback">
-                        🧴
-                        <small>Skincare Set</small>
-                    </div>
-
-                </div>
-
-                <div class="card-body">
-
-                    <h3>Skincare Set</h3>
-
-                    <div class="category">Beauty</div>
-
-                    <div class="rating">★★★★☆</div>
-
-                    <div class="price-row">
-
-                        <div class="price">₹1,099</div>
-
-                        <button
-                            class="add-btn"
-                            data-name="Skincare Set"
-                            data-price="1099">
-                            Add
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <div class="card product-card"
-                 data-category="Beauty"
-                 data-name="Hair Care Kit">
-
-                <div class="image-wrap">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                    <div class="fallback">
-                        💇
-                        <small>Hair Care</small>
-                    </div>
-
-                </div>
-
-                <div class="card-body">
-
-                    <h3>Hair Care Kit</h3>
-
-                    <div class="category">Beauty</div>
-
-                    <div class="rating">★★★★☆</div>
-
-                    <div class="price-row">
-
-                        <div class="price">₹749</div>
-
-                        <button
-                            class="add-btn"
-                            data-name="Hair Care Kit"
-                            data-price="749">
-                            Add
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <!-- HOME -->
-
-            <div class="card product-card"
-                 data-category="Home"
-                 data-name="Modern Chair">
-
-                <div class="image-wrap">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                    <div class="fallback">
-                        🪑
-                        <small>Modern Chair</small>
-                    </div>
-
-                </div>
-
-                <div class="card-body">
-
-                    <h3>Modern Chair</h3>
-
-                    <div class="category">Home</div>
-
-                    <div class="rating">★★★★★</div>
-
-                    <div class="price-row">
-
-                        <div class="price">₹3,499</div>
-
-                        <button
-                            class="add-btn"
-                            data-name="Modern Chair"
-                            data-price="3499">
-                            Add
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <div class="card product-card"
-                 data-category="Home"
-                 data-name="Table Lamp">
-
-                <div class="image-wrap">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                    <div class="fallback">
-                        💡
-                        <small>Table Lamp</small>
-                    </div>
-
-                </div>
-
-                <div class="card-body">
-
-                    <h3>Table Lamp</h3>
-
-                    <div class="category">Home</div>
-
-                    <div class="rating">★★★★☆</div>
-
-                    <div class="price-row">
-
-                        <div class="price">₹999</div>
-
-                        <button
-                            class="add-btn"
-                            data-name="Table Lamp"
-                            data-price="999">
-                            Add
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <div class="card product-card"
-                 data-category="Home"
-                 data-name="Comfort Cushion Set">
-
-                <div class="image-wrap">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?auto=format&fit=crop&w=800&q=80"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                    <div class="fallback">
-                        🛋️
-                        <small>Cushion Set</small>
-                    </div>
-
-                </div>
-
-                <div class="card-body">
-
-                    <h3>Comfort Cushion Set</h3>
-
-                    <div class="category">Home</div>
-
-                    <div class="rating">★★★★★</div>
-
-                    <div class="price-row">
-
-                        <div class="price">₹899</div>
-
-                        <button
-                            class="add-btn"
-                            data-name="Comfort Cushion Set"
-                            data-price="899">
-                            Add
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <div class="card product-card"
-                 data-category="Home"
-                 data-name="Wall Decor">
-
-                <div class="image-wrap">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                    <div class="fallback">
-                        🖼️
-                        <small>Wall Decor</small>
-                    </div>
-
-                </div>
-
-                <div class="card-body">
-
-                    <h3>Wall Decor</h3>
-
-                    <div class="category">Home</div>
-
-                    <div class="rating">★★★★☆</div>
-
-                    <div class="price-row">
-
-                        <div class="price">₹1,499</div>
-
-                        <button
-                            class="add-btn"
-                            data-name="Wall Decor"
-                            data-price="1499">
-                            Add
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <!-- ACCESSORIES -->
-
-            <div class="card product-card"
-                 data-category="Accessories"
-                 data-name="Classic Sunglasses">
-
-                <div class="image-wrap">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=800&q=80"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                    <div class="fallback">
-                        🕶️
-                        <small>Sunglasses</small>
-                    </div>
-
-                </div>
-
-                <div class="card-body">
-
-                    <h3>Classic Sunglasses</h3>
-
-                    <div class="category">Accessories</div>
-
-                    <div class="rating">★★★★★</div>
-
-                    <div class="price-row">
-
-                        <div class="price">₹799</div>
-
-                        <button
-                            class="add-btn"
-                            data-name="Classic Sunglasses"
-                            data-price="799">
-                            Add
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <div class="card product-card"
-                 data-category="Accessories"
-                 data-name="Classic Watch">
-
-                <div class="image-wrap">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=800&q=80"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                    <div class="fallback">
-                        ⌚
-                        <small>Classic Watch</small>
-                    </div>
-
-                </div>
-
-                <div class="card-body">
-
-                    <h3>Classic Watch</h3>
-
-                    <div class="category">Accessories</div>
-
-                    <div class="rating">★★★★★</div>
-
-                    <div class="price-row">
-
-                        <div class="price">₹1,599</div>
-
-                        <button
-                            class="add-btn"
-                            data-name="Classic Watch"
-                            data-price="1599">
-                            Add
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <div class="card product-card"
-                 data-category="Accessories"
-                 data-name="Designer Handbag">
-
-                <div class="image-wrap">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=800&q=80"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                    <div class="fallback">
-                        👜
-                        <small>Handbag</small>
-                    </div>
-
-                </div>
-
-                <div class="card-body">
-
-                    <h3>Designer Handbag</h3>
-
-                    <div class="category">Accessories</div>
-
-                    <div class="rating">★★★★☆</div>
-
-                    <div class="price-row">
-
-                        <div class="price">₹1,899</div>
-
-                        <button
-                            class="add-btn"
-                            data-name="Designer Handbag"
-                            data-price="1899">
-                            Add
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-
-
-            <div class="card product-card"
-                 data-category="Accessories"
-                 data-name="Leather Wallet">
-
-                <div class="image-wrap">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=800&q=80"
-                        onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-
-                    <div class="fallback">
-                        👛
-                        <small>Leather Wallet</small>
-                    </div>
-
-                </div>
-
-                <div class="card-body">
-
-                    <h3>Leather Wallet</h3>
-
-                    <div class="category">Accessories</div>
-
-                    <div class="rating">★★★★★</div>
-
-                    <div class="price-row">
-
-                        <div class="price">₹699</div>
-
-                        <button
-                            class="add-btn"
-                            data-name="Leather Wallet"
-                            data-price="699">
-                            Add
-                        </button>
-
-                    </div>
-
-                </div>
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <footer>
-
-        <b>💜 Bhavana-Mart</b>
-        <br><br>
-        Native C++ E-Commerce Marketplace • Drogon Backend • SQLite Database
-
-    </footer>
+<footer>
+<b>💜 Bhavana-Mart</b><br><br>
+Native C++ E-Commerce Marketplace • Drogon Backend • SQLite Database
+</footer>
 
 </div>
 
 
-<!-- ================= CART MODAL ================= -->
+<!-- CART -->
+<div class="modal" id="cartModal">
 
-<div class="cart-modal" id="cartModal">
+<div class="modal-box">
 
-    <div class="cart-box">
+<div class="modal-head">
+<h2>🛒 Your Cart</h2>
+<button class="close" onclick="closeCart()">✕</button>
+</div>
 
-        <div class="cart-header">
+<div id="cartItems"></div>
 
-            <h2>🛒 Your Cart</h2>
+<div class="total">
+<span>Total</span>
+<span id="total">₹0</span>
+</div>
 
-            <button
-                class="close-btn"
-                onclick="closeCart()">
-                ✕
-            </button>
+<button class="checkout" onclick="checkout()">
+Proceed to Checkout
+</button>
 
-        </div>
-
-        <div id="cartItems"></div>
-
-        <div class="cart-total">
-
-            <span>Total</span>
-
-            <span id="cartTotal">
-                ₹0
-            </span>
-
-        </div>
-
-        <button
-            class="checkout-btn"
-            onclick="checkout()">
-            Proceed to Checkout
-        </button>
-
-    </div>
+</div>
 
 </div>
 
 
 <script>
 
-/* ================= AUTH ================= */
+/* PRODUCTS */
 
-let currentUser = null;
+const products = [
+
+{name:"Women Kurti",price:899,cat:"Clothing",emoji:"👗",image:"https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80"},
+{name:"Classic T-Shirt",price:599,cat:"Clothing",emoji:"👕",image:"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80"},
+{name:"Denim Jeans",price:1299,cat:"Clothing",emoji:"👖",image:"https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=800&q=80"},
+{name:"Casual Jacket",price:1799,cat:"Clothing",emoji:"🧥",image:"https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=80"},
+
+{name:"Gold Necklace",price:2499,cat:"Jewellery",emoji:"📿",image:"https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80"},
+{name:"Elegant Earrings",price:999,cat:"Jewellery",emoji:"✨",image:"https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=800&q=80"},
+{name:"Silver Ring",price:749,cat:"Jewellery",emoji:"💍",image:"https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80"},
+{name:"Designer Bracelet",price:1199,cat:"Jewellery",emoji:"📿",image:"https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=800&q=80"},
+
+{name:"Running Shoes",price:1999,cat:"Shoes",emoji:"👟",image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80"},
+{name:"Sports Sneakers",price:2199,cat:"Shoes",emoji:"👟",image:"https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&w=800&q=80"},
+{name:"Elegant Heels",price:1499,cat:"Shoes",emoji:"👠",image:"https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=800&q=80"},
+{name:"Casual Shoes",price:1699,cat:"Shoes",emoji:"👞",image:"https://images.unsplash.com/photo-1495555961986-6d4c1ecb7be3?auto=format&fit=crop&w=800&q=80"},
+
+{name:"Laptop",price:57000,cat:"Electronics",emoji:"💻",image:"https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=800&q=80"},
+{name:"Wireless Headphones",price:1500,cat:"Electronics",emoji:"🎧",image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80"},
+{name:"Mechanical Keyboard",price:1200,cat:"Electronics",emoji:"⌨️",image:"https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=800&q=80"},
+{name:"HD Monitor",price:8000,cat:"Electronics",emoji:"🖥️",image:"https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=800&q=80"},
+
+{name:"Makeup Kit",price:1299,cat:"Beauty",emoji:"💄",image:"https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=800&q=80"},
+{name:"Floral Perfume",price:899,cat:"Beauty",emoji:"🌸",image:"https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80"},
+{name:"Skincare Set",price:1099,cat:"Beauty",emoji:"🧴",image:"https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=800&q=80"},
+{name:"Hair Care Kit",price:749,cat:"Beauty",emoji:"💇",image:"https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80"},
+
+{name:"Modern Chair",price:3499,cat:"Home",emoji:"🪑",image:"https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80"},
+{name:"Table Lamp",price:999,cat:"Home",emoji:"💡",image:"https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80"},
+{name:"Comfort Cushion Set",price:899,cat:"Home",emoji:"🛋️",image:"https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?auto=format&fit=crop&w=800&q=80"},
+{name:"Wall Decor",price:1499,cat:"Home",emoji:"🖼️",image:"https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80"},
+
+{name:"Classic Sunglasses",price:799,cat:"Accessories",emoji:"🕶️",image:"https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=800&q=80"},
+{name:"Classic Watch",price:1599,cat:"Accessories",emoji:"⌚",image:"https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=800&q=80"},
+{name:"Designer Handbag",price:1899,cat:"Accessories",emoji:"👜",image:"https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=800&q=80"},
+{name:"Leather Wallet",price:699,cat:"Accessories",emoji:"👛",image:"https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=800&q=80"}
+
+];
+
+
+/* AUTH */
 
 function showLogin(){
 
-    document.getElementById("loginForm").style.display = "block";
-    document.getElementById("registerForm").style.display = "none";
+document.getElementById("loginForm").style.display="block";
+document.getElementById("registerForm").style.display="none";
 
-    document.getElementById("loginTab").classList.add("active");
-    document.getElementById("registerTab").classList.remove("active");
+document.getElementById("loginTab").classList.add("active");
+document.getElementById("registerTab").classList.remove("active");
 
-    document.getElementById("authMessage").textContent = "";
+document.getElementById("message").textContent="";
 }
 
 function showRegister(){
 
-    document.getElementById("loginForm").style.display = "none";
-    document.getElementById("registerForm").style.display = "block";
+document.getElementById("loginForm").style.display="none";
+document.getElementById("registerForm").style.display="block";
 
-    document.getElementById("loginTab").classList.remove("active");
-    document.getElementById("registerTab").classList.add("active");
+document.getElementById("loginTab").classList.remove("active");
+document.getElementById("registerTab").classList.add("active");
 
-    document.getElementById("authMessage").textContent = "";
-}
-
-function registerUser(event){
-
-    event.preventDefault();
-
-    const user = {
-        name: document.getElementById("registerName").value.trim(),
-        email: document.getElementById("registerEmail").value.trim(),
-        password: document.getElementById("registerPassword").value,
-        role: document.getElementById("registerRole").value
-    };
-
-    localStorage.setItem(
-        "bhavanaMartUser",
-        JSON.stringify(user)
-    );
-
-    const message = document.getElementById("authMessage");
-
-    message.textContent =
-        "✅ Registration successful! Please login.";
-
-    message.style.color = "#388e3c";
-
-    setTimeout(showLogin,700);
-}
-
-function loginUser(event){
-
-    event.preventDefault();
-
-    const email =
-        document.getElementById("loginEmail").value.trim();
-
-    const password =
-        document.getElementById("loginPassword").value;
-
-    const saved =
-        localStorage.getItem("bhavanaMartUser");
-
-    const message =
-        document.getElementById("authMessage");
-
-    if(!saved){
-
-        message.textContent =
-            "❌ Please register first.";
-
-        message.style.color =
-            "#d32f2f";
-
-        return;
-    }
-
-    const user = JSON.parse(saved);
-
-    if(
-        email === user.email &&
-        password === user.password
-    ){
-
-        currentUser = user;
-
-        localStorage.setItem(
-            "bhavanaMartLoggedIn",
-            "true"
-        );
-
-        openShop();
-
-    }
-    else{
-
-        message.textContent =
-            "❌ Invalid email or password.";
-
-        message.style.color =
-            "#d32f2f";
-    }
-}
-
-function openShop(){
-
-    document.getElementById("authPage").style.display = "none";
-    document.getElementById("shopPage").style.display = "block";
-
-    document.getElementById("userDisplay").textContent =
-        "👤 " + currentUser.name + " • " + currentUser.role;
-
-    updateCartCount();
-    checkBackend();
-}
-
-function logoutUser(){
-
-    localStorage.removeItem("bhavanaMartLoggedIn");
-
-    currentUser = null;
-
-    document.getElementById("shopPage").style.display = "none";
-    document.getElementById("authPage").style.display = "flex";
-
-    document.getElementById("loginForm").reset();
-
-    showLogin();
+document.getElementById("message").textContent="";
 }
 
 
-/* ================= CART ================= */
+function register(e){
 
-let cart = JSON.parse(
-    localStorage.getItem("bhavanaMartCart") || "[]"
+e.preventDefault();
+
+const user={
+name:document.getElementById("regName").value.trim(),
+email:document.getElementById("regEmail").value.trim(),
+password:document.getElementById("regPassword").value,
+role:document.getElementById("regRole").value
+};
+
+localStorage.setItem("bhavanaMartUser",JSON.stringify(user));
+
+const msg=document.getElementById("message");
+
+msg.textContent="✅ Registration successful! Please login.";
+msg.style.color="#388e3c";
+
+setTimeout(showLogin,700);
+}
+
+
+function login(e){
+
+e.preventDefault();
+
+const saved=localStorage.getItem("bhavanaMartUser");
+
+const msg=document.getElementById("message");
+
+if(!saved){
+
+msg.textContent="❌ Please register first.";
+msg.style.color="#d32f2f";
+return;
+}
+
+const user=JSON.parse(saved);
+
+const email=document.getElementById("loginEmail").value.trim();
+const password=document.getElementById("loginPassword").value;
+
+if(email===user.email && password===user.password){
+
+document.getElementById("authPage").style.display="none";
+document.getElementById("shop").style.display="block";
+
+document.getElementById("userInfo").textContent=
+"👤 "+user.name+" • "+user.role;
+
+checkBackend();
+renderProducts();
+
+}else{
+
+msg.textContent="❌ Invalid email or password.";
+msg.style.color="#d32f2f";
+}
+
+}
+
+
+function logout(){
+
+document.getElementById("shop").style.display="none";
+document.getElementById("authPage").style.display="flex";
+
+document.getElementById("loginEmail").value="";
+document.getElementById("loginPassword").value="";
+
+showLogin();
+}
+
+
+/* PRODUCTS */
+
+let category="All";
+
+function renderProducts(){
+
+const search=
+document.getElementById("search").value.toLowerCase().trim();
+
+const box=document.getElementById("products");
+
+const list=products.filter(p=>
+(category==="All" || p.cat===category) &&
+p.name.toLowerCase().includes(search)
 );
 
-function saveCart(){
+if(list.length===0){
 
-    localStorage.setItem(
-        "bhavanaMartCart",
-        JSON.stringify(cart)
-    );
+box.innerHTML='<div class="empty">😔 No products found</div>';
+return;
 }
 
-function addToCart(name,price){
+box.innerHTML=list.map((p,index)=>`
 
-    const existing =
-        cart.find(item => item.name === name);
+<div class="card">
 
-    if(existing){
+<div class="pic">
 
-        existing.quantity++;
+<img
+src="${p.image}"
+onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
 
-    }
-    else{
+<div class="fallback">
+${p.emoji}
+<small>${p.name}</small>
+</div>
 
-        cart.push({
-            name:name,
-            price:Number(price),
-            quantity:1
-        });
-    }
+</div>
 
-    saveCart();
-    updateCartCount();
+<div class="card-body">
 
-    alert(name + " added to cart 💜");
+<h3>${p.name}</h3>
+
+<div class="category">${p.cat}</div>
+
+<div class="rating">★★★★★</div>
+
+<div class="row">
+
+<div class="price">₹${p.price.toLocaleString("en-IN")}</div>
+
+<button class="add" onclick="addCart('${p.name}',${p.price})">
+Add
+</button>
+
+</div>
+
+</div>
+</div>
+
+`).join("");
 }
+
+
+function setCategory(value,btn){
+
+category=value;
+
+document.querySelectorAll(".cat").forEach(b=>b.classList.remove("active"));
+
+btn.classList.add("active");
+
+renderProducts();
+}
+
+
+function filterProducts(){
+renderProducts();
+}
+
+
+/* CART */
+
+let cart=[];
+
+function addCart(name,price){
+
+const item=cart.find(x=>x.name===name);
+
+if(item){
+item.qty++;
+}else{
+cart.push({name:name,price:Number(price),qty:1});
+}
+
+updateCartCount();
+
+alert(name+" added to cart 💜");
+}
+
 
 function updateCartCount(){
 
-    let count = 0;
+const count=cart.reduce((sum,item)=>sum+item.qty,0);
 
-    cart.forEach(item=>{
-        count += item.quantity;
-    });
-
-    document.getElementById("cartCount").textContent =
-        count;
+document.getElementById("cartCount").textContent=count;
 }
+
 
 function openCart(){
 
-    renderCart();
+renderCart();
 
-    document.getElementById("cartModal").style.display =
-        "flex";
+document.getElementById("cartModal").style.display="flex";
 }
+
 
 function closeCart(){
 
-    document.getElementById("cartModal").style.display =
-        "none";
+document.getElementById("cartModal").style.display="none";
 }
+
 
 function renderCart(){
 
-    const container =
-        document.getElementById("cartItems");
+const box=document.getElementById("cartItems");
 
-    let total = 0;
+if(cart.length===0){
 
-    if(cart.length === 0){
+box.innerHTML=
+'<div class="empty">🛒<br><br>Your cart is empty</div>';
 
-        container.innerHTML = `
-            <div class="cart-empty">
-                🛒<br><br>
-                Your cart is empty
-            </div>
-        `;
+document.getElementById("total").textContent="₹0";
 
-        document.getElementById("cartTotal").textContent =
-            "₹0";
-
-        return;
-    }
-
-    container.innerHTML = cart.map((item,index)=>{
-
-        const itemTotal =
-            item.price * item.quantity;
-
-        total += itemTotal;
-
-        return `
-            <div class="cart-item">
-
-                <div>
-                    <div class="cart-item-name">
-                        ${item.name}
-                    </div>
-
-                    <div class="cart-item-price">
-                        ₹${item.price}
-                    </div>
-                </div>
-
-                <div class="qty-box">
-
-                    <button
-                        class="qty-btn"
-                        onclick="changeQuantity(${index},-1)">
-                        −
-                    </button>
-
-                    <span>${item.quantity}</span>
-
-                    <button
-                        class="qty-btn"
-                        onclick="changeQuantity(${index},1)">
-                        +
-                    </button>
-
-                </div>
-
-                <div class="cart-item-price">
-                    ₹${itemTotal}
-                </div>
-
-                <button
-                    class="remove-btn"
-                    onclick="removeFromCart(${index})">
-                    Remove
-                </button>
-
-            </div>
-        `;
-
-    }).join("");
-
-    document.getElementById("cartTotal").textContent =
-        "₹" + total;
+return;
 }
 
-function changeQuantity(index,amount){
+let total=0;
 
-    cart[index].quantity += amount;
+box.innerHTML=cart.map((item,index)=>{
 
-    if(cart[index].quantity <= 0){
+const itemTotal=item.price*item.qty;
 
-        cart.splice(index,1);
-    }
+total+=itemTotal;
 
-    saveCart();
-    updateCartCount();
-    renderCart();
+return `
+
+<div class="cart-item">
+
+<div>
+<b>${item.name}</b><br>
+<span style="color:#6a1b9a">₹${item.price.toLocaleString("en-IN")}</span>
+</div>
+
+<div class="qty">
+
+<button onclick="changeQty(${index},-1)">−</button>
+<span>${item.qty}</span>
+<button onclick="changeQty(${index},1)">+</button>
+
+</div>
+
+<div>
+<b>₹${itemTotal.toLocaleString("en-IN")}</b>
+</div>
+
+<button class="remove" onclick="removeItem(${index})">
+Remove
+</button>
+
+</div>
+
+`;
+
+}).join("");
+
+document.getElementById("total").textContent=
+"₹"+total.toLocaleString("en-IN");
 }
 
-function removeFromCart(index){
 
-    cart.splice(index,1);
+function changeQty(index,amount){
 
-    saveCart();
-    updateCartCount();
-    renderCart();
+cart[index].qty+=amount;
+
+if(cart[index].qty<=0){
+cart.splice(index,1);
 }
+
+updateCartCount();
+renderCart();
+}
+
+
+function removeItem(index){
+
+cart.splice(index,1);
+
+updateCartCount();
+renderCart();
+}
+
 
 function checkout(){
 
-    if(cart.length === 0){
+if(cart.length===0){
 
-        alert("Your cart is empty!");
-        return;
-    }
+alert("Your cart is empty!");
 
-    alert(
-        "✅ Checkout successful! This is a mock payment confirmation."
-    );
+return;
+}
 
-    cart = [];
+alert("✅ Order placed successfully! Mock payment confirmed.");
 
-    saveCart();
-    updateCartCount();
-    closeCart();
+cart=[];
+
+updateCartCount();
+closeCart();
 }
 
 
-/* ================= PRODUCT BUTTONS ================= */
-
-document.querySelectorAll(".add-btn")
-    .forEach(button => {
-
-        button.addEventListener("click",function(){
-
-            addToCart(
-                this.dataset.name,
-                this.dataset.price
-            );
-
-        });
-
-    });
-
-
-/* ================= FILTER ================= */
-
-let currentCategory = "All";
-
-function setCategory(category,button){
-
-    currentCategory = category;
-
-    document.querySelectorAll(".category-btn")
-        .forEach(btn=>{
-            btn.classList.remove("active");
-        });
-
-    button.classList.add("active");
-
-    filterProducts();
-}
-
-function filterProducts(){
-
-    const search =
-        document.getElementById("searchInput")
-        .value
-        .toLowerCase()
-        .trim();
-
-    const cards =
-        document.querySelectorAll(".product-card");
-
-    let visible = 0;
-
-    cards.forEach(card=>{
-
-        const name =
-            card.dataset.name.toLowerCase();
-
-        const category =
-            card.dataset.category;
-
-        const categoryMatch =
-            currentCategory === "All" ||
-            category === currentCategory;
-
-        const searchMatch =
-            name.includes(search);
-
-        if(categoryMatch && searchMatch){
-
-            card.style.display = "";
-            visible++;
-
-        }
-        else{
-
-            card.style.display = "none";
-        }
-
-    });
-
-    const oldMessage =
-        document.querySelector(".no-products");
-
-    if(oldMessage){
-        oldMessage.remove();
-    }
-
-    if(visible === 0){
-
-        document.getElementById("productGrid")
-            .insertAdjacentHTML(
-                "beforeend",
-                `
-                <div class="no-products">
-                    😔 No products found
-                </div>
-                `
-            );
-    }
-}
-
-
-/* ================= BACKEND ================= */
+/* BACKEND */
 
 async function checkBackend(){
 
-    try{
+try{
 
-        const response =
-            await fetch("/api/v1/health");
+const response=await fetch("/api/v1/health");
 
-        if(response.ok){
+if(response.ok){
 
-            const data =
-                await response.json();
+const data=await response.json();
 
-            if(
-                data.status === "UP" &&
-                data.db === "UP"
-            ){
+if(data.status==="UP" && data.db==="UP"){
 
-                document.getElementById("status").textContent =
-                    "✅ Backend UP • Database UP • API Connected";
+document.getElementById("status").textContent=
+"✅ Backend UP • Database UP • API Connected";
 
-            }
-            else{
+}else{
 
-                document.getElementById("status").textContent =
-                    "⚠️ Backend reachable";
+document.getElementById("status").textContent=
+"⚠️ Backend reachable";
+}
 
-            }
+}else{
 
-        }
-        else{
+document.getElementById("status").textContent=
+"⚠️ Backend not responding";
+}
 
-            document.getElementById("status").textContent =
-                "⚠️ Backend not responding";
-        }
+}catch(e){
 
-    }
-    catch(error){
+document.getElementById("status").textContent=
+"⚠️ Backend unavailable";
+}
 
-        document.getElementById("status").textContent =
-            "⚠️ Backend unavailable";
-    }
 }
 
 
-/* ================= AUTO LOGIN ================= */
+/* IMPORTANT:
+   Always start with login page after refresh.
+*/
 
-window.onload = function(){
+window.onload=function(){
 
-    const saved =
-        localStorage.getItem("bhavanaMartUser");
+document.getElementById("authPage").style.display="flex";
+document.getElementById("shop").style.display="none";
 
-    const loggedIn =
-        localStorage.getItem("bhavanaMartLoggedIn");
+showLogin();
 
-    if(saved && loggedIn === "true"){
-
-        currentUser =
-            JSON.parse(saved);
-
-        openShop();
-
-    }
 };
 
 </script>
