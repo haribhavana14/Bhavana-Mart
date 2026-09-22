@@ -1,83 +1,157 @@
 #include "productrepository.h"
-#include <sqlite3.h>
+#include "../plugin/DatabasePlugin.h"
 
-static sqlite3* db = nullptr;
+#include <cmath>
+#include <iostream>
 
-ProductRepository::ProductRepository() {
-    sqlite3_open("database/bhavanamart.db", &db);
-    createTable();
+drogon::orm::DbClientPtr ProductRepository::getClient()
+{
+    auto *plugin = drogon::app().getPlugin<DatabasePlugin>();
+
+    if (!plugin)
+    {
+        throw std::runtime_error("DatabasePlugin is not available");
+    }
+
+    return plugin->getClient();
 }
 
-void ProductRepository::createTable() {
-    const char* sql =
+void ProductRepository::ensureSchema()
+{
+    auto db = getClient();
+
+    db->execSqlSync(
+        "CREATE TABLE IF NOT EXISTS users ("
+        "id SERIAL PRIMARY KEY,"
+        "name TEXT NOT NULL,"
+        "email TEXT UNIQUE NOT NULL,"
+        "password_hash TEXT NOT NULL,"
+        "role TEXT NOT NULL CHECK(role IN ('BUYER','SELLER','ADMIN')),"
+        "created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP"
+        ");");
+
+    db->execSqlSync(
         "CREATE TABLE IF NOT EXISTS products ("
         "id INTEGER PRIMARY KEY,"
+        "seller_id INTEGER REFERENCES users(id) ON DELETE SET NULL,"
         "name TEXT NOT NULL,"
-        "price REAL NOT NULL,"
-        "stock INTEGER NOT NULL);";
-
-    sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
+        "description TEXT DEFAULT '',"
+        "price_cents BIGINT NOT NULL,"
+        "stock_qty INTEGER NOT NULL,"
+        "category TEXT DEFAULT '',"
+        "image_url TEXT DEFAULT '',"
+        "created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP"
+        ");");
 }
 
-void ProductRepository::addProduct(const Product& product) {
-    const char* sql =
-        "INSERT OR REPLACE INTO products "
-        "(id, name, price, stock) VALUES (?, ?, ?, ?);";
+void ProductRepository::addProduct(const Product& product)
+{
+    ensureSchema();
 
-    sqlite3_stmt* stmt = nullptr;
+    auto db = getClient();
 
-    sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
-    sqlite3_bind_int(stmt, 1, product.id);
-    sqlite3_bind_text(stmt, 2, product.name.c_str(), -1, SQLITE_TRANSIENT);
-    sqlite3_bind_double(stmt, 3, product.price);
-    sqlite3_bind_int(stmt, 4, product.stock);
+    long long priceCents =
+        static_cast<long long>(std::llround(product.price * 100.0));
 
-    sqlite3_step(stmt);
-    sqlite3_finalize(stmt);
+    db->execSqlSync(
+        "INSERT INTO products "
+        "(id, name, price_cents, stock_qty) "
+        "VALUES ($1, $2, $3, $4) "
+        "ON CONFLICT (id) DO UPDATE SET "
+        "name = EXCLUDED.name, "
+        "price_cents = EXCLUDED.price_cents, "
+        "stock_qty = EXCLUDED.stock_qty;",
+        product.id,
+        product.name,
+        priceCents,
+        product.stock);
 }
 
-std::vector<Product> ProductRepository::getProducts() {
+std::vector<Product> ProductRepository::getProducts()
+{
+    ensureSchema();
+
+    auto db = getClient();
+
+    // Demo seed - inserted only when IDs don't already exist.
+    db->execSqlSync(
+        "INSERT INTO products (id, name, price_cents, stock_qty) "
+        "VALUES "
+        "(1, 'Laptop', 5700000, 10),"
+        "(2, 'Mouse', 80000, 25),"
+        "(3, 'Keyboard', 120000, 15),"
+        "(4, 'Headphones', 150000, 20),"
+        "(5, 'Monitor', 800000, 10) "
+        "ON CONFLICT (id) DO NOTHING;");
+
     std::vector<Product> products;
 
-    const char* sql =
-        "SELECT id, name, price, stock FROM products;";
+    auto result = db->execSqlSync(
+        "SELECT id, name, price_cents, stock_qty "
+        "FROM products ORDER BY id;");
 
-    sqlite3_stmt* stmt = nullptr;
-
-    sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
-
-    while (sqlite3_step(stmt) == SQLITE_ROW) {
+    for (auto row : result)
+    {
         Product p;
 
-        p.id = sqlite3_column_int(stmt, 0);
-        p.name =
-            reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
-        p.price = sqlite3_column_double(stmt, 2);
-        p.stock = sqlite3_column_int(stmt, 3);
+        p.id = row["id"].as<int>();
+        p.name = row["name"].as<std::string>();
+
+        long long cents = row["price_cents"].as<long long>();
+        p.price = cents / 100.0;
+
+        p.stock = row["stock_qty"].as<int>();
 
         products.push_back(p);
     }
 
-    sqlite3_finalize(stmt);
-
     return products;
 }
 
-bool ProductRepository::isDatabaseHealthy() {
-    if (db == nullptr) {
+bool ProductRepository::updateProduct(const Product& product)
+{
+    ensureSchema();
+
+    auto db = getClient();
+
+    long long priceCents =
+        static_cast<long long>(std::llround(product.price * 100.0));
+
+    auto result = db->execSqlSync(
+        "UPDATE products "
+        "SET name = $1, price_cents = $2, stock_qty = $3 "
+        "WHERE id = $4;",
+        product.name,
+        priceCents,
+        product.stock,
+        product.id);
+
+    return result.affectedRows() > 0;
+}
+
+bool ProductRepository::deleteProduct(int id)
+{
+    ensureSchema();
+
+    auto db = getClient();
+
+    auto result = db->execSqlSync(
+        "DELETE FROM products WHERE id = $1;",
+        id);
+
+    return result.affectedRows() > 0;
+}
+
+bool ProductRepository::isDatabaseHealthy()
+{
+    try
+    {
+        auto db = getClient();
+        auto result = db->execSqlSync("SELECT 1;");
+        return result.size() == 1;
+    }
+    catch (...)
+    {
         return false;
     }
-
-    const char* sql = "SELECT 1;";
-    sqlite3_stmt* stmt = nullptr;
-
-    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK) {
-        return false;
-    }
-
-    bool healthy = (sqlite3_step(stmt) == SQLITE_ROW);
-
-    sqlite3_finalize(stmt);
-
-    return healthy;
 }

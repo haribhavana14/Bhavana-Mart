@@ -1,0 +1,9 @@
+{
+    "plugins": [
+        {
+            "name": "DatabasePlugin",
+            "dependencies": [],
+            "config": {}
+        }
+    ]
+}

@@ -1,17 +1,24 @@
 #pragma once
 
-#include "../models/product.h"
+#include <drogon/drogon.h>
 #include <vector>
 
-class ProductRepository {
+#include "../models/product.h"
+
+class ProductRepository
+{
 public:
-    ProductRepository();
+    ProductRepository() = default;
 
     void addProduct(const Product& product);
     std::vector<Product> getProducts();
 
+    bool updateProduct(const Product& product);
+    bool deleteProduct(int id);
+
     bool isDatabaseHealthy();
 
 private:
-    void createTable();
+    drogon::orm::DbClientPtr getClient();
+    void ensureSchema();
 };
