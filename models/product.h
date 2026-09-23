@@ -2,9 +2,20 @@
 
 #include <string>
 
-struct Product {
-    int id;
+#include "money.h"
+
+struct Product
+{
+    int id{0};
+    int seller_id{0};
+
     std::string name;
-    double price;
-    int stock;
+    std::string description;
+
+    Money price;
+
+    int stock_qty{0};
+
+    std::string category;
+    std::string image_url;
 };
