@@ -6,8 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Drogon CONFIG REQUIRED)
-
-find_library(SODIUM_LIBRARY sodium REQUIRED)
+find_package(unofficial-sodium CONFIG REQUIRED)
 
 add_executable(BhavanaMart
     src/main.cpp
@@ -16,7 +15,10 @@ add_executable(BhavanaMart
 
     plugin/DatabasePlugin.cpp
 
-    src/util/PasswordUtil.cpp
+    src/util/passwordUtil.cpp
+
+    src/repository/AuthRepository.cpp
+    src/service/AuthService.cpp
 )
 
 target_include_directories(BhavanaMart PRIVATE
@@ -25,5 +27,5 @@ target_include_directories(BhavanaMart PRIVATE
 
 target_link_libraries(BhavanaMart PRIVATE
     Drogon::Drogon
-    ${SODIUM_LIBRARY}
+    unofficial-sodium::sodium
 )

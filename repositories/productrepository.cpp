@@ -1,19 +1,21 @@
 #include "productrepository.h"
 #include "../plugin/DatabasePlugin.h"
 
-#include <cmath>
-#include <iostream>
+#include <stdexcept>
 
 drogon::orm::DbClientPtr ProductRepository::getClient()
 {
-    auto *plugin = drogon::app().getPlugin<DatabasePlugin>();
+    auto plugin = drogon::app().getPlugin<DatabasePlugin>();
 
     if (!plugin)
-    {
         throw std::runtime_error("DatabasePlugin is not available");
-    }
 
-    return plugin->getClient();
+    auto client = plugin->getClient();
+
+    if (!client)
+        throw std::runtime_error("Database client is not available");
+
+    return client;
 }
 
 void ProductRepository::ensureSchema()
@@ -23,25 +25,47 @@ void ProductRepository::ensureSchema()
     db->execSqlSync(
         "CREATE TABLE IF NOT EXISTS users ("
         "id SERIAL PRIMARY KEY,"
-        "name TEXT NOT NULL,"
-        "email TEXT UNIQUE NOT NULL,"
+        "name VARCHAR(100) NOT NULL,"
+        "email VARCHAR(255) UNIQUE NOT NULL,"
         "password_hash TEXT NOT NULL,"
-        "role TEXT NOT NULL CHECK(role IN ('BUYER','SELLER','ADMIN')),"
-        "created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP"
-        ");");
+        "role VARCHAR(10) NOT NULL CHECK "
+        "(role IN ('BUYER','SELLER','ADMIN')),"
+        "created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"
+        ")");
 
     db->execSqlSync(
         "CREATE TABLE IF NOT EXISTS products ("
-        "id INTEGER PRIMARY KEY,"
-        "seller_id INTEGER REFERENCES users(id) ON DELETE SET NULL,"
-        "name TEXT NOT NULL,"
-        "description TEXT DEFAULT '',"
+        "id SERIAL PRIMARY KEY,"
+        "seller_id INTEGER REFERENCES users(id),"
+        "name VARCHAR(255) NOT NULL,"
+        "description TEXT,"
         "price_cents BIGINT NOT NULL,"
-        "stock_qty INTEGER NOT NULL,"
-        "category TEXT DEFAULT '',"
-        "image_url TEXT DEFAULT '',"
-        "created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP"
-        ");");
+        "stock_qty INTEGER NOT NULL DEFAULT 0,"
+        "category VARCHAR(100),"
+        "image_url TEXT,"
+        "created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"
+        ")");
+
+    db->execSqlSync(
+        "ALTER TABLE products "
+        "ADD COLUMN IF NOT EXISTS seller_id INTEGER");
+
+    db->execSqlSync(
+        "ALTER TABLE products "
+        "ADD COLUMN IF NOT EXISTS description TEXT");
+
+    db->execSqlSync(
+        "ALTER TABLE products "
+        "ADD COLUMN IF NOT EXISTS category VARCHAR(100)");
+
+    db->execSqlSync(
+        "ALTER TABLE products "
+        "ADD COLUMN IF NOT EXISTS image_url TEXT");
+
+    db->execSqlSync(
+        "ALTER TABLE products "
+        "ADD COLUMN IF NOT EXISTS created_at "
+        "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
 }
 
 void ProductRepository::addProduct(const Product& product)
@@ -50,21 +74,27 @@ void ProductRepository::addProduct(const Product& product)
 
     auto db = getClient();
 
-    long long priceCents =
-        static_cast<long long>(std::llround(product.price * 100.0));
-
     db->execSqlSync(
         "INSERT INTO products "
-        "(id, name, price_cents, stock_qty) "
-        "VALUES ($1, $2, $3, $4) "
+        "(id, seller_id, name, description, price_cents, "
+        "stock_qty, category, image_url) "
+        "VALUES ($1, $2, $3, $4, $5, $6, $7, $8) "
         "ON CONFLICT (id) DO UPDATE SET "
+        "seller_id = EXCLUDED.seller_id, "
         "name = EXCLUDED.name, "
+        "description = EXCLUDED.description, "
         "price_cents = EXCLUDED.price_cents, "
-        "stock_qty = EXCLUDED.stock_qty;",
+        "stock_qty = EXCLUDED.stock_qty, "
+        "category = EXCLUDED.category, "
+        "image_url = EXCLUDED.image_url",
         product.id,
+        product.seller_id,
         product.name,
-        priceCents,
-        product.stock);
+        product.description,
+        product.price.cents,
+        product.stock_qty,
+        product.category,
+        product.image_url);
 }
 
 std::vector<Product> ProductRepository::getProducts()
@@ -73,34 +103,47 @@ std::vector<Product> ProductRepository::getProducts()
 
     auto db = getClient();
 
-    // Demo seed - inserted only when IDs don't already exist.
-    db->execSqlSync(
-        "INSERT INTO products (id, name, price_cents, stock_qty) "
-        "VALUES "
-        "(1, 'Laptop', 5700000, 10),"
-        "(2, 'Mouse', 80000, 25),"
-        "(3, 'Keyboard', 120000, 15),"
-        "(4, 'Headphones', 150000, 20),"
-        "(5, 'Monitor', 800000, 10) "
-        "ON CONFLICT (id) DO NOTHING;");
+    auto result = db->execSqlSync(
+        "SELECT id, seller_id, name, description, "
+        "price_cents, stock_qty, category, image_url "
+        "FROM products "
+        "ORDER BY id");
 
     std::vector<Product> products;
 
-    auto result = db->execSqlSync(
-        "SELECT id, name, price_cents, stock_qty "
-        "FROM products ORDER BY id;");
-
-    for (auto row : result)
+    for (const auto& row : result)
     {
         Product p;
 
         p.id = row["id"].as<int>();
+
+        if (row["seller_id"].isNull())
+            p.seller_id = 0;
+        else
+            p.seller_id = row["seller_id"].as<int>();
+
         p.name = row["name"].as<std::string>();
 
-        long long cents = row["price_cents"].as<long long>();
-        p.price = cents / 100.0;
+        if (row["description"].isNull())
+            p.description = "";
+        else
+            p.description = row["description"].as<std::string>();
 
-        p.stock = row["stock_qty"].as<int>();
+        p.price.cents =
+            row["price_cents"].as<long long>();
+
+        p.stock_qty =
+            row["stock_qty"].as<int>();
+
+        if (row["category"].isNull())
+            p.category = "";
+        else
+            p.category = row["category"].as<std::string>();
+
+        if (row["image_url"].isNull())
+            p.image_url = "";
+        else
+            p.image_url = row["image_url"].as<std::string>();
 
         products.push_back(p);
     }
@@ -114,16 +157,23 @@ bool ProductRepository::updateProduct(const Product& product)
 
     auto db = getClient();
 
-    long long priceCents =
-        static_cast<long long>(std::llround(product.price * 100.0));
-
     auto result = db->execSqlSync(
-        "UPDATE products "
-        "SET name = $1, price_cents = $2, stock_qty = $3 "
-        "WHERE id = $4;",
+        "UPDATE products SET "
+        "seller_id = $1, "
+        "name = $2, "
+        "description = $3, "
+        "price_cents = $4, "
+        "stock_qty = $5, "
+        "category = $6, "
+        "image_url = $7 "
+        "WHERE id = $8",
+        product.seller_id,
         product.name,
-        priceCents,
-        product.stock,
+        product.description,
+        product.price.cents,
+        product.stock_qty,
+        product.category,
+        product.image_url,
         product.id);
 
     return result.affectedRows() > 0;
@@ -136,7 +186,7 @@ bool ProductRepository::deleteProduct(int id)
     auto db = getClient();
 
     auto result = db->execSqlSync(
-        "DELETE FROM products WHERE id = $1;",
+        "DELETE FROM products WHERE id = $1",
         id);
 
     return result.affectedRows() > 0;
@@ -147,8 +197,10 @@ bool ProductRepository::isDatabaseHealthy()
     try
     {
         auto db = getClient();
-        auto result = db->execSqlSync("SELECT 1;");
-        return result.size() == 1;
+
+        db->execSqlSync("SELECT 1");
+
+        return true;
     }
     catch (...)
     {

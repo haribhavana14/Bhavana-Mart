@@ -9,77 +9,168 @@
 
 int main()
 {
-    // Load Drogon configuration and DatabasePlugin
     drogon::app().loadConfigFile("./config.json");
 
     ProductRepository repo;
 
-    // =========================
-    // GET /products
-    // =========================
+    // GET /products and /api/v1/products
     auto getProductsHandler =
-        [&repo](const drogon::HttpRequestPtr&,
-                std::function<void(const drogon::HttpResponsePtr&)>&& callback)
-    {
-        auto products = repo.getProducts();
-
-        Json::Value result(Json::arrayValue);
-
-        for (const auto& p : products)
+        [&repo](
+            const drogon::HttpRequestPtr&,
+            std::function<void(const drogon::HttpResponsePtr&)>&& callback)
         {
-            Json::Value item;
-            item["id"] = p.id;
-            item["name"] = p.name;
-            item["price"] = p.price;
-            item["stock"] = p.stock;
+            try
+            {
+                auto products = repo.getProducts();
 
-            result.append(item);
-        }
+                Json::Value result(Json::arrayValue);
 
-        auto resp = drogon::HttpResponse::newHttpJsonResponse(result);
-        callback(resp);
-    };
+                for (const auto& p : products)
+                {
+                    Json::Value item;
 
-    // =========================
-    // POST /products
-    // =========================
+                    item["id"] = p.id;
+                    item["seller_id"] = p.seller_id;
+                    item["name"] = p.name;
+                    item["description"] = p.description;
+
+                    // Money is stored as integer minor units.
+                    item["price"] =
+                        static_cast<Json::Int64>(p.price.cents);
+
+                    item["stock"] = p.stock_qty;
+                    item["category"] = p.category;
+                    item["image_url"] = p.image_url;
+
+                    result.append(item);
+                }
+
+                callback(
+                    drogon::HttpResponse::newHttpJsonResponse(result));
+            }
+            catch (...)
+            {
+                Json::Value error;
+
+                error["success"] = false;
+                error["data"] = Json::nullValue;
+                error["error"]["code"] = "DATABASE_ERROR";
+
+                auto response =
+                    drogon::HttpResponse::newHttpJsonResponse(error);
+
+                response->setStatusCode(
+                    drogon::k500InternalServerError);
+
+                callback(response);
+            }
+        };
+
+    // POST /products and /api/v1/products
     auto postProductHandler =
-        [&repo](const drogon::HttpRequestPtr& req,
-                std::function<void(const drogon::HttpResponsePtr&)>&& callback)
-    {
-        auto json = req->getJsonObject();
-
-        if (!json)
+        [&repo](
+            const drogon::HttpRequestPtr& request,
+            std::function<void(const drogon::HttpResponsePtr&)>&& callback)
         {
-            auto resp = drogon::HttpResponse::newHttpResponse();
-            resp->setStatusCode(drogon::k400BadRequest);
-            resp->setBody("Invalid JSON");
-            callback(resp);
-            return;
-        }
+            auto json = request->getJsonObject();
 
-        Product p;
+            if (!json)
+            {
+                Json::Value error;
+                error["success"] = false;
+                error["data"] = Json::nullValue;
+                error["error"]["code"] = "INVALID_JSON";
 
-        p.id = (*json)["id"].asInt();
-        p.name = (*json)["name"].asString();
-        p.price = (*json)["price"].asDouble();
-        p.stock = (*json)["stock"].asInt();
+                auto response =
+                    drogon::HttpResponse::newHttpJsonResponse(error);
 
-        repo.addProduct(p);
+                response->setStatusCode(
+                    drogon::k400BadRequest);
 
-        Json::Value result;
-        result["message"] = "Product added successfully";
-        result["id"] = p.id;
+                callback(response);
+                return;
+            }
 
-        auto resp = drogon::HttpResponse::newHttpJsonResponse(result);
-        resp->setStatusCode(drogon::k201Created);
+            Product product;
 
-        callback(resp);
-    };
+            product.id = (*json)["id"].asInt();
+            product.seller_id = (*json)["seller_id"].asInt();
+            product.name = (*json)["name"].asString();
+            product.description = (*json)["description"].asString();
 
-    // =========================
-    // Existing product routes
-    // =========================
+            const double price =
+                (*json)["price"].asDouble();
+
+            product.price.cents =
+                static_cast<long long>(price * 100.0 + 0.5);
+
+            product.stock_qty =
+                (*json)["stock"].asInt();
+
+            product.category =
+                (*json)["category"].asString();
+
+            product.image_url =
+                (*json)["image_url"].asString();
+
+            if (product.id <= 0 ||
+                product.name.empty() ||
+                product.price.cents < 0 ||
+                product.stock_qty < 0)
+            {
+                Json::Value error;
+                error["success"] = false;
+                error["data"] = Json::nullValue;
+                error["error"]["code"] = "INVALID_PRODUCT_DATA";
+
+                auto response =
+                    drogon::HttpResponse::newHttpJsonResponse(error);
+
+                response->setStatusCode(
+                    drogon::k400BadRequest);
+
+                callback(response);
+                return;
+            }
+
+            try
+            {
+                repo.addProduct(product);
+
+                Json::Value data;
+                data["id"] = product.id;
+
+                Json::Value responseJson;
+                responseJson["success"] = true;
+                responseJson["data"] = data;
+                responseJson["error"] = Json::nullValue;
+
+                auto response =
+                    drogon::HttpResponse::newHttpJsonResponse(
+                        responseJson);
+
+                response->setStatusCode(
+                    drogon::k201Created);
+
+                callback(response);
+            }
+            catch (...)
+            {
+                Json::Value error;
+                error["success"] = false;
+                error["data"] = Json::nullValue;
+                error["error"]["code"] = "DATABASE_ERROR";
+
+                auto response =
+                    drogon::HttpResponse::newHttpJsonResponse(error);
+
+                response->setStatusCode(
+                    drogon::k500InternalServerError);
+
+                callback(response);
+            }
+        };
+
     drogon::app().registerHandler(
         "/products",
         getProductsHandler,
@@ -90,9 +181,6 @@ int main()
         postProductHandler,
         {drogon::Post});
 
-    // =========================
-    // Versioned API routes
-    // =========================
     drogon::app().registerHandler(
         "/api/v1/products",
         getProductsHandler,
@@ -103,13 +191,12 @@ int main()
         postProductHandler,
         {drogon::Post});
 
-    // =========================
     // Health check
-    // =========================
     drogon::app().registerHandler(
         "/api/v1/health",
-        [&repo](const drogon::HttpRequestPtr&,
-                std::function<void(const drogon::HttpResponsePtr&)>&& callback)
+        [&repo](
+            const drogon::HttpRequestPtr&,
+            std::function<void(const drogon::HttpResponsePtr&)>&& callback)
         {
             Json::Value result;
 
@@ -118,47 +205,35 @@ int main()
                 result["status"] = "UP";
                 result["db"] = "UP";
 
-                auto resp =
-                    drogon::HttpResponse::newHttpJsonResponse(result);
-
-                resp->setStatusCode(drogon::k200OK);
-                callback(resp);
+                callback(
+                    drogon::HttpResponse::newHttpJsonResponse(result));
             }
             else
             {
                 result["status"] = "DOWN";
                 result["db"] = "DOWN";
 
-                auto resp =
+                auto response =
                     drogon::HttpResponse::newHttpJsonResponse(result);
 
-                resp->setStatusCode(drogon::k503ServiceUnavailable);
-                callback(resp);
+                response->setStatusCode(
+                    drogon::k503ServiceUnavailable);
+
+                callback(response);
             }
         },
         {drogon::Get});
 
-    // =========================
-    // Serve frontend
-    // =========================
     drogon::app().setDocumentRoot("./src");
     drogon::app().setHomePage("index.html");
 
-    // =========================
-    // Render PORT
-    // =========================
     int port = 8080;
 
     const char* portEnv = std::getenv("PORT");
 
-    if (portEnv != nullptr)
-    {
+    if (portEnv)
         port = std::stoi(portEnv);
-    }
 
-    // =========================
-    // Start server
-    // =========================
     drogon::app()
         .addListener("0.0.0.0", port)
         .run();
