@@ -9,7 +9,11 @@
 
 int main()
 {
+    // Load Drogon configuration and PostgreSQL plugin.
     drogon::app().loadConfigFile("./config.json");
+
+    // Enable server-side sessions with a 20-minute idle timeout.
+    drogon::app().enableSession(1200);
 
     ProductRepository repo;
 
@@ -17,7 +21,8 @@ int main()
     auto getProductsHandler =
         [&repo](
             const drogon::HttpRequestPtr&,
-            std::function<void(const drogon::HttpResponsePtr&)>&& callback)
+            std::function<void(
+                const drogon::HttpResponsePtr&)>&& callback)
         {
             try
             {
@@ -70,13 +75,15 @@ int main()
     auto postProductHandler =
         [&repo](
             const drogon::HttpRequestPtr& request,
-            std::function<void(const drogon::HttpResponsePtr&)>&& callback)
+            std::function<void(
+                const drogon::HttpResponsePtr&)>&& callback)
         {
             auto json = request->getJsonObject();
 
             if (!json)
             {
                 Json::Value error;
+
                 error["success"] = false;
                 error["data"] = Json::nullValue;
                 error["error"]["code"] = "INVALID_JSON";
@@ -93,16 +100,24 @@ int main()
 
             Product product;
 
-            product.id = (*json)["id"].asInt();
-            product.seller_id = (*json)["seller_id"].asInt();
-            product.name = (*json)["name"].asString();
-            product.description = (*json)["description"].asString();
+            product.id =
+                (*json)["id"].asInt();
+
+            product.seller_id =
+                (*json)["seller_id"].asInt();
+
+            product.name =
+                (*json)["name"].asString();
+
+            product.description =
+                (*json)["description"].asString();
 
             const double price =
                 (*json)["price"].asDouble();
 
             product.price.cents =
-                static_cast<long long>(price * 100.0 + 0.5);
+                static_cast<long long>(
+                    price * 100.0 + 0.5);
 
             product.stock_qty =
                 (*json)["stock"].asInt();
@@ -119,9 +134,11 @@ int main()
                 product.stock_qty < 0)
             {
                 Json::Value error;
+
                 error["success"] = false;
                 error["data"] = Json::nullValue;
-                error["error"]["code"] = "INVALID_PRODUCT_DATA";
+                error["error"]["code"] =
+                    "INVALID_PRODUCT_DATA";
 
                 auto response =
                     drogon::HttpResponse::newHttpJsonResponse(error);
@@ -141,6 +158,7 @@ int main()
                 data["id"] = product.id;
 
                 Json::Value responseJson;
+
                 responseJson["success"] = true;
                 responseJson["data"] = data;
                 responseJson["error"] = Json::nullValue;
@@ -157,9 +175,11 @@ int main()
             catch (...)
             {
                 Json::Value error;
+
                 error["success"] = false;
                 error["data"] = Json::nullValue;
-                error["error"]["code"] = "DATABASE_ERROR";
+                error["error"]["code"] =
+                    "DATABASE_ERROR";
 
                 auto response =
                     drogon::HttpResponse::newHttpJsonResponse(error);
@@ -196,7 +216,8 @@ int main()
         "/api/v1/health",
         [&repo](
             const drogon::HttpRequestPtr&,
-            std::function<void(const drogon::HttpResponsePtr&)>&& callback)
+            std::function<void(
+                const drogon::HttpResponsePtr&)>&& callback)
         {
             Json::Value result;
 
@@ -206,7 +227,8 @@ int main()
                 result["db"] = "UP";
 
                 callback(
-                    drogon::HttpResponse::newHttpJsonResponse(result));
+                    drogon::HttpResponse::newHttpJsonResponse(
+                        result));
             }
             else
             {
@@ -214,7 +236,8 @@ int main()
                 result["db"] = "DOWN";
 
                 auto response =
-                    drogon::HttpResponse::newHttpJsonResponse(result);
+                    drogon::HttpResponse::newHttpJsonResponse(
+                        result);
 
                 response->setStatusCode(
                     drogon::k503ServiceUnavailable);
@@ -229,7 +252,8 @@ int main()
 
     int port = 8080;
 
-    const char* portEnv = std::getenv("PORT");
+    const char* portEnv =
+        std::getenv("PORT");
 
     if (portEnv)
         port = std::stoi(portEnv);
