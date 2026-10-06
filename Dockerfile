@@ -11,6 +11,7 @@ RUN apt-get update && \
     uuid-dev \
     zlib1g-dev \
     libpq-dev \
+    libsodium-dev \
     libbrotli-dev \
     libc-ares-dev \
     libhiredis-dev \
@@ -25,6 +26,7 @@ COPY . .
 RUN mkdir -p database
 
 RUN cmake -S . -B build -G Ninja
+
 RUN cmake --build build
 
 EXPOSE 10000
