@@ -1,4 +1,5 @@
 #include "productrepository.h"
+
 #include "../plugin/DatabasePlugin.h"
 
 #include <stdexcept>
@@ -18,60 +19,8 @@ drogon::orm::DbClientPtr ProductRepository::getClient()
     return client;
 }
 
-void ProductRepository::ensureSchema()
-{
-    auto db = getClient();
-
-    db->execSqlSync(
-        "CREATE TABLE IF NOT EXISTS users ("
-        "id SERIAL PRIMARY KEY,"
-        "name VARCHAR(100) NOT NULL,"
-        "email VARCHAR(255) UNIQUE NOT NULL,"
-        "password_hash TEXT NOT NULL,"
-        "role VARCHAR(10) NOT NULL CHECK "
-        "(role IN ('BUYER','SELLER','ADMIN')),"
-        "created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"
-        ")");
-
-    db->execSqlSync(
-        "CREATE TABLE IF NOT EXISTS products ("
-        "id SERIAL PRIMARY KEY,"
-        "seller_id INTEGER REFERENCES users(id),"
-        "name VARCHAR(255) NOT NULL,"
-        "description TEXT,"
-        "price_cents BIGINT NOT NULL,"
-        "stock_qty INTEGER NOT NULL DEFAULT 0,"
-        "category VARCHAR(100),"
-        "image_url TEXT,"
-        "created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"
-        ")");
-
-    db->execSqlSync(
-        "ALTER TABLE products "
-        "ADD COLUMN IF NOT EXISTS seller_id INTEGER");
-
-    db->execSqlSync(
-        "ALTER TABLE products "
-        "ADD COLUMN IF NOT EXISTS description TEXT");
-
-    db->execSqlSync(
-        "ALTER TABLE products "
-        "ADD COLUMN IF NOT EXISTS category VARCHAR(100)");
-
-    db->execSqlSync(
-        "ALTER TABLE products "
-        "ADD COLUMN IF NOT EXISTS image_url TEXT");
-
-    db->execSqlSync(
-        "ALTER TABLE products "
-        "ADD COLUMN IF NOT EXISTS created_at "
-        "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP");
-}
-
 void ProductRepository::addProduct(const Product& product)
 {
-    ensureSchema();
-
     auto db = getClient();
 
     db->execSqlSync(
@@ -99,8 +48,6 @@ void ProductRepository::addProduct(const Product& product)
 
 std::vector<Product> ProductRepository::getProducts()
 {
-    ensureSchema();
-
     auto db = getClient();
 
     auto result = db->execSqlSync(
@@ -113,39 +60,39 @@ std::vector<Product> ProductRepository::getProducts()
 
     for (const auto& row : result)
     {
-        Product p;
+        Product product;
 
-        p.id = row["id"].as<int>();
+        product.id = row["id"].as<int>();
 
         if (row["seller_id"].isNull())
-            p.seller_id = 0;
+            product.seller_id = 0;
         else
-            p.seller_id = row["seller_id"].as<int>();
+            product.seller_id = row["seller_id"].as<int>();
 
-        p.name = row["name"].as<std::string>();
+        product.name = row["name"].as<std::string>();
 
         if (row["description"].isNull())
-            p.description = "";
+            product.description = "";
         else
-            p.description = row["description"].as<std::string>();
+            product.description = row["description"].as<std::string>();
 
-        p.price.cents =
+        product.price.cents =
             row["price_cents"].as<long long>();
 
-        p.stock_qty =
+        product.stock_qty =
             row["stock_qty"].as<int>();
 
         if (row["category"].isNull())
-            p.category = "";
+            product.category = "";
         else
-            p.category = row["category"].as<std::string>();
+            product.category = row["category"].as<std::string>();
 
         if (row["image_url"].isNull())
-            p.image_url = "";
+            product.image_url = "";
         else
-            p.image_url = row["image_url"].as<std::string>();
+            product.image_url = row["image_url"].as<std::string>();
 
-        products.push_back(p);
+        products.push_back(product);
     }
 
     return products;
@@ -153,8 +100,6 @@ std::vector<Product> ProductRepository::getProducts()
 
 bool ProductRepository::updateProduct(const Product& product)
 {
-    ensureSchema();
-
     auto db = getClient();
 
     auto result = db->execSqlSync(
@@ -181,8 +126,6 @@ bool ProductRepository::updateProduct(const Product& product)
 
 bool ProductRepository::deleteProduct(int id)
 {
-    ensureSchema();
-
     auto db = getClient();
 
     auto result = db->execSqlSync(
@@ -197,9 +140,7 @@ bool ProductRepository::isDatabaseHealthy()
     try
     {
         auto db = getClient();
-
         db->execSqlSync("SELECT 1");
-
         return true;
     }
     catch (...)
