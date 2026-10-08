@@ -240,7 +240,7 @@ int main()
         Product product;
 
         product.id =
-            std::stoi(request->getParameter("1"));
+            std::stoi(request->getParameter("id"));
 
         product.seller_id =
             userId.value();
@@ -339,7 +339,7 @@ int main()
         try
         {
             const int productId =
-                std::stoi(request->getParameter("1"));
+                std::stoi(request->getParameter("id"));
 
             if (!repo.deleteProductForSeller(
                     productId,
@@ -453,12 +453,12 @@ int main()
         {drogon::Post});
 
     drogon::app().registerHandler(
-        "/api/v1/products/{1}",
+        "/api/v1/products/{id}",
         updateProductHandler,
         {drogon::Put});
 
     drogon::app().registerHandler(
-        "/api/v1/products/{1}",
+        "/api/v1/products/{id}",
         deleteProductHandler,
         {drogon::Delete});
 
@@ -538,4 +538,5 @@ int main()
 
     return 0;
 }
+
 
