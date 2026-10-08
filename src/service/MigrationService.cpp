@@ -5,6 +5,8 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+#include <string>
+#include <utility>
 #include <vector>
 
 MigrationService::MigrationService(
@@ -22,7 +24,7 @@ std::string MigrationService::ReadFile(
 
     if (!file.is_open())
         throw std::runtime_error(
-            "Unable to open migration file");
+            "Unable to open SQL file: " + file_path);
 
     std::ostringstream content;
     content << file.rdbuf();
@@ -30,43 +32,154 @@ std::string MigrationService::ReadFile(
     return content.str();
 }
 
+static std::string Trim(const std::string& value)
+{
+    const auto first = value.find_first_not_of(" \t\r\n");
+
+    if (first == std::string::npos)
+        return "";
+
+    const auto last = value.find_last_not_of(" \t\r\n");
+
+    return value.substr(first, last - first + 1);
+}
+
+static std::vector<std::string> SplitSqlStatements(
+    const std::string& sql)
+{
+    std::vector<std::string> statements;
+    std::string current;
+
+    bool inSingleQuote = false;
+    bool inDoubleQuote = false;
+    bool inLineComment = false;
+    bool inBlockComment = false;
+
+    for (std::size_t i = 0; i < sql.size(); ++i)
+    {
+        const char c = sql[i];
+        const char next =
+            (i + 1 < sql.size()) ? sql[i + 1] : '\0';
+
+        if (inLineComment)
+        {
+            if (c == '\n')
+                inLineComment = false;
+
+            continue;
+        }
+
+        if (inBlockComment)
+        {
+            if (c == '*' && next == '/')
+            {
+                inBlockComment = false;
+                ++i;
+            }
+
+            continue;
+        }
+
+        if (!inSingleQuote && !inDoubleQuote)
+        {
+            if (c == '-' && next == '-')
+            {
+                inLineComment = true;
+                ++i;
+                continue;
+            }
+
+            if (c == '/' && next == '*')
+            {
+                inBlockComment = true;
+                ++i;
+                continue;
+            }
+        }
+
+        if (c == '\'' && !inDoubleQuote)
+        {
+            current += c;
+
+            if (inSingleQuote && next == '\'')
+            {
+                current += next;
+                ++i;
+                continue;
+            }
+
+            inSingleQuote = !inSingleQuote;
+            continue;
+        }
+
+        if (c == '"' && !inSingleQuote)
+        {
+            current += c;
+
+            if (inDoubleQuote && next == '"')
+            {
+                current += next;
+                ++i;
+                continue;
+            }
+
+            inDoubleQuote = !inDoubleQuote;
+            continue;
+        }
+
+        if (c == ';' &&
+            !inSingleQuote &&
+            !inDoubleQuote)
+        {
+            const std::string statement = Trim(current);
+
+            if (!statement.empty())
+                statements.push_back(statement);
+
+            current.clear();
+            continue;
+        }
+
+        current += c;
+    }
+
+    const std::string lastStatement = Trim(current);
+
+    if (!lastStatement.empty())
+        statements.push_back(lastStatement);
+
+    return statements;
+}
+
 void MigrationService::ApplyMigration(
     const std::string& version,
     const std::string& sql)
 {
-    db_client_->execSqlSync("BEGIN");
+    auto transaction = db_client_->newTransaction();
 
-    try
+    const auto applied = transaction->execSqlSync(
+        "SELECT 1 FROM schema_migrations "
+        "WHERE version = $1",
+        version);
+
+    if (!applied.empty())
+        return;
+
+    const auto statements = SplitSqlStatements(sql);
+
+    if (statements.empty())
+        throw std::runtime_error(
+            "Migration contains no SQL statements: " + version);
+
+    for (const auto& statement : statements)
     {
-        auto applied = db_client_->execSqlSync(
-            "SELECT 1 FROM schema_migrations "
-            "WHERE version = $1",
-            version);
-
-        if (applied.empty())
-        {
-            db_client_->execSqlSync(sql);
-
-            db_client_->execSqlSync(
-                "INSERT INTO schema_migrations "
-                "(version) VALUES ($1)",
-                version);
-        }
-
-        db_client_->execSqlSync("COMMIT");
+        transaction->execSqlSync(statement);
     }
-    catch (...)
-    {
-        try
-        {
-            db_client_->execSqlSync("ROLLBACK");
-        }
-        catch (...)
-        {
-        }
 
-        throw;
-    }
+    transaction->execSqlSync(
+        "INSERT INTO schema_migrations "
+        "(version) VALUES ($1)",
+        version);
 }
 
 void MigrationService::Run(
@@ -110,5 +223,13 @@ void MigrationService::Run(
     const std::string seed_sql =
         ReadFile(seed_file);
 
-    db_client_->execSqlSync(seed_sql);
+    const auto seed_statements =
+        SplitSqlStatements(seed_sql);
+
+    auto seed_transaction = db_client_->newTransaction();
+
+    for (const auto& statement : seed_statements)
+    {
+        seed_transaction->execSqlSync(statement);
+    }
 }
