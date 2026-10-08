@@ -1,6 +1,6 @@
 #include "AuthService.h"
 
-#include "../util/PasswordUtil.h"
+#include "../util/passwordUtil.h"
 
 #include <regex>
 #include <stdexcept>
@@ -76,3 +76,4 @@ User AuthService::LoginUser(const std::string& email,
 
     return user.value();
 }
+

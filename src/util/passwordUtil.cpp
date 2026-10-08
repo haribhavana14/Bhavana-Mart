@@ -1,4 +1,4 @@
-#include "PasswordUtil.h"
+#include "passwordUtil.h"
 
 #include <sodium.h>
 #include <stdexcept>
