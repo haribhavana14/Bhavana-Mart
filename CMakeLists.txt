@@ -21,10 +21,14 @@ add_executable(BhavanaMart
     src/main.cpp
     repositories/productrepository.cpp
     plugin/DatabasePlugin.cpp
+
     src/util/passwordUtil.cpp
     src/model/User.h
+
     src/repository/AuthRepository.cpp
     src/service/AuthService.cpp
+    src/service/MigrationService.cpp
+
     src/controller/AuthController.cpp
     src/filter/AuthFilter.cpp
 )
