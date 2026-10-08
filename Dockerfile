@@ -5,6 +5,7 @@ RUN apt-get update && \
     g++ \
     cmake \
     ninja-build \
+    pkg-config \
     libdrogon-dev \
     libsqlite3-dev \
     libjsoncpp-dev \
