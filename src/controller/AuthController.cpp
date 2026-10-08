@@ -6,8 +6,11 @@
 
 AuthController::AuthController()
 {
-    repository_ = std::make_shared<AuthRepository>();
-    service_ = std::make_unique<AuthService>(repository_);
+    repository_ =
+        std::make_shared<AuthRepository>();
+
+    service_ =
+        std::make_unique<AuthService>(repository_);
 }
 
 drogon::HttpResponsePtr AuthController::errorResponse(
@@ -68,6 +71,7 @@ void AuthController::registerUser(
         data["id"] = userId;
 
         Json::Value body;
+
         body["success"] = true;
         body["data"] = data;
         body["error"] = Json::nullValue;
@@ -118,17 +122,24 @@ void AuthController::loginUser(
     try
     {
         const User user =
-            service_->LoginUser(email, password);
+            service_->LoginUser(
+                email,
+                password);
 
-        // Discard pre-authentication session data.
         req->session()->clear();
-
-        // Force a fresh session ID after login.
         req->session()->changeSessionIdToClient();
 
-        req->session()->insert("user_id", user.id);
-        req->session()->insert("role", user.role);
-        req->session()->insert("user_name", user.name);
+        req->session()->insert(
+            "user_id",
+            user.id);
+
+        req->session()->insert(
+            "role",
+            user.role);
+
+        req->session()->insert(
+            "user_name",
+            user.name);
 
         Json::Value data;
 
@@ -138,6 +149,7 @@ void AuthController::loginUser(
         data["role"] = user.role;
 
         Json::Value body;
+
         body["success"] = true;
         body["data"] = data;
         body["error"] = Json::nullValue;
@@ -153,7 +165,6 @@ void AuthController::loginUser(
     }
     catch (...)
     {
-        // Do not expose authentication/database details.
         callback(errorResponse(
             "INVALID_CREDENTIALS",
             drogon::k401Unauthorized));
@@ -169,6 +180,7 @@ void AuthController::logoutUser(
     req->session()->changeSessionIdToClient();
 
     Json::Value body;
+
     body["success"] = true;
     body["data"]["message"] = "Logged out";
     body["error"] = Json::nullValue;
@@ -182,7 +194,7 @@ void AuthController::currentUser(
     std::function<void(
         const drogon::HttpResponsePtr&)>&& callback)
 {
-    auto userId =
+    const auto userId =
         req->session()->getOptional<int>("user_id");
 
     if (!userId.has_value())
@@ -196,12 +208,17 @@ void AuthController::currentUser(
     Json::Value data;
 
     data["id"] = userId.value();
+
     data["name"] =
-        req->session()->get<std::string>("user_name");
+        req->session()->get<std::string>(
+            "user_name");
+
     data["role"] =
-        req->session()->get<std::string>("role");
+        req->session()->get<std::string>(
+            "role");
 
     Json::Value body;
+
     body["success"] = true;
     body["data"] = data;
     body["error"] = Json::nullValue;

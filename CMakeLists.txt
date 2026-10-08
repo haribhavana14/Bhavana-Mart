@@ -23,6 +23,8 @@ add_executable(BhavanaMart
     src/service/AuthService.cpp
 
     src/controller/AuthController.cpp
+
+    src/filter/AuthFilter.cpp
 )
 
 target_include_directories(BhavanaMart PRIVATE

@@ -1,30 +1,40 @@
 #pragma once
 
 #include <drogon/HttpController.h>
+
 #include "../service/AuthService.h"
 
+#include <functional>
 #include <memory>
+#include <string>
 
-class AuthController : public drogon::HttpController<AuthController>
+class AuthController
+    : public drogon::HttpController<AuthController>
 {
 public:
     METHOD_LIST_BEGIN
 
-    ADD_METHOD_TO(AuthController::registerUser,
-                  "/api/v1/auth/register",
-                  drogon::Post);
+    ADD_METHOD_TO(
+        AuthController::registerUser,
+        "/api/v1/auth/register",
+        drogon::Post);
 
-    ADD_METHOD_TO(AuthController::loginUser,
-                  "/api/v1/auth/login",
-                  drogon::Post);
+    ADD_METHOD_TO(
+        AuthController::loginUser,
+        "/api/v1/auth/login",
+        drogon::Post);
 
-    ADD_METHOD_TO(AuthController::logoutUser,
-                  "/api/v1/auth/logout",
-                  drogon::Post);
+    ADD_METHOD_TO(
+        AuthController::logoutUser,
+        "/api/v1/auth/logout",
+        drogon::Post,
+        "AuthFilter");
 
-    ADD_METHOD_TO(AuthController::currentUser,
-                  "/api/v1/auth/me",
-                  drogon::Get);
+    ADD_METHOD_TO(
+        AuthController::currentUser,
+        "/api/v1/auth/me",
+        drogon::Get,
+        "AuthFilter");
 
     METHOD_LIST_END
 
