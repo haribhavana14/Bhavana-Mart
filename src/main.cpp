@@ -207,7 +207,7 @@ int main()
         [&repo](
             const drogon::HttpRequestPtr& request,
             std::function<void(
-                const drogon::HttpResponsePtr&)>&& callback)
+                const drogon::HttpResponsePtr&)>&& callback, const std::string& productIdParam)
     {
         if (!isSeller(request))
         {
@@ -240,7 +240,7 @@ int main()
         Product product;
 
         product.id =
-            std::stoi(request->getParameter("id"));
+            std::stoi(productIdParam);
 
         product.seller_id =
             userId.value();
@@ -316,7 +316,7 @@ int main()
         [&repo](
             const drogon::HttpRequestPtr& request,
             std::function<void(
-                const drogon::HttpResponsePtr&)>&& callback)
+                const drogon::HttpResponsePtr&)>&& callback, const std::string& productIdParam)
     {
         if (!isSeller(request))
         {
@@ -339,7 +339,7 @@ int main()
         try
         {
             const int productId =
-                std::stoi(request->getParameter("id"));
+                std::stoi(productIdParam);
 
             if (!repo.deleteProductForSeller(
                     productId,
@@ -538,5 +538,8 @@ int main()
 
     return 0;
 }
+
+
+
 
 
