@@ -13,6 +13,7 @@
 #include <optional>
 
 #include <string>
+#include <stdexcept>
 
 static std::optional<int> getUserId(
 
@@ -40,6 +41,12 @@ static bool isSeller(
 
 }
 
+static bool isBuyer(const drogon::HttpRequestPtr& req)
+{
+    auto role = req->session()->getOptional<std::string>("role");
+    return role.has_value() && role.value() == "BUYER";
+}
+
 static drogon::HttpResponsePtr errorResponse(
 
     drogon::HttpStatusCode status,
@@ -64,6 +71,24 @@ static drogon::HttpResponsePtr errorResponse(
 
     return response;
 
+}
+
+static drogon::HttpResponsePtr cartOperationError(CartOperationResult result)
+{
+    switch (result)
+    {
+        case CartOperationResult::InvalidQuantity:
+            return errorResponse(drogon::k400BadRequest, "INVALID_QUANTITY");
+        case CartOperationResult::ProductNotFound:
+            return errorResponse(drogon::k404NotFound, "PRODUCT_NOT_FOUND");
+        case CartOperationResult::InsufficientStock:
+            return errorResponse(drogon::k409Conflict, "INSUFFICIENT_STOCK");
+        case CartOperationResult::CartItemNotFound:
+            return errorResponse(drogon::k404NotFound, "CART_ITEM_NOT_FOUND");
+        case CartOperationResult::Success:
+            break;
+    }
+    return errorResponse(drogon::k500InternalServerError, "CART_OPERATION_FAILED");
 }
 
 static std::string toLower(std::string value)
@@ -758,6 +783,243 @@ int main()
     };
 
     // =========================
+    // F4: BUYER SHOPPING CART
+    // =========================
+
+    auto getCartHandler =
+        [&repo](const drogon::HttpRequestPtr& request,
+                std::function<void(const drogon::HttpResponsePtr&)>&& callback)
+    {
+        if (!isBuyer(request))
+        {
+            callback(errorResponse(drogon::k401Unauthorized, "BUYER_LOGIN_REQUIRED"));
+            return;
+        }
+
+        auto userId = getUserId(request);
+        if (!userId.has_value())
+        {
+            callback(errorResponse(drogon::k401Unauthorized, "UNAUTHORIZED"));
+            return;
+        }
+
+        try
+        {
+            const auto cartItems = repo.getCartItems(userId.value());
+            Json::Value data;
+            data["items"] = Json::Value(Json::arrayValue);
+            Json::Int64 totalCents = 0;
+
+            for (const auto& item : cartItems)
+            {
+                const Json::Int64 subtotal =
+                    static_cast<Json::Int64>(item.price_cents) * item.quantity;
+                Json::Value row;
+                row["product_id"] = item.product_id;
+                row["name"] = item.name;
+                row["description"] = item.description;
+                row["category"] = item.category;
+                row["image_url"] = item.image_url;
+                row["price"] = static_cast<Json::Int64>(item.price_cents);
+                row["quantity"] = item.quantity;
+                row["stock"] = item.stock_qty;
+                row["subtotal"] = subtotal;
+                data["items"].append(row);
+                totalCents += subtotal;
+            }
+
+            data["total_cents"] = totalCents;
+            data["currency"] = "INR";
+
+            Json::Value body;
+            body["success"] = true;
+            body["data"] = data;
+            body["error"] = Json::nullValue;
+            callback(drogon::HttpResponse::newHttpJsonResponse(body));
+        }
+        catch (...)
+        {
+            callback(errorResponse(drogon::k500InternalServerError, "DATABASE_ERROR"));
+        }
+    };
+
+    auto addCartItemHandler =
+        [&repo](const drogon::HttpRequestPtr& request,
+                std::function<void(const drogon::HttpResponsePtr&)>&& callback)
+    {
+        if (!isBuyer(request))
+        {
+            callback(errorResponse(drogon::k401Unauthorized, "BUYER_LOGIN_REQUIRED"));
+            return;
+        }
+
+        auto userId = getUserId(request);
+        auto json = request->getJsonObject();
+        if (!userId.has_value())
+        {
+            callback(errorResponse(drogon::k401Unauthorized, "UNAUTHORIZED"));
+            return;
+        }
+        if (!json)
+        {
+            callback(errorResponse(drogon::k400BadRequest, "INVALID_JSON"));
+            return;
+        }
+
+        const int productId = (*json)["product_id"].asInt();
+        const int quantity = (*json).isMember("quantity")
+                                 ? (*json)["quantity"].asInt()
+                                 : 1;
+        if (productId <= 0 || quantity <= 0)
+        {
+            callback(errorResponse(drogon::k400BadRequest, "INVALID_CART_DATA"));
+            return;
+        }
+
+        try
+        {
+            const auto result = repo.addCartItem(userId.value(), productId, quantity);
+            if (result != CartOperationResult::Success)
+            {
+                callback(cartOperationError(result));
+                return;
+            }
+
+            Json::Value data;
+            data["product_id"] = productId;
+            data["message"] = "Product added to cart";
+            Json::Value body;
+            body["success"] = true;
+            body["data"] = data;
+            body["error"] = Json::nullValue;
+            callback(drogon::HttpResponse::newHttpJsonResponse(body));
+        }
+        catch (...)
+        {
+            callback(errorResponse(drogon::k500InternalServerError, "DATABASE_ERROR"));
+        }
+    };
+
+    auto updateCartItemHandler =
+        [&repo](const drogon::HttpRequestPtr& request,
+                std::function<void(const drogon::HttpResponsePtr&)>&& callback,
+                const std::string& productIdParam)
+    {
+        if (!isBuyer(request))
+        {
+            callback(errorResponse(drogon::k401Unauthorized, "BUYER_LOGIN_REQUIRED"));
+            return;
+        }
+
+        auto userId = getUserId(request);
+        auto json = request->getJsonObject();
+        if (!userId.has_value())
+        {
+            callback(errorResponse(drogon::k401Unauthorized, "UNAUTHORIZED"));
+            return;
+        }
+        if (!json)
+        {
+            callback(errorResponse(drogon::k400BadRequest, "INVALID_JSON"));
+            return;
+        }
+
+        try
+        {
+            const int productId = std::stoi(productIdParam);
+            const int quantity = (*json)["quantity"].asInt();
+            if (productId <= 0 || quantity <= 0)
+            {
+                callback(errorResponse(drogon::k400BadRequest, "INVALID_CART_DATA"));
+                return;
+            }
+
+            const auto result = repo.updateCartItemQuantity(userId.value(), productId, quantity);
+            if (result != CartOperationResult::Success)
+            {
+                callback(cartOperationError(result));
+                return;
+            }
+
+            Json::Value data;
+            data["product_id"] = productId;
+            data["quantity"] = quantity;
+            Json::Value body;
+            body["success"] = true;
+            body["data"] = data;
+            body["error"] = Json::nullValue;
+            callback(drogon::HttpResponse::newHttpJsonResponse(body));
+        }
+        catch (const std::invalid_argument&)
+        {
+            callback(errorResponse(drogon::k400BadRequest, "INVALID_PRODUCT_ID"));
+        }
+        catch (const std::out_of_range&)
+        {
+            callback(errorResponse(drogon::k400BadRequest, "INVALID_PRODUCT_ID"));
+        }
+        catch (...)
+        {
+            callback(errorResponse(drogon::k500InternalServerError, "DATABASE_ERROR"));
+        }
+    };
+
+    auto removeCartItemHandler =
+        [&repo](const drogon::HttpRequestPtr& request,
+                std::function<void(const drogon::HttpResponsePtr&)>&& callback,
+                const std::string& productIdParam)
+    {
+        if (!isBuyer(request))
+        {
+            callback(errorResponse(drogon::k401Unauthorized, "BUYER_LOGIN_REQUIRED"));
+            return;
+        }
+
+        auto userId = getUserId(request);
+        if (!userId.has_value())
+        {
+            callback(errorResponse(drogon::k401Unauthorized, "UNAUTHORIZED"));
+            return;
+        }
+
+        try
+        {
+            const int productId = std::stoi(productIdParam);
+            if (productId <= 0)
+            {
+                callback(errorResponse(drogon::k400BadRequest, "INVALID_PRODUCT_ID"));
+                return;
+            }
+            if (!repo.removeCartItem(userId.value(), productId))
+            {
+                callback(errorResponse(drogon::k404NotFound, "CART_ITEM_NOT_FOUND"));
+                return;
+            }
+
+            Json::Value data;
+            data["product_id"] = productId;
+            data["message"] = "Product removed from cart";
+            Json::Value body;
+            body["success"] = true;
+            body["data"] = data;
+            body["error"] = Json::nullValue;
+            callback(drogon::HttpResponse::newHttpJsonResponse(body));
+        }
+        catch (const std::invalid_argument&)
+        {
+            callback(errorResponse(drogon::k400BadRequest, "INVALID_PRODUCT_ID"));
+        }
+        catch (const std::out_of_range&)
+        {
+            callback(errorResponse(drogon::k400BadRequest, "INVALID_PRODUCT_ID"));
+        }
+        catch (...)
+        {
+            callback(errorResponse(drogon::k500InternalServerError, "DATABASE_ERROR"));
+        }
+    };
+
+    // =========================
 
     // PRODUCT ROUTES
 
@@ -802,6 +1064,19 @@ int main()
         getSellerProductsHandler,
 
         {drogon::Get});
+
+    // F4: buyer shopping cart endpoints.
+    drogon::app().registerHandler(
+        "/api/v1/cart", getCartHandler, {drogon::Get});
+
+    drogon::app().registerHandler(
+        "/api/v1/cart/items", addCartItemHandler, {drogon::Post});
+
+    drogon::app().registerHandler(
+        "/api/v1/cart/items/{id}", updateCartItemHandler, {drogon::Put});
+
+    drogon::app().registerHandler(
+        "/api/v1/cart/items/{id}", removeCartItemHandler, {drogon::Delete});
 
     // Preserve old routes.
 

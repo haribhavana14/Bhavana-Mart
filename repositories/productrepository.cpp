@@ -154,3 +154,122 @@ bool ProductRepository::isDatabaseHealthy()
         return false;
     }
 }
+
+std::vector<CartItem> ProductRepository::getCartItems(int userId)
+{
+    auto db = getClient();
+    auto result = db->execSqlSync(
+        "SELECT p.id AS product_id, p.name, p.description, "
+        "p.category, p.image_url, p.price_cents, p.stock_qty, c.quantity "
+        "FROM cart_items c JOIN products p ON p.id = c.product_id "
+        "WHERE c.user_id = $1 ORDER BY c.id",
+        userId);
+
+    std::vector<CartItem> items;
+    for (const auto& row : result)
+    {
+        CartItem item;
+        item.product_id = row["product_id"].as<int>();
+        item.name = row["name"].as<std::string>();
+        item.description = row["description"].as<std::string>();
+        item.category = row["category"].as<std::string>();
+        item.image_url = row["image_url"].as<std::string>();
+        item.price_cents = row["price_cents"].as<long long>();
+        item.stock_qty = row["stock_qty"].as<int>();
+        item.quantity = row["quantity"].as<int>();
+        items.push_back(item);
+    }
+    return items;
+}
+
+CartOperationResult ProductRepository::addCartItem(
+    int userId, int productId, int quantity)
+{
+    if (userId <= 0 || productId <= 0 || quantity <= 0)
+        return CartOperationResult::InvalidQuantity;
+
+    auto db = getClient();
+    auto transaction = db->newTransaction();
+
+    auto products = transaction->execSqlSync(
+        "SELECT stock_qty FROM products WHERE id = $1 FOR UPDATE",
+        productId);
+
+    if (products.empty())
+        return CartOperationResult::ProductNotFound;
+
+    int stock = products[0]["stock_qty"].as<int>();
+
+    auto cart = transaction->execSqlSync(
+        "SELECT quantity FROM cart_items "
+        "WHERE user_id = $1 AND product_id = $2 FOR UPDATE",
+        userId, productId);
+
+    int current = cart.empty() ? 0 : cart[0]["quantity"].as<int>();
+
+    if (quantity > stock - current)
+        return CartOperationResult::InsufficientStock;
+
+    if (cart.empty())
+    {
+        transaction->execSqlSync(
+            "INSERT INTO cart_items (user_id, product_id, quantity) "
+            "VALUES ($1, $2, $3)",
+            userId, productId, quantity);
+    }
+    else
+    {
+        transaction->execSqlSync(
+            "UPDATE cart_items SET quantity = $1 "
+            "WHERE user_id = $2 AND product_id = $3",
+            current + quantity, userId, productId);
+    }
+
+    return CartOperationResult::Success;
+}
+
+CartOperationResult ProductRepository::updateCartItemQuantity(
+    int userId, int productId, int quantity)
+{
+    if (userId <= 0 || productId <= 0 || quantity <= 0)
+        return CartOperationResult::InvalidQuantity;
+
+    auto db = getClient();
+    auto transaction = db->newTransaction();
+
+    auto products = transaction->execSqlSync(
+        "SELECT stock_qty FROM products WHERE id = $1 FOR UPDATE",
+        productId);
+
+    if (products.empty())
+        return CartOperationResult::ProductNotFound;
+
+    auto cart = transaction->execSqlSync(
+        "SELECT quantity FROM cart_items "
+        "WHERE user_id = $1 AND product_id = $2 FOR UPDATE",
+        userId, productId);
+
+    if (cart.empty())
+        return CartOperationResult::CartItemNotFound;
+
+    int stock = products[0]["stock_qty"].as<int>();
+    if (quantity > stock)
+        return CartOperationResult::InsufficientStock;
+
+    transaction->execSqlSync(
+        "UPDATE cart_items SET quantity = $1 "
+        "WHERE user_id = $2 AND product_id = $3",
+        quantity, userId, productId);
+
+    return CartOperationResult::Success;
+}
+
+bool ProductRepository::removeCartItem(int userId, int productId)
+{
+    auto db = getClient();
+    auto result = db->execSqlSync(
+        "DELETE FROM cart_items WHERE user_id = $1 AND product_id = $2",
+        userId, productId);
+
+    return result.affectedRows() > 0;
+}
