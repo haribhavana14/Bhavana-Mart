@@ -2,6 +2,7 @@
 #include "../plugin/DatabasePlugin.h"
 
 #include <stdexcept>
+#include <limits>
 #include <string>
 #include <vector>
 
@@ -272,4 +273,81 @@ bool ProductRepository::removeCartItem(int userId, int productId)
         userId, productId);
 
     return result.affectedRows() > 0;
+}
+
+
+// F5: Create an order from the buyer's cart using mock payment.
+CheckoutResult ProductRepository::checkoutCart(int userId)
+{
+    if (userId <= 0)
+        return {CheckoutStatus::CartEmpty, 0, 0};
+
+    auto db = getClient();
+    auto transaction = db->newTransaction();
+
+    auto rows = transaction->execSqlSync(
+        "SELECT c.product_id, c.quantity, "
+        "p.price_cents, p.stock_qty "
+        "FROM cart_items c "
+        "JOIN products p ON p.id = c.product_id "
+        "WHERE c.user_id = $1 "
+        "ORDER BY p.id FOR UPDATE OF c, p",
+        userId);
+
+    if (rows.empty())
+        return {CheckoutStatus::CartEmpty, 0, 0};
+
+    long long totalCents = 0;
+
+    // Validate every item and calculate total before writing the order.
+    for (const auto& row : rows)
+    {
+        const int quantity = row["quantity"].as<int>();
+        const int stock = row["stock_qty"].as<int>();
+        const long long price = row["price_cents"].as<long long>();
+
+        if (quantity <= 0 || quantity > stock)
+            return {CheckoutStatus::InsufficientStock, 0, 0};
+
+        if (price < 0 ||
+            price > (std::numeric_limits<long long>::max() - totalCents)
+                        / quantity)
+            throw std::runtime_error("Order total is out of range");
+
+        totalCents += price * quantity;
+    }
+
+    // Mock payment succeeds immediately; no real payment is collected.
+    auto orderRows = transaction->execSqlSync(
+        "INSERT INTO orders (buyer_id, status, total_amount_cents) "
+        "VALUES ($1, $2, $3) RETURNING id",
+        userId,
+        std::string("CONFIRMED"),
+        totalCents);
+
+    const int orderId = orderRows[0]["id"].as<int>();
+
+    for (const auto& row : rows)
+    {
+        const int productId = row["product_id"].as<int>();
+        const int quantity = row["quantity"].as<int>();
+        const long long price = row["price_cents"].as<long long>();
+
+        transaction->execSqlSync(
+            "INSERT INTO order_items "
+            "(order_id, product_id, quantity, unit_price_cents) "
+            "VALUES ($1, $2, $3, $4)",
+            orderId, productId, quantity, price);
+
+        transaction->execSqlSync(
+            "UPDATE products SET stock_qty = stock_qty - $1 "
+            "WHERE id = $2 AND stock_qty >= $1",
+            quantity, productId);
+    }
+
+    transaction->execSqlSync(
+        "DELETE FROM cart_items WHERE user_id = $1",
+        userId);
+
+    return {CheckoutStatus::Success, orderId, totalCents};
 }

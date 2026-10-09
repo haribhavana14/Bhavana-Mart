@@ -26,6 +26,20 @@ enum class CartOperationResult
     CartItemNotFound
 };
 
+enum class CheckoutStatus
+{
+    Success,
+    CartEmpty,
+    InsufficientStock
+};
+
+struct CheckoutResult
+{
+    CheckoutStatus status{CheckoutStatus::Success};
+    int order_id{0};
+    long long total_cents{0};
+};
+
 class ProductRepository
 {
 public:
@@ -40,6 +54,7 @@ public:
     CartOperationResult addCartItem(int userId, int productId, int quantity);
     CartOperationResult updateCartItemQuantity(int userId, int productId, int quantity);
     bool removeCartItem(int userId, int productId);
+    CheckoutResult checkoutCart(int userId);
 
     bool isDatabaseHealthy();
 

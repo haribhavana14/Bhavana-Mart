@@ -1065,6 +1065,63 @@ int main()
 
         {drogon::Get});
 
+    // F5: Buyer checkout with simulated payment.
+    auto checkoutHandler =
+        [&repo](const drogon::HttpRequestPtr& request,
+                std::function<void(const drogon::HttpResponsePtr&)>&& callback)
+    {
+        if (!isBuyer(request))
+        {
+            callback(errorResponse(drogon::k403Forbidden, "BUYER_ONLY"));
+            return;
+        }
+
+        auto userId = getUserId(request);
+        if (!userId.has_value())
+        {
+            callback(errorResponse(drogon::k401Unauthorized, "UNAUTHORIZED"));
+            return;
+        }
+
+        try
+        {
+            const auto result = repo.checkoutCart(userId.value());
+
+            if (result.status == CheckoutStatus::CartEmpty)
+            {
+                callback(errorResponse(drogon::k400BadRequest, "CART_EMPTY"));
+                return;
+            }
+
+            if (result.status == CheckoutStatus::InsufficientStock)
+            {
+                callback(errorResponse(
+                    drogon::k409Conflict, "INSUFFICIENT_STOCK"));
+                return;
+            }
+
+            Json::Value data;
+            data["order_id"] = result.order_id;
+            data["status"] = "CONFIRMED";
+            data["currency"] = "INR";
+            data["total_cents"] =
+                static_cast<Json::Int64>(result.total_cents);
+            data["payment"]["method"] = "MOCK";
+            data["payment"]["status"] = "SIMULATED_SUCCESS";
+
+            Json::Value body;
+            body["success"] = true;
+            body["data"] = data;
+            body["error"] = Json::nullValue;
+
+            callback(drogon::HttpResponse::newHttpJsonResponse(body));
+        }
+        catch (...)
+        {
+            callback(errorResponse(
+                drogon::k500InternalServerError, "CHECKOUT_FAILED"));
+        }
+    };
     // F4: buyer shopping cart endpoints.
     drogon::app().registerHandler(
         "/api/v1/cart", getCartHandler, {drogon::Get});
@@ -1077,6 +1134,8 @@ int main()
 
     drogon::app().registerHandler(
         "/api/v1/cart/items/{id}", removeCartItemHandler, {drogon::Delete});
+
+    drogon::app().registerHandler("/api/v1/checkout", checkoutHandler, {drogon::Post});
 
     // Preserve old routes.
 
