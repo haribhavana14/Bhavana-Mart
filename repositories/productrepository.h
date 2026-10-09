@@ -99,6 +99,33 @@ enum class AdminDeleteProductResult
     NotFound,
     ProductHasOrders
 };
+struct ProductReview
+{
+    int id = 0;
+    int product_id = 0;
+    int user_id = 0;
+    std::string reviewer_name;
+    int rating = 0;
+    std::string comment;
+    std::string created_at;
+};
+
+struct ProductReviewList
+{
+    bool product_exists = false;
+    double average_rating = 0.0;
+    int review_count = 0;
+    std::vector<ProductReview> reviews;
+};
+
+enum class ReviewSubmissionStatus
+{
+    Success,
+    InvalidData,
+    ProductNotFound,
+    OrderNotCompleted,
+    AlreadyReviewed
+};
 class ProductRepository
 {
 public:
@@ -119,6 +146,8 @@ public:
     std::vector<AdminUserSummary> getAdminUsers();
     std::vector<AdminOrderSummary> getAdminOrders();
     AdminDeleteProductResult removeProductAsAdmin(int productId);
+    ProductReviewList getProductReviews(int productId);
+    ReviewSubmissionStatus addProductReview(int userId, int productId, int rating, const std::string& comment);
 
     bool isDatabaseHealthy();
 

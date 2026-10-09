@@ -1213,6 +1213,169 @@ int main()
                                    "DATABASE_ERROR"));
         }
     };
+    // F8: Public product rating and review list.
+    auto productReviewsHandler =
+        [&repo](const drogon::HttpRequestPtr&,
+                std::function<void(const drogon::HttpResponsePtr&)>&& callback,
+                const std::string& productIdParam)
+    {
+        try
+        {
+            const int productId = std::stoi(productIdParam);
+            if (productId <= 0)
+            {
+                callback(errorResponse(drogon::k400BadRequest,
+                                       "INVALID_PRODUCT_ID"));
+                return;
+            }
+
+            const auto result = repo.getProductReviews(productId);
+            if (!result.product_exists)
+            {
+                callback(errorResponse(drogon::k404NotFound,
+                                       "PRODUCT_NOT_FOUND"));
+                return;
+            }
+
+            Json::Value data;
+            data["product_id"] = productId;
+            data["average_rating"] = result.average_rating;
+            data["review_count"] = result.review_count;
+            data["reviews"] = Json::Value(Json::arrayValue);
+
+            for (const auto& review : result.reviews)
+            {
+                Json::Value row;
+                row["id"] = review.id;
+                row["user_id"] = review.user_id;
+                row["reviewer_name"] = review.reviewer_name;
+                row["rating"] = review.rating;
+                row["comment"] = review.comment;
+                row["created_at"] = review.created_at;
+                data["reviews"].append(row);
+            }
+
+            Json::Value body;
+            body["success"] = true;
+            body["data"] = data;
+            body["error"] = Json::nullValue;
+            callback(drogon::HttpResponse::newHttpJsonResponse(body));
+        }
+        catch (const std::invalid_argument&)
+        {
+            callback(errorResponse(drogon::k400BadRequest,
+                                   "INVALID_PRODUCT_ID"));
+        }
+        catch (const std::out_of_range&)
+        {
+            callback(errorResponse(drogon::k400BadRequest,
+                                   "INVALID_PRODUCT_ID"));
+        }
+        catch (...)
+        {
+            callback(errorResponse(drogon::k500InternalServerError,
+                                   "DATABASE_ERROR"));
+        }
+    };
+
+    // F8: Submit a rating for a delivered order's product.
+    auto submitProductReviewHandler =
+        [&repo](const drogon::HttpRequestPtr& request,
+                std::function<void(const drogon::HttpResponsePtr&)>&& callback,
+                const std::string& productIdParam)
+    {
+        if (!isBuyer(request))
+        {
+            callback(errorResponse(drogon::k403Forbidden, "BUYER_ONLY"));
+            return;
+        }
+
+        auto userId = getUserId(request);
+        if (!userId.has_value())
+        {
+            callback(errorResponse(drogon::k401Unauthorized, "UNAUTHORIZED"));
+            return;
+        }
+
+        try
+        {
+            const int productId = std::stoi(productIdParam);
+            auto json = request->getJsonObject();
+
+            if (productId <= 0 || !json || !json->isMember("rating"))
+            {
+                callback(errorResponse(drogon::k400BadRequest,
+                                       "INVALID_REVIEW_DATA"));
+                return;
+            }
+
+            const int rating = (*json)["rating"].asInt();
+            const std::string comment =
+                json->isMember("comment")
+                    ? (*json)["comment"].asString()
+                    : "";
+
+            const auto status = repo.addProductReview(
+                userId.value(), productId, rating, comment);
+
+            if (status == ReviewSubmissionStatus::InvalidData)
+            {
+                callback(errorResponse(drogon::k400BadRequest,
+                                       "INVALID_REVIEW_DATA"));
+                return;
+            }
+
+            if (status == ReviewSubmissionStatus::ProductNotFound)
+            {
+                callback(errorResponse(drogon::k404NotFound,
+                                       "PRODUCT_NOT_FOUND"));
+                return;
+            }
+
+            if (status == ReviewSubmissionStatus::OrderNotCompleted)
+            {
+                callback(errorResponse(drogon::k403Forbidden,
+                                       "ORDER_NOT_COMPLETED"));
+                return;
+            }
+
+            if (status == ReviewSubmissionStatus::AlreadyReviewed)
+            {
+                callback(errorResponse(drogon::k409Conflict,
+                                       "ALREADY_REVIEWED"));
+                return;
+            }
+
+            Json::Value data;
+            data["product_id"] = productId;
+            data["rating"] = rating;
+            data["message"] = "Review submitted successfully";
+
+            Json::Value body;
+            body["success"] = true;
+            body["data"] = data;
+            body["error"] = Json::nullValue;
+
+            auto response = drogon::HttpResponse::newHttpJsonResponse(body);
+            response->setStatusCode(drogon::k201Created);
+            callback(response);
+        }
+        catch (const std::invalid_argument&)
+        {
+            callback(errorResponse(drogon::k400BadRequest,
+                                   "INVALID_PRODUCT_ID"));
+        }
+        catch (const std::out_of_range&)
+        {
+            callback(errorResponse(drogon::k400BadRequest,
+                                   "INVALID_PRODUCT_ID"));
+        }
+        catch (...)
+        {
+            callback(errorResponse(drogon::k500InternalServerError,
+                                   "DATABASE_ERROR"));
+        }
+    };
     // F6: Buyer order history.
     auto buyerOrderHistoryHandler =
         [&repo](const drogon::HttpRequestPtr& request,
@@ -1415,6 +1578,16 @@ int main()
 
     drogon::app().registerHandler("/api/v1/checkout", checkoutHandler, {drogon::Post});
 
+    // F8: Product reviews and star ratings.
+    drogon::app().registerHandler(
+        "/api/v1/products/{id}/reviews",
+        productReviewsHandler,
+        {drogon::Get});
+
+    drogon::app().registerHandler(
+        "/api/v1/products/{id}/reviews",
+        submitProductReviewHandler,
+        {drogon::Post});
     // F6: Order history and seller incoming orders.
     drogon::app().registerHandler(
         "/api/v1/orders",

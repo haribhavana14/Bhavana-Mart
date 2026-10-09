@@ -529,3 +529,101 @@ AdminDeleteProductResult ProductRepository::removeProductAsAdmin(
         ? AdminDeleteProductResult::Success
         : AdminDeleteProductResult::NotFound;
 }
+
+
+// F8: Get product ratings and reviews.
+ProductReviewList ProductRepository::getProductReviews(int productId)
+{
+    ProductReviewList result;
+
+    if (productId <= 0)
+        return result;
+
+    auto db = getClient();
+
+    auto product = db->execSqlSync(
+        "SELECT id FROM products WHERE id = $1",
+        productId);
+
+    if (product.empty())
+        return result;
+
+    result.product_exists = true;
+
+    auto aggregate = db->execSqlSync(
+        "SELECT COALESCE(AVG(rating), 0)::float8 AS average_rating, "
+        "COUNT(*) AS review_count FROM reviews WHERE product_id = $1",
+        productId);
+
+    result.average_rating =
+        aggregate[0]["average_rating"].as<double>();
+    result.review_count =
+        aggregate[0]["review_count"].as<int>();
+
+    auto rows = db->execSqlSync(
+        "SELECT r.id, r.product_id, r.user_id, u.name AS reviewer_name, "
+        "r.rating, r.comment, r.created_at::text AS created_at "
+        "FROM reviews r JOIN users u ON u.id = r.user_id "
+        "WHERE r.product_id = $1 "
+        "ORDER BY r.created_at DESC, r.id DESC",
+        productId);
+
+    for (const auto& row : rows)
+    {
+        ProductReview review;
+        review.id = row["id"].as<int>();
+        review.product_id = row["product_id"].as<int>();
+        review.user_id = row["user_id"].as<int>();
+        review.reviewer_name = row["reviewer_name"].as<std::string>();
+        review.rating = row["rating"].as<int>();
+        review.comment = row["comment"].as<std::string>();
+        review.created_at = row["created_at"].as<std::string>();
+        result.reviews.push_back(review);
+    }
+
+    return result;
+}
+
+// F8: Only buyers with a delivered order for the product may review it.
+ReviewSubmissionStatus ProductRepository::addProductReview(
+    int userId, int productId, int rating, const std::string& comment)
+{
+    if (userId <= 0 || productId <= 0 ||
+        rating < 1 || rating > 5 || comment.size() > 1000)
+        return ReviewSubmissionStatus::InvalidData;
+
+    auto db = getClient();
+    auto transaction = db->newTransaction();
+
+    auto product = transaction->execSqlSync(
+        "SELECT id FROM products WHERE id = $1",
+        productId);
+
+    if (product.empty())
+        return ReviewSubmissionStatus::ProductNotFound;
+
+    auto completedOrder = transaction->execSqlSync(
+        "SELECT 1 FROM orders o "
+        "JOIN order_items oi ON oi.order_id = o.id "
+        "WHERE o.buyer_id = $1 AND oi.product_id = $2 "
+        "AND o.status = $3 LIMIT 1",
+        userId, productId, std::string("DELIVERED"));
+
+    if (completedOrder.empty())
+        return ReviewSubmissionStatus::OrderNotCompleted;
+
+    auto existing = transaction->execSqlSync(
+        "SELECT id FROM reviews WHERE user_id = $1 "
+        "AND product_id = $2 LIMIT 1",
+        userId, productId);
+
+    if (!existing.empty())
+        return ReviewSubmissionStatus::AlreadyReviewed;
+
+    transaction->execSqlSync(
+        "INSERT INTO reviews (product_id, user_id, rating, comment) "
+        "VALUES ($1, $2, $3, $4)",
+        productId, userId, rating, comment);
+
+    return ReviewSubmissionStatus::Success;
+}
