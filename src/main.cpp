@@ -47,6 +47,11 @@ static bool isBuyer(const drogon::HttpRequestPtr& req)
     return role.has_value() && role.value() == "BUYER";
 }
 
+static bool isAdmin(const drogon::HttpRequestPtr& req)
+{
+    auto role = req->session()->getOptional<std::string>("role");
+    return role.has_value() && role.value() == "ADMIN";
+}
 static drogon::HttpResponsePtr errorResponse(
 
     drogon::HttpStatusCode status,
@@ -1065,6 +1070,149 @@ int main()
 
         {drogon::Get});
 
+    // F7: Admin-only user listing.
+    auto adminUsersHandler =
+        [&repo](const drogon::HttpRequestPtr& request,
+                std::function<void(const drogon::HttpResponsePtr&)>&& callback)
+    {
+        if (!isAdmin(request))
+        {
+            callback(errorResponse(drogon::k403Forbidden, "ADMIN_ONLY"));
+            return;
+        }
+
+        try
+        {
+            Json::Value data;
+            data["users"] = Json::Value(Json::arrayValue);
+
+            for (const auto& user : repo.getAdminUsers())
+            {
+                Json::Value row;
+                row["id"] = user.id;
+                row["name"] = user.name;
+                row["email"] = user.email;
+                row["role"] = user.role;
+                row["created_at"] = user.created_at;
+                data["users"].append(row);
+            }
+
+            Json::Value body;
+            body["success"] = true;
+            body["data"] = data;
+            body["error"] = Json::nullValue;
+            callback(drogon::HttpResponse::newHttpJsonResponse(body));
+        }
+        catch (...)
+        {
+            callback(errorResponse(drogon::k500InternalServerError,
+                                   "DATABASE_ERROR"));
+        }
+    };
+
+    // F7: Admin-only order listing.
+    auto adminOrdersHandler =
+        [&repo](const drogon::HttpRequestPtr& request,
+                std::function<void(const drogon::HttpResponsePtr&)>&& callback)
+    {
+        if (!isAdmin(request))
+        {
+            callback(errorResponse(drogon::k403Forbidden, "ADMIN_ONLY"));
+            return;
+        }
+
+        try
+        {
+            Json::Value data;
+            data["orders"] = Json::Value(Json::arrayValue);
+
+            for (const auto& order : repo.getAdminOrders())
+            {
+                Json::Value row;
+                row["id"] = order.id;
+                row["buyer_id"] = order.buyer_id;
+                row["buyer_name"] = order.buyer_name;
+                row["buyer_email"] = order.buyer_email;
+                row["status"] = order.status;
+                row["created_at"] = order.created_at;
+                row["currency"] = "INR";
+                row["total_cents"] =
+                    static_cast<Json::Int64>(order.total_cents);
+                row["item_count"] =
+                    static_cast<Json::Int64>(order.item_count);
+                data["orders"].append(row);
+            }
+
+            Json::Value body;
+            body["success"] = true;
+            body["data"] = data;
+            body["error"] = Json::nullValue;
+            callback(drogon::HttpResponse::newHttpJsonResponse(body));
+        }
+        catch (...)
+        {
+            callback(errorResponse(drogon::k500InternalServerError,
+                                   "DATABASE_ERROR"));
+        }
+    };
+
+    // F7: Admin removes a product listing.
+    auto adminDeleteProductHandler =
+        [&repo](const drogon::HttpRequestPtr& request,
+                std::function<void(const drogon::HttpResponsePtr&)>&& callback,
+                const std::string& productIdParam)
+    {
+        if (!isAdmin(request))
+        {
+            callback(errorResponse(drogon::k403Forbidden, "ADMIN_ONLY"));
+            return;
+        }
+
+        try
+        {
+            const int productId = std::stoi(productIdParam);
+            const auto result = repo.removeProductAsAdmin(productId);
+
+            if (result == AdminDeleteProductResult::NotFound)
+            {
+                callback(errorResponse(drogon::k404NotFound,
+                                       "PRODUCT_NOT_FOUND"));
+                return;
+            }
+
+            if (result == AdminDeleteProductResult::ProductHasOrders)
+            {
+                callback(errorResponse(drogon::k409Conflict,
+                                       "PRODUCT_HAS_ORDER_HISTORY"));
+                return;
+            }
+
+            Json::Value data;
+            data["product_id"] = productId;
+            data["message"] = "Product listing removed";
+
+            Json::Value body;
+            body["success"] = true;
+            body["data"] = data;
+            body["error"] = Json::nullValue;
+            callback(drogon::HttpResponse::newHttpJsonResponse(body));
+        }
+        catch (const std::invalid_argument&)
+        {
+            callback(errorResponse(drogon::k400BadRequest,
+                                   "INVALID_PRODUCT_ID"));
+        }
+        catch (const std::out_of_range&)
+        {
+            callback(errorResponse(drogon::k400BadRequest,
+                                   "INVALID_PRODUCT_ID"));
+        }
+        catch (...)
+        {
+            callback(errorResponse(drogon::k500InternalServerError,
+                                   "DATABASE_ERROR"));
+        }
+    };
     // F6: Buyer order history.
     auto buyerOrderHistoryHandler =
         [&repo](const drogon::HttpRequestPtr& request,
@@ -1277,6 +1425,16 @@ int main()
         "/api/v1/seller/orders",
         sellerOrdersHandler,
         {drogon::Get});
+    // F7: Admin endpoints.
+    drogon::app().registerHandler(
+        "/api/v1/admin/users", adminUsersHandler, {drogon::Get});
+
+    drogon::app().registerHandler(
+        "/api/v1/admin/orders", adminOrdersHandler, {drogon::Get});
+
+    drogon::app().registerHandler(
+        "/api/v1/admin/products/{id}",
+        adminDeleteProductHandler, {drogon::Delete});
     // Preserve old routes.
 
     drogon::app().registerHandler(

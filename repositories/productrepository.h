@@ -72,6 +72,33 @@ struct SellerOrderLine
     long long unit_price_cents = 0;
 };
 
+struct AdminUserSummary
+{
+    int id = 0;
+    std::string name;
+    std::string email;
+    std::string role;
+    std::string created_at;
+};
+
+struct AdminOrderSummary
+{
+    int id = 0;
+    int buyer_id = 0;
+    std::string buyer_name;
+    std::string buyer_email;
+    std::string status;
+    std::string created_at;
+    long long total_cents = 0;
+    long long item_count = 0;
+};
+
+enum class AdminDeleteProductResult
+{
+    Success,
+    NotFound,
+    ProductHasOrders
+};
 class ProductRepository
 {
 public:
@@ -89,6 +116,9 @@ public:
     CheckoutResult checkoutCart(int userId);
     std::vector<BuyerOrderSummary> getBuyerOrders(int buyerId);
     std::vector<SellerOrderLine> getSellerOrders(int sellerId);
+    std::vector<AdminUserSummary> getAdminUsers();
+    std::vector<AdminOrderSummary> getAdminOrders();
+    AdminDeleteProductResult removeProductAsAdmin(int productId);
 
     bool isDatabaseHealthy();
 

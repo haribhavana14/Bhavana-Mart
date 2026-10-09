@@ -444,3 +444,88 @@ std::vector<SellerOrderLine> ProductRepository::getSellerOrders(
 
     return result;
 }
+
+
+// F7: Admin sees users without exposing password hashes.
+std::vector<AdminUserSummary> ProductRepository::getAdminUsers()
+{
+    auto db = getClient();
+    auto rows = db->execSqlSync(
+        "SELECT id, name, email, role, created_at::text AS created_at "
+        "FROM users ORDER BY id");
+
+    std::vector<AdminUserSummary> result;
+
+    for (const auto& row : rows)
+    {
+        AdminUserSummary user;
+        user.id = row["id"].as<int>();
+        user.name = row["name"].as<std::string>();
+        user.email = row["email"].as<std::string>();
+        user.role = row["role"].as<std::string>();
+        user.created_at = row["created_at"].as<std::string>();
+        result.push_back(user);
+    }
+
+    return result;
+}
+
+// F7: Admin sees all orders and buyer details.
+std::vector<AdminOrderSummary> ProductRepository::getAdminOrders()
+{
+    auto db = getClient();
+    auto rows = db->execSqlSync(
+        "SELECT o.id, o.buyer_id, u.name AS buyer_name, "
+        "u.email AS buyer_email, o.status, "
+        "o.created_at::text AS created_at, "
+        "o.total_amount_cents, COUNT(oi.id) AS item_count "
+        "FROM orders o "
+        "JOIN users u ON u.id = o.buyer_id "
+        "LEFT JOIN order_items oi ON oi.order_id = o.id "
+        "GROUP BY o.id, u.name, u.email "
+        "ORDER BY o.created_at DESC, o.id DESC");
+
+    std::vector<AdminOrderSummary> result;
+
+    for (const auto& row : rows)
+    {
+        AdminOrderSummary order;
+        order.id = row["id"].as<int>();
+        order.buyer_id = row["buyer_id"].as<int>();
+        order.buyer_name = row["buyer_name"].as<std::string>();
+        order.buyer_email = row["buyer_email"].as<std::string>();
+        order.status = row["status"].as<std::string>();
+        order.created_at = row["created_at"].as<std::string>();
+        order.total_cents = row["total_amount_cents"].as<long long>();
+        order.item_count = row["item_count"].as<long long>();
+        result.push_back(order);
+    }
+
+    return result;
+}
+
+// F7: Remove a listing only when it is not referenced by order history.
+AdminDeleteProductResult ProductRepository::removeProductAsAdmin(
+    int productId)
+{
+    if (productId <= 0)
+        return AdminDeleteProductResult::NotFound;
+
+    auto db = getClient();
+
+    auto references = db->execSqlSync(
+        "SELECT COUNT(*) AS ref_count FROM order_items "
+        "WHERE product_id = $1",
+        productId);
+
+    if (references[0]["ref_count"].as<long long>() > 0)
+        return AdminDeleteProductResult::ProductHasOrders;
+
+    auto deleted = db->execSqlSync(
+        "DELETE FROM products WHERE id = $1",
+        productId);
+
+    return deleted.affectedRows() > 0
+        ? AdminDeleteProductResult::Success
+        : AdminDeleteProductResult::NotFound;
+}
