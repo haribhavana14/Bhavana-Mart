@@ -627,3 +627,31 @@ ReviewSubmissionStatus ProductRepository::addProductReview(
 
     return ReviewSubmissionStatus::Success;
 }
+
+// Seller status workflow: CONFIRMED -> SHIPPED -> DELIVERED.
+bool ProductRepository::updateSellerOrderStatus(
+    int sellerId, int orderId, const std::string& newStatus)
+{
+    if (sellerId <= 0 || orderId <= 0 ||
+        (newStatus != "SHIPPED" && newStatus != "DELIVERED"))
+        return false;
+
+    auto db = getClient();
+
+    auto result = db->execSqlSync(
+        "UPDATE orders AS o SET status = $1 "
+        "WHERE o.id = $2 "
+        "AND ((o.status = 'CONFIRMED' AND $1 = 'SHIPPED') "
+        "OR (o.status = 'SHIPPED' AND $1 = 'DELIVERED')) "
+        "AND EXISTS ("
+        "SELECT 1 FROM order_items oi "
+        "JOIN products p ON p.id = oi.product_id "
+        "WHERE oi.order_id = o.id AND p.seller_id = $3) "
+        "AND NOT EXISTS ("
+        "SELECT 1 FROM order_items oi "
+        "JOIN products p ON p.id = oi.product_id "
+        "WHERE oi.order_id = o.id AND p.seller_id <> $3)",
+        newStatus, orderId, sellerId);
+
+    return result.affectedRows() > 0;
+}

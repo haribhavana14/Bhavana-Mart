@@ -1447,6 +1447,82 @@ int main()
         }
     };
 
+    // Basic order status workflow for the seller's own orders.
+    auto updateSellerOrderStatusHandler =
+        [&repo](const drogon::HttpRequestPtr& request,
+                std::function<void(const drogon::HttpResponsePtr&)>&& callback,
+                const std::string& orderIdParam)
+    {
+        if (!isSeller(request))
+        {
+            callback(errorResponse(drogon::k403Forbidden, "SELLER_ONLY"));
+            return;
+        }
+
+        auto userId = getUserId(request);
+        if (!userId.has_value())
+        {
+            callback(errorResponse(drogon::k401Unauthorized, "UNAUTHORIZED"));
+            return;
+        }
+
+        try
+        {
+            const int orderId = std::stoi(orderIdParam);
+            auto json = request->getJsonObject();
+
+            if (orderId <= 0 || !json || !json->isMember("status"))
+            {
+                callback(errorResponse(drogon::k400BadRequest,
+                                       "INVALID_ORDER_STATUS"));
+                return;
+            }
+
+            const std::string status = (*json)["status"].asString();
+
+            if (status != "SHIPPED" && status != "DELIVERED")
+            {
+                callback(errorResponse(drogon::k400BadRequest,
+                                       "INVALID_ORDER_STATUS"));
+                return;
+            }
+
+            if (!repo.updateSellerOrderStatus(
+                    userId.value(), orderId, status))
+            {
+                callback(errorResponse(
+                    drogon::k409Conflict,
+                    "ORDER_NOT_FOUND_OR_INVALID_STATUS_TRANSITION"));
+                return;
+            }
+
+            Json::Value data;
+            data["order_id"] = orderId;
+            data["status"] = status;
+
+            Json::Value body;
+            body["success"] = true;
+            body["data"] = data;
+            body["error"] = Json::nullValue;
+
+            callback(drogon::HttpResponse::newHttpJsonResponse(body));
+        }
+        catch (const std::invalid_argument&)
+        {
+            callback(errorResponse(drogon::k400BadRequest,
+                                   "INVALID_ORDER_ID"));
+        }
+        catch (const std::out_of_range&)
+        {
+            callback(errorResponse(drogon::k400BadRequest,
+                                   "INVALID_ORDER_ID"));
+        }
+        catch (...)
+        {
+            callback(errorResponse(drogon::k500InternalServerError,
+                                   "DATABASE_ERROR"));
+        }
+    };
     // F6: Seller's incoming order lines.
     auto sellerOrdersHandler =
         [&repo](const drogon::HttpRequestPtr& request,
@@ -1598,6 +1674,10 @@ int main()
         "/api/v1/seller/orders",
         sellerOrdersHandler,
         {drogon::Get});
+    drogon::app().registerHandler(
+        "/api/v1/seller/orders/{id}/status",
+        updateSellerOrderStatusHandler,
+        {drogon::Put});
     // F7: Admin endpoints.
     drogon::app().registerHandler(
         "/api/v1/admin/users", adminUsersHandler, {drogon::Get});

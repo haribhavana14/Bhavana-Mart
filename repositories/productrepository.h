@@ -150,6 +150,7 @@ public:
     ReviewSubmissionStatus addProductReview(int userId, int productId, int rating, const std::string& comment);
 
     bool isDatabaseHealthy();
+    bool updateSellerOrderStatus(int sellerId, int orderId, const std::string& newStatus);
 
 private:
     drogon::orm::DbClientPtr getClient();
