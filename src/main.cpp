@@ -1065,6 +1065,136 @@ int main()
 
         {drogon::Get});
 
+    // F6: Buyer order history.
+    auto buyerOrderHistoryHandler =
+        [&repo](const drogon::HttpRequestPtr& request,
+                std::function<void(const drogon::HttpResponsePtr&)>&& callback)
+    {
+        if (!isBuyer(request))
+        {
+            callback(errorResponse(
+                drogon::k403Forbidden, "BUYER_ONLY"));
+            return;
+        }
+
+        auto userId = getUserId(request);
+        if (!userId.has_value())
+        {
+            callback(errorResponse(
+                drogon::k401Unauthorized, "UNAUTHORIZED"));
+            return;
+        }
+
+        try
+        {
+            auto orders = repo.getBuyerOrders(userId.value());
+
+            Json::Value data;
+            data["orders"] = Json::Value(Json::arrayValue);
+
+            for (const auto& order : orders)
+            {
+                Json::Value row;
+                row["id"] = order.id;
+                row["status"] = order.status;
+                row["created_at"] = order.created_at;
+                row["currency"] = "INR";
+                row["total_cents"] =
+                    static_cast<Json::Int64>(order.total_cents);
+                row["items"] = Json::Value(Json::arrayValue);
+
+                for (const auto& item : order.items)
+                {
+                    Json::Value product;
+                    product["product_id"] = item.product_id;
+                    product["product_name"] = item.product_name;
+                    product["quantity"] = item.quantity;
+                    product["seller_id"] = item.seller_id;
+                    product["unit_price_cents"] =
+                        static_cast<Json::Int64>(item.unit_price_cents);
+                    product["subtotal_cents"] =
+                        static_cast<Json::Int64>(
+                            item.unit_price_cents * item.quantity);
+
+                    row["items"].append(product);
+                }
+
+                data["orders"].append(row);
+            }
+
+            Json::Value body;
+            body["success"] = true;
+            body["data"] = data;
+            body["error"] = Json::nullValue;
+
+            callback(drogon::HttpResponse::newHttpJsonResponse(body));
+        }
+        catch (...)
+        {
+            callback(errorResponse(
+                drogon::k500InternalServerError, "DATABASE_ERROR"));
+        }
+    };
+
+    // F6: Seller's incoming order lines.
+    auto sellerOrdersHandler =
+        [&repo](const drogon::HttpRequestPtr& request,
+                std::function<void(const drogon::HttpResponsePtr&)>&& callback)
+    {
+        if (!isSeller(request))
+        {
+            callback(errorResponse(
+                drogon::k403Forbidden, "SELLER_ONLY"));
+            return;
+        }
+
+        auto userId = getUserId(request);
+        if (!userId.has_value())
+        {
+            callback(errorResponse(
+                drogon::k401Unauthorized, "UNAUTHORIZED"));
+            return;
+        }
+
+        try
+        {
+            auto orders = repo.getSellerOrders(userId.value());
+
+            Json::Value data;
+            data["orders"] = Json::Value(Json::arrayValue);
+
+            for (const auto& order : orders)
+            {
+                Json::Value row;
+                row["order_id"] = order.order_id;
+                row["buyer_id"] = order.buyer_id;
+                row["status"] = order.status;
+                row["created_at"] = order.created_at;
+                row["currency"] = "INR";
+                row["order_total_cents"] =
+                    static_cast<Json::Int64>(order.total_cents);
+                row["product_id"] = order.product_id;
+                row["product_name"] = order.product_name;
+                row["quantity"] = order.quantity;
+                row["unit_price_cents"] =
+                    static_cast<Json::Int64>(order.unit_price_cents);
+
+                data["orders"].append(row);
+            }
+
+            Json::Value body;
+            body["success"] = true;
+            body["data"] = data;
+            body["error"] = Json::nullValue;
+
+            callback(drogon::HttpResponse::newHttpJsonResponse(body));
+        }
+        catch (...)
+        {
+            callback(errorResponse(
+                drogon::k500InternalServerError, "DATABASE_ERROR"));
+        }
+    };
     // F5: Buyer checkout with simulated payment.
     auto checkoutHandler =
         [&repo](const drogon::HttpRequestPtr& request,
@@ -1137,6 +1267,16 @@ int main()
 
     drogon::app().registerHandler("/api/v1/checkout", checkoutHandler, {drogon::Post});
 
+    // F6: Order history and seller incoming orders.
+    drogon::app().registerHandler(
+        "/api/v1/orders",
+        buyerOrderHistoryHandler,
+        {drogon::Get});
+
+    drogon::app().registerHandler(
+        "/api/v1/seller/orders",
+        sellerOrdersHandler,
+        {drogon::Get});
     // Preserve old routes.
 
     drogon::app().registerHandler(

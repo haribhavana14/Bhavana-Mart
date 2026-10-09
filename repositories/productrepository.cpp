@@ -351,3 +351,96 @@ CheckoutResult ProductRepository::checkoutCart(int userId)
 
     return {CheckoutStatus::Success, orderId, totalCents};
 }
+
+
+// F6: Buyer order history, including products in each order.
+std::vector<BuyerOrderSummary> ProductRepository::getBuyerOrders(
+    int buyerId)
+{
+    auto db = getClient();
+
+    auto orders = db->execSqlSync(
+        "SELECT id, status, total_amount_cents, created_at "
+        "FROM orders WHERE buyer_id = $1 "
+        "ORDER BY created_at DESC, id DESC",
+        buyerId);
+
+    std::vector<BuyerOrderSummary> result;
+
+    for (const auto& row : orders)
+    {
+        BuyerOrderSummary order;
+        order.id = row["id"].as<int>();
+        order.status = row["status"].as<std::string>();
+        order.created_at = row["created_at"].as<std::string>();
+        order.total_cents = row["total_amount_cents"].as<long long>();
+
+        auto items = db->execSqlSync(
+            "SELECT oi.product_id, p.seller_id, "
+            "p.name AS product_name, oi.quantity, "
+            "oi.unit_price_cents "
+            "FROM order_items oi "
+            "JOIN products p ON p.id = oi.product_id "
+            "WHERE oi.order_id = $1 ORDER BY oi.id",
+            order.id);
+
+        for (const auto& itemRow : items)
+        {
+            OrderItemSummary item;
+            item.product_id = itemRow["product_id"].as<int>();
+            item.seller_id = itemRow["seller_id"].as<int>();
+            item.product_name =
+                itemRow["product_name"].as<std::string>();
+            item.quantity = itemRow["quantity"].as<int>();
+            item.unit_price_cents =
+                itemRow["unit_price_cents"].as<long long>();
+
+            order.items.push_back(item);
+        }
+
+        result.push_back(order);
+    }
+
+    return result;
+}
+
+// F6: Seller sees orders containing that seller's products.
+std::vector<SellerOrderLine> ProductRepository::getSellerOrders(
+    int sellerId)
+{
+    auto db = getClient();
+
+    auto rows = db->execSqlSync(
+        "SELECT o.id AS order_id, o.buyer_id, o.status, "
+        "o.created_at, o.total_amount_cents, "
+        "oi.product_id, p.name AS product_name, "
+        "oi.quantity, oi.unit_price_cents "
+        "FROM orders o "
+        "JOIN order_items oi ON oi.order_id = o.id "
+        "JOIN products p ON p.id = oi.product_id "
+        "WHERE p.seller_id = $1 "
+        "ORDER BY o.created_at DESC, o.id DESC, oi.id",
+        sellerId);
+
+    std::vector<SellerOrderLine> result;
+
+    for (const auto& row : rows)
+    {
+        SellerOrderLine item;
+        item.order_id = row["order_id"].as<int>();
+        item.buyer_id = row["buyer_id"].as<int>();
+        item.status = row["status"].as<std::string>();
+        item.created_at = row["created_at"].as<std::string>();
+        item.total_cents =
+            row["total_amount_cents"].as<long long>();
+        item.product_id = row["product_id"].as<int>();
+        item.product_name = row["product_name"].as<std::string>();
+        item.quantity = row["quantity"].as<int>();
+        item.unit_price_cents =
+            row["unit_price_cents"].as<long long>();
+
+        result.push_back(item);
+    }
+
+    return result;
+}

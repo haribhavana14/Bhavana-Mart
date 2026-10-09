@@ -40,6 +40,38 @@ struct CheckoutResult
     long long total_cents{0};
 };
 
+
+struct OrderItemSummary
+{
+    int product_id = 0;
+    int seller_id = 0;
+    std::string product_name;
+    int quantity = 0;
+    long long unit_price_cents = 0;
+};
+
+struct BuyerOrderSummary
+{
+    int id = 0;
+    std::string status;
+    std::string created_at;
+    long long total_cents = 0;
+    std::vector<OrderItemSummary> items;
+};
+
+struct SellerOrderLine
+{
+    int order_id = 0;
+    int buyer_id = 0;
+    std::string status;
+    std::string created_at;
+    long long total_cents = 0;
+    int product_id = 0;
+    std::string product_name;
+    int quantity = 0;
+    long long unit_price_cents = 0;
+};
+
 class ProductRepository
 {
 public:
@@ -55,6 +87,8 @@ public:
     CartOperationResult updateCartItemQuantity(int userId, int productId, int quantity);
     bool removeCartItem(int userId, int productId);
     CheckoutResult checkoutCart(int userId);
+    std::vector<BuyerOrderSummary> getBuyerOrders(int buyerId);
+    std::vector<SellerOrderLine> getSellerOrders(int sellerId);
 
     bool isDatabaseHealthy();
 
