@@ -20,7 +20,9 @@ button{cursor:pointer}
   background:linear-gradient(135deg,#4b126b,#7b1fa2,#5e35b1);
   padding:20px
 }
-
+git add src/index.html
+git commit -m "Fix emoji encoding in marketplace UI"
+git push
 .auth-box{
   width:100%;
   max-width:420px;
@@ -482,7 +484,7 @@ footer b{color:#d8b7ff}
 
 <div class="auth-box">
 
-<div class="logo-big">ðŸ’œ Bhavana-Mart</div>
+<div class="logo-big">💜 Bhavana-Mart</div>
 <div class="welcome">Welcome to Bhavana-Mart</div>
 <div class="sub">Your smart shopping marketplace</div>
 
@@ -499,7 +501,7 @@ footer b{color:#d8b7ff}
 <label>Password</label>
 <input id="loginPassword" type="password" placeholder="Enter your password" required>
 
-<button class="main-btn" type="submit">ðŸ” Login</button>
+<button class="main-btn" type="submit">🔐 Login</button>
 
 </form>
 
@@ -520,7 +522,7 @@ footer b{color:#d8b7ff}
 <option value="Seller">Seller</option>
 </select>
 
-<button class="main-btn" type="submit">ðŸ“ Create Account</button>
+<button class="main-btn" type="submit">📝 Create Account</button>
 
 </form>
 
@@ -535,7 +537,7 @@ footer b{color:#d8b7ff}
 
 <nav class="nav">
 
-<div class="logo">ðŸ’œ Bhavana-Mart</div>
+<div class="logo">💜 Bhavana-Mart</div>
 
 <div class="search">
 <input id="search" placeholder="Search products..." oninput="filterProducts()">
@@ -543,10 +545,10 @@ footer b{color:#d8b7ff}
 
 <div class="nav-right">
 
-<div class="user" id="userInfo">ðŸ‘¤ User</div>
+<div class="user" id="userInfo">👤 User</div>
 
 <button class="cart-btn" onclick="openCart()">
-ðŸ›’ Cart (<span id="cartCount">0</span>)
+🛒 Cart (<span id="cartCount">0</span>)
 </button>
 
 <button class="logout" onclick="logout()">Logout</button>
@@ -559,12 +561,12 @@ footer b{color:#d8b7ff}
 <section class="hero">
 
 <div>
-<h1>Shop Everything You Love ðŸ’œ</h1>
-<p>Clothing â€¢ Jewellery â€¢ Shoes â€¢ Electronics â€¢ Beauty â€¢ Home â€¢ Accessories</p>
+<h1>Shop Everything You Love 💜</h1>
+<p>Clothing • Jewellery • Shoes • Electronics • Beauty • Home • Accessories</p>
 </div>
 
 <div class="hero-card">
-<div class="emoji">ðŸ›ï¸</div>
+<div class="emoji">🛍️</div>
 <b>Bhavana-Mart</b>
 <span>Smart Shopping Marketplace</span>
 </div>
@@ -579,13 +581,13 @@ footer b{color:#d8b7ff}
 <div class="categories">
 
 <button class="cat active" onclick="setCategory('All',this)">All</button>
-<button class="cat" onclick="setCategory('Clothing',this)">ðŸ‘— Clothing</button>
-<button class="cat" onclick="setCategory('Jewellery',this)">ðŸ’Ž Jewellery</button>
-<button class="cat" onclick="setCategory('Shoes',this)">ðŸ‘Ÿ Shoes</button>
-<button class="cat" onclick="setCategory('Electronics',this)">ðŸ’» Electronics</button>
-<button class="cat" onclick="setCategory('Beauty',this)">ðŸ’„ Beauty</button>
-<button class="cat" onclick="setCategory('Home',this)">ðŸ  Home</button>
-<button class="cat" onclick="setCategory('Accessories',this)">ðŸ‘œ Accessories</button>
+<button class="cat" onclick="setCategory('Clothing',this)">👗 Clothing</button>
+<button class="cat" onclick="setCategory('Jewellery',this)">💎 Jewellery</button>
+<button class="cat" onclick="setCategory('Shoes',this)">👟 Shoes</button>
+<button class="cat" onclick="setCategory('Electronics',this)">💻 Electronics</button>
+<button class="cat" onclick="setCategory('Beauty',this)">💄 Beauty</button>
+<button class="cat" onclick="setCategory('Home',this)">🏠 Home</button>
+<button class="cat" onclick="setCategory('Accessories',this)">👜 Accessories</button>
 
 </div>
 
@@ -593,7 +595,7 @@ footer b{color:#d8b7ff}
 
 
 <div class="status">
-<b>âš¡ Backend Status</b>
+<b>⚡ Backend Status</b>
 <div id="status">Checking backend...</div>
 </div>
 
@@ -608,8 +610,8 @@ footer b{color:#d8b7ff}
 
 
 <footer>
-<b>ðŸ’œ Bhavana-Mart</b><br><br>
-Native C++ E-Commerce Marketplace â€¢ Drogon Backend â€¢ SQLite Database
+<b>💜 Bhavana-Mart</b><br><br>
+Native C++ E-Commerce Marketplace • Drogon Backend • SQLite Database
 </footer>
 
 </div>
@@ -621,15 +623,15 @@ Native C++ E-Commerce Marketplace â€¢ Drogon Backend â€¢ SQLite Database
 <div class="modal-box">
 
 <div class="modal-head">
-<h2>ðŸ›’ Your Cart</h2>
-<button class="close" onclick="closeCart()">âœ•</button>
+<h2>🛒 Your Cart</h2>
+<button class="close" onclick="closeCart()">✕</button>
 </div>
 
 <div id="cartItems"></div>
 
 <div class="total">
 <span>Total</span>
-<span id="total">â‚¹0</span>
+<span id="total">₹0</span>
 </div>
 
 <button class="checkout" onclick="checkout()">
@@ -647,40 +649,40 @@ Proceed to Checkout
 
 const products = [
 
-{name:"Women Kurti",price:899,cat:"Clothing",emoji:"ðŸ‘—",image:"https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80"},
-{name:"Classic T-Shirt",price:599,cat:"Clothing",emoji:"ðŸ‘•",image:"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80"},
-{name:"Denim Jeans",price:1299,cat:"Clothing",emoji:"ðŸ‘–",image:"https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=800&q=80"},
-{name:"Casual Jacket",price:1799,cat:"Clothing",emoji:"ðŸ§¥",image:"https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=80"},
+{name:"Women Kurti",price:899,cat:"Clothing",emoji:"👗",image:"https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80"},
+{name:"Classic T-Shirt",price:599,cat:"Clothing",emoji:"👕",image:"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80"},
+{name:"Denim Jeans",price:1299,cat:"Clothing",emoji:"👖",image:"https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=800&q=80"},
+{name:"Casual Jacket",price:1799,cat:"Clothing",emoji:"🧥",image:"https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=800&q=80"},
 
-{name:"Gold Necklace",price:2499,cat:"Jewellery",emoji:"ðŸ“¿",image:"https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80"},
-{name:"Elegant Earrings",price:999,cat:"Jewellery",emoji:"âœ¨",image:"https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=800&q=80"},
-{name:"Silver Ring",price:749,cat:"Jewellery",emoji:"ðŸ’",image:"https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80"},
-{name:"Designer Bracelet",price:1199,cat:"Jewellery",emoji:"ðŸ“¿",image:"https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=800&q=80"},
+{name:"Gold Necklace",price:2499,cat:"Jewellery",emoji:"📿",image:"https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80"},
+{name:"Elegant Earrings",price:999,cat:"Jewellery",emoji:"✨",image:"https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=800&q=80"},
+{name:"Silver Ring",price:749,cat:"Jewellery",emoji:"💍",image:"https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80"},
+{name:"Designer Bracelet",price:1199,cat:"Jewellery",emoji:"📿",image:"https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=800&q=80"},
 
-{name:"Running Shoes",price:1999,cat:"Shoes",emoji:"ðŸ‘Ÿ",image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80"},
-{name:"Sports Sneakers",price:2199,cat:"Shoes",emoji:"ðŸ‘Ÿ",image:"https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&w=800&q=80"},
-{name:"Elegant Heels",price:1499,cat:"Shoes",emoji:"ðŸ‘ ",image:"https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=800&q=80"},
-{name:"Casual Shoes",price:1699,cat:"Shoes",emoji:"ðŸ‘ž",image:"https://images.unsplash.com/photo-1495555961986-6d4c1ecb7be3?auto=format&fit=crop&w=800&q=80"},
+{name:"Running Shoes",price:1999,cat:"Shoes",emoji:"👟",image:"https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80"},
+{name:"Sports Sneakers",price:2199,cat:"Shoes",emoji:"👟",image:"https://images.unsplash.com/photo-1460353581641-37baddab0fa2?auto=format&fit=crop&w=800&q=80"},
+{name:"Elegant Heels",price:1499,cat:"Shoes",emoji:"👠",image:"https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=800&q=80"},
+{name:"Casual Shoes",price:1699,cat:"Shoes",emoji:"👞",image:"https://images.unsplash.com/photo-1495555961986-6d4c1ecb7be3?auto=format&fit=crop&w=800&q=80"},
 
-{name:"Laptop",price:57000,cat:"Electronics",emoji:"ðŸ’»",image:"https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=800&q=80"},
-{name:"Wireless Headphones",price:1500,cat:"Electronics",emoji:"ðŸŽ§",image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80"},
-{name:"Mechanical Keyboard",price:1200,cat:"Electronics",emoji:"âŒ¨ï¸",image:"https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=800&q=80"},
-{name:"HD Monitor",price:8000,cat:"Electronics",emoji:"ðŸ–¥ï¸",image:"https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=800&q=80"},
+{name:"Laptop",price:57000,cat:"Electronics",emoji:"💻",image:"https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=800&q=80"},
+{name:"Wireless Headphones",price:1500,cat:"Electronics",emoji:"🎧",image:"https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80"},
+{name:"Mechanical Keyboard",price:1200,cat:"Electronics",emoji:"⌨️",image:"https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=800&q=80"},
+{name:"HD Monitor",price:8000,cat:"Electronics",emoji:"🖥️",image:"https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=800&q=80"},
 
-{name:"Makeup Kit",price:1299,cat:"Beauty",emoji:"ðŸ’„",image:"https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=800&q=80"},
-{name:"Floral Perfume",price:899,cat:"Beauty",emoji:"ðŸŒ¸",image:"https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80"},
-{name:"Skincare Set",price:1099,cat:"Beauty",emoji:"ðŸ§´",image:"https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=800&q=80"},
-{name:"Hair Care Kit",price:749,cat:"Beauty",emoji:"ðŸ’‡",image:"https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80"},
+{name:"Makeup Kit",price:1299,cat:"Beauty",emoji:"💄",image:"https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=800&q=80"},
+{name:"Floral Perfume",price:899,cat:"Beauty",emoji:"🌸",image:"https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80"},
+{name:"Skincare Set",price:1099,cat:"Beauty",emoji:"🧴",image:"https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=800&q=80"},
+{name:"Hair Care Kit",price:749,cat:"Beauty",emoji:"💇",image:"https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80"},
 
-{name:"Modern Chair",price:3499,cat:"Home",emoji:"ðŸª‘",image:"https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80"},
-{name:"Table Lamp",price:999,cat:"Home",emoji:"ðŸ’¡",image:"https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80"},
-{name:"Comfort Cushion Set",price:899,cat:"Home",emoji:"ðŸ›‹ï¸",image:"https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?auto=format&fit=crop&w=800&q=80"},
-{name:"Wall Decor",price:1499,cat:"Home",emoji:"ðŸ–¼ï¸",image:"https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80"},
+{name:"Modern Chair",price:3499,cat:"Home",emoji:"🪑",image:"https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80"},
+{name:"Table Lamp",price:999,cat:"Home",emoji:"💡",image:"https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80"},
+{name:"Comfort Cushion Set",price:899,cat:"Home",emoji:"🛋️",image:"https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?auto=format&fit=crop&w=800&q=80"},
+{name:"Wall Decor",price:1499,cat:"Home",emoji:"🖼️",image:"https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80"},
 
-{name:"Classic Sunglasses",price:799,cat:"Accessories",emoji:"ðŸ•¶ï¸",image:"https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=800&q=80"},
-{name:"Classic Watch",price:1599,cat:"Accessories",emoji:"âŒš",image:"https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=800&q=80"},
-{name:"Designer Handbag",price:1899,cat:"Accessories",emoji:"ðŸ‘œ",image:"https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=800&q=80"},
-{name:"Leather Wallet",price:699,cat:"Accessories",emoji:"ðŸ‘›",image:"https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=800&q=80"}
+{name:"Classic Sunglasses",price:799,cat:"Accessories",emoji:"🕶️",image:"https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=800&q=80"},
+{name:"Classic Watch",price:1599,cat:"Accessories",emoji:"⌚",image:"https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&w=800&q=80"},
+{name:"Designer Handbag",price:1899,cat:"Accessories",emoji:"👜",image:"https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=800&q=80"},
+{name:"Leather Wallet",price:699,cat:"Accessories",emoji:"👛",image:"https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=800&q=80"}
 
 ];
 
@@ -725,7 +727,7 @@ localStorage.setItem("bhavanaMartUser",JSON.stringify(user));
 
 const msg=document.getElementById("message");
 
-msg.textContent="âœ… Registration successful! Please login.";
+msg.textContent="✅ Registration successful! Please login.";
 msg.style.color="#388e3c";
 
 setTimeout(showLogin,700);
@@ -742,7 +744,7 @@ const msg=document.getElementById("message");
 
 if(!saved){
 
-msg.textContent="âŒ Please register first.";
+msg.textContent="❌ Please register first.";
 msg.style.color="#d32f2f";
 return;
 }
@@ -758,14 +760,14 @@ document.getElementById("authPage").style.display="none";
 document.getElementById("shop").style.display="block";
 
 document.getElementById("userInfo").textContent=
-"ðŸ‘¤ "+user.name+" â€¢ "+user.role;
+"👤 "+user.name+" • "+user.role;
 
 checkBackend();
 renderProducts();
 
 }else{
 
-msg.textContent="âŒ Invalid email or password.";
+msg.textContent="❌ Invalid email or password.";
 msg.style.color="#d32f2f";
 }
 
@@ -802,7 +804,7 @@ p.name.toLowerCase().includes(search)
 
 if(list.length===0){
 
-box.innerHTML='<div class="empty">ðŸ˜” No products found</div>';
+box.innerHTML='<div class="empty">😔 No products found</div>';
 return;
 }
 
@@ -829,11 +831,11 @@ ${p.emoji}
 
 <div class="category">${p.cat}</div>
 
-<div class="rating">â˜…â˜…â˜…â˜…â˜…</div>
+<div class="rating">★★★★★</div>
 
 <div class="row">
 
-<div class="price">â‚¹${p.price.toLocaleString("en-IN")}</div>
+<div class="price">₹${p.price.toLocaleString("en-IN")}</div>
 
 <button class="add" onclick="addCart('${p.name}',${p.price})">
 Add
@@ -881,7 +883,7 @@ cart.push({name:name,price:Number(price),qty:1});
 
 updateCartCount();
 
-alert(name+" added to cart ðŸ’œ");
+alert(name+" added to cart 💜");
 }
 
 
@@ -914,9 +916,9 @@ const box=document.getElementById("cartItems");
 if(cart.length===0){
 
 box.innerHTML=
-'<div class="empty">ðŸ›’<br><br>Your cart is empty</div>';
+'<div class="empty">🛒<br><br>Your cart is empty</div>';
 
-document.getElementById("total").textContent="â‚¹0";
+document.getElementById("total").textContent="₹0";
 
 return;
 }
@@ -935,19 +937,19 @@ return `
 
 <div>
 <b>${item.name}</b><br>
-<span style="color:#6a1b9a">â‚¹${item.price.toLocaleString("en-IN")}</span>
+<span style="color:#6a1b9a">₹${item.price.toLocaleString("en-IN")}</span>
 </div>
 
 <div class="qty">
 
-<button onclick="changeQty(${index},-1)">âˆ’</button>
+<button onclick="changeQty(${index},-1)">−</button>
 <span>${item.qty}</span>
 <button onclick="changeQty(${index},1)">+</button>
 
 </div>
 
 <div>
-<b>â‚¹${itemTotal.toLocaleString("en-IN")}</b>
+<b>₹${itemTotal.toLocaleString("en-IN")}</b>
 </div>
 
 <button class="remove" onclick="removeItem(${index})">
@@ -961,7 +963,7 @@ Remove
 }).join("");
 
 document.getElementById("total").textContent=
-"â‚¹"+total.toLocaleString("en-IN");
+"₹"+total.toLocaleString("en-IN");
 }
 
 
@@ -997,7 +999,7 @@ alert("Your cart is empty!");
 return;
 }
 
-alert("âœ… Order placed successfully! Mock payment confirmed.");
+alert("✅ Order placed successfully! Mock payment confirmed.");
 
 cart=[];
 
@@ -1021,24 +1023,24 @@ const data=await response.json();
 if(data.status==="UP" && data.db==="UP"){
 
 document.getElementById("status").textContent=
-"âœ… Backend UP â€¢ Database UP â€¢ API Connected";
+"✅ Backend UP • Database UP • API Connected";
 
 }else{
 
 document.getElementById("status").textContent=
-"âš ï¸ Backend reachable";
+"⚠️ Backend reachable";
 }
 
 }else{
 
 document.getElementById("status").textContent=
-"âš ï¸ Backend not responding";
+"⚠️ Backend not responding";
 }
 
 }catch(e){
 
 document.getElementById("status").textContent=
-"âš ï¸ Backend unavailable";
+"⚠️ Backend unavailable";
 }
 
 }
