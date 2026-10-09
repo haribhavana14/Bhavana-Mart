@@ -3,6 +3,7 @@
 #include "../repositories/productrepository.h"
 
 #include "../plugin/DatabasePlugin.h"
+#include "service/ChatService.h"
 
 #include <algorithm>
 #include <cctype>
@@ -114,6 +115,7 @@ int main()
     drogon::app().enableSession(1200);
 
     ProductRepository repo;
+    ChatService chatService;
 
     // =========================
 
@@ -1664,6 +1666,49 @@ int main()
         "/api/v1/products/{id}/reviews",
         submitProductReviewHandler,
         {drogon::Post});
+    // O4: Product-domain AI shopping assistant.
+    auto chatHandler =
+        [&chatService](const drogon::HttpRequestPtr& request,
+                std::function<void(const drogon::HttpResponsePtr&)>&& callback)
+    {
+        auto json = request->getJsonObject();
+
+        if (!json || !json->isMember("message") ||
+            !(*json)["message"].isString())
+        {
+            Json::Value body;
+            body["reply"] = "Please enter a product-related question.";
+            body["degraded"] = true;
+
+            auto response =
+                drogon::HttpResponse::newHttpJsonResponse(body);
+            response->setStatusCode(drogon::k400BadRequest);
+            callback(response);
+            return;
+        }
+
+        const std::string message = (*json)["message"].asString();
+        const auto session = request->session();
+        const std::string sessionId =
+            session ? session->sessionId() : std::string("anonymous");
+
+        const ChatReply result = chatService.Ask(sessionId, message);
+
+        Json::Value body;
+        body["reply"] = result.reply;
+        body["degraded"] = result.degraded;
+
+        auto response =
+            drogon::HttpResponse::newHttpJsonResponse(body);
+
+        if (result.rate_limited)
+            response->setStatusCode(drogon::k429TooManyRequests);
+
+        callback(response);
+    };
+
+    drogon::app().registerHandler(
+        "/api/chat", chatHandler, {drogon::Post});
     // F6: Order history and seller incoming orders.
     drogon::app().registerHandler(
         "/api/v1/orders",

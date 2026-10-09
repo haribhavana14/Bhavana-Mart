@@ -12,6 +12,7 @@ RUN apt-get update && \
     uuid-dev \
     zlib1g-dev \
     libpq-dev \
+    libcurl4-openssl-dev \
     libsodium-dev \
     libbrotli-dev \
     libc-ares-dev \
